@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviesFlix - Streaming Portal</title>
+    
+    <!-- FAVICON CONNECTED WITH YOUR FILE: fevicon.png -->
+    <link rel="icon" type="image/png" href="fevicon.png">
+    <link rel="shortcut icon" type="image/png" href="fevicon.png">
+    <link rel="apple-touch-icon" href="fevicon.png">
+
+    <!-- FontAwesome 6 Pro CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Cyber Toast Container for Notifications -->
+    <div class="cyber-toast-container" id="toastContainer"></div>
+
+    <!-- ========================================================
+         HEADER (LOGO + DYNAMIC SOCIAL ICONS)
+         ======================================================== -->
+    <header class="top-header">
+        <a class="logo-link" onclick="goHome()">
+            <span class="logo-text" id="brandLogoText">Movies<span>Flix</span></span>
+            <img src="" id="brandLogoImg" class="logo-img" style="display:none;" alt="Logo">
+        </a>
+
+        <div class="social-icons-wrapper" id="socialIconsContainer"></div>
+    </header>
+
+    <!-- ========================================================
+         SUB-NAV (MENU + SEARCH + BELL)
+         ======================================================== -->
+    <div class="sub-nav">
+        <button class="menu-toggle-btn" id="menuToggleBtn">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search Movies, Series, Actors, Tags in MoviesFlix...">
+        </div>
+
+        <div class="notification-box" id="notifBox">
+            <div class="notif-bell-btn">
+                <i class="fa-regular fa-bell"></i>
+            </div>
+            <span class="notif-badge" id="notifBadge">0</span>
+
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-header">
+                    <span><i class="fa-solid fa-bolt"></i> Recent Updates</span>
+                    <button style="background:none; border:none; color:#00e5ff; font-size:11px; cursor:pointer;" id="clearNotifBtn">Clear All</button>
+                </div>
+                <ul class="notif-list" id="notifList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         SIDEBAR (CYAN ICONS, ABOUT, CONTACT & FOOTER LINE)
+         ======================================================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">Movies<span style="color:#fff;">Flix</span></span>
+            <button style="background:none; border:none; color:#888; font-size:18px; cursor:pointer;" id="closeSidebarBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <ul class="sidebar-menu" id="sidebarDynamicMenu"></ul>
+
+        <div class="sidebar-divider"></div>
+        <div class="pages-title">Legal & Information</div>
+
+        <a class="page-item-link" onclick="openLegalPage('about')"><i class="fa-solid fa-circle-info"></i> About Us</a>
+        <a class="page-item-link" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
+        <a class="page-item-link" onclick="openLegalPage('copyright')"><i class="fa-regular fa-copyright"></i> Copyright Disclaimer</a>
+        <a class="page-item-link" onclick="openLegalPage('privacy')"><i class="fa-solid fa-user-lock"></i> Privacy Policy</a>
+        <a class="page-item-link" onclick="openLegalPage('terms')"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
+        <a class="page-item-link" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-triangle-exclamation"></i> 18+ & Content Disclaimer</a>
+        <a class="page-item-link" onclick="openContactFormModal()"><i class="fa-solid fa-envelope-open-text"></i> Contact & Support Form</a>
+
+        <div class="sidebar-footer-box">
+            <p class="sidebar-footer-text">© 2026 MoviesFlix<br>Powered By Movies Flix Company</p>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MAIN CONTENT CONTAINER (HOME: COMING SOON -> TOP 10 -> RECENTLY -> CATEGORIES)
+         ======================================================== -->
+    <main class="main-content" id="mainContent"></main>
+
+    <!-- ========================================================
+         FOOTER (PERMANENT CYAN BORDER & CODED COPYRIGHT)
+         ======================================================== -->
+    <footer>
+        <div class="footer-nav">
+            <a onclick="goHome()">Home</a>
+            <a onclick="openLegalPage('about')">About Us</a>
+            <a onclick="openLegalPage('dmca')">DMCA</a>
+            <a onclick="openLegalPage('copyright')">Copyright</a>
+            <a onclick="openLegalPage('privacy')">Privacy</a>
+            <a onclick="openLegalPage('terms')">Terms</a>
+            <a onclick="openContactFormModal()">Contact</a>
+        </div>
+        <div class="footer-disclaimer-box">
+            MoviesFlix does not host any media on its servers. All files and video streams are indexed from non-affiliated third-party providers (Streamtape, Mega, Google Drive).
+        </div>
+        <div class="footer-bottom-bar">
+            <span>© 2026 MoviesFlix - Powered By Movies Flix Company</span>
+            <button class="secret-admin-trigger" id="secretAdminTrigger" title="Staff Portal"><i class="fa-solid fa-lock"></i></button>
+        </div>
+    </footer>
+
+    <!-- ========================================================
+         MODAL 1: REGULAR POST VIEW (WITH IMDB METADATA BOX)
+         ======================================================== -->
+    <div class="modal-overlay" id="movieModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeModal('movieModal')"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="post-header-view">
+                <img id="postPosterImg" src="" class="post-poster-img" alt="Poster">
+                <div class="post-meta-info">
+                    <h2 id="modalMovieTitle">Title</h2>
+                    <div class="post-badges-row">
+                        <span class="meta-pill" id="badgeType">Movie</span>
+                        <span class="meta-pill" id="badgeQuality">1080p HD</span>
+                        <span class="meta-pill" id="badgeYear">2024</span>
+                        <span class="meta-pill" id="badgeMainCat">Movies</span>
+                        <span class="meta-pill" id="badgeSubCat">Bollywood</span>
+                    </div>
+                    <div class="real-time-stamp">
+                        <i class="fa-regular fa-clock" style="color:var(--cyan-accent);"></i>
+                        <span id="badgeDateTime">Posted: Real-Time</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REAL IMDB METADATA BOX -->
+            <div class="imdb-details-panel" id="modalImdbPanel" style="display:none;">
+                <div class="imdb-rating-row">
+                    <span class="imdb-badge">IMDb</span>
+                    <span class="imdb-score-text" id="modalImdbScore">7.6</span>
+                </div>
+                <div class="imdb-specs-list">
+                    <div class="imdb-spec-item" id="modalGenreRow">
+                        <strong>Genre:</strong> <span id="modalGenreVal">Horror, Sci-Fi, Thriller</span>
+                    </div>
+                    <div class="imdb-spec-item" id="modalDurationRow">
+                        <strong>Duration:</strong> <span id="modalDurationVal">1h 49m</span>
+                        &nbsp;&nbsp;•&nbsp;&nbsp;
+                        <strong>Country:</strong> <span id="modalCountryVal">USA</span>
+                    </div>
+                    <div class="imdb-spec-item" id="modalDirectorRow">
+                        <strong>Director:</strong> <span id="modalDirectorVal">James Watkins</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-description-box" id="modalMovieDesc">
+                Description goes here...
+            </div>
+
+            <div class="post-tags-wrapper" id="modalPostTags"></div>
+
+            <!-- CINEMA STYLE CAST & CHARACTERS -->
+            <div class="post-cast-container" id="modalCastContainer" style="display:none;">
+                <div class="cast-section-header">
+                    <div class="cast-section-title">
+                        <i class="fa-solid fa-users"></i> Cast & Characters
+                    </div>
+                    <div class="cast-count-label" id="modalCastCount">0 members</div>
+                </div>
+                <div class="cast-scroll-container" id="modalCastGrid"></div>
+            </div>
+
+            <div class="series-episodes-panel" id="seriesEpisodePanel" style="display:none;">
+                <div class="now-playing-label" id="nowPlayingText">Select an Episode to Watch & Download:</div>
+                <div class="season-tabs-row" id="seasonTabsContainer"></div>
+                <div class="episodes-grid" id="episodesGridContainer"></div>
+            </div>
+
+            <div class="action-buttons-group" id="movieActionButtons">
+                <button class="btn-watch-online" id="btnTriggerPlayer" onclick="toggleOnlinePlayer()">
+                    <i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)
+                </button>
+            </div>
+
+            <div class="player-container-box" id="playerWrapper">
+                <div class="streaming-servers-box" id="serversSwitchContainer" style="display:none;">
+                    <div class="servers-title-badge">
+                        <i class="fa-solid fa-server"></i> Switch Video Server:
+                    </div>
+                    <div class="servers-btn-grid" id="modalServersGrid"></div>
+                </div>
+                
+                <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen></iframe>
+            </div>
+
+            <div id="movieDownloadsWrapper" style="margin-top:14px;">
+                <div class="servers-title-badge" id="downloadHeading" style="margin-bottom:8px;">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Available Download Mirrors:
+                </div>
+                <div class="multi-downloads-container" id="modalDownloadsList"></div>
+            </div>
+
+            <div id="seriesDownloadGroup" style="display:none; margin-top:14px;">
+                <a id="seriesEpisodeDownloadBtn" href="#" target="_blank" class="btn-download-server-pill">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Download Selected Episode (Mega / GDrive)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 2: COMING SOON UPCOMING POST PREVIEW
+         ======================================================== -->
+    <div class="modal-overlay" id="comingSoonModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeModal('comingSoonModal')"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="post-header-view">
+                <img id="csModalPoster" src="" class="post-poster-img" alt="Upcoming Poster">
+                <div class="post-meta-info">
+                    <h2 id="csModalTitle">Upcoming Title</h2>
+                    <div class="post-badges-row">
+                        <span class="meta-pill" style="background:#f59e0b; color:#000; font-weight:800;">COMING SOON</span>
+                        <span class="meta-pill" id="csModalCat">Bollywood</span>
+                    </div>
+                    <div class="real-time-stamp expected-date-tag">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        <span id="csModalDate">Releasing: Friday</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-description-box" id="csModalDesc">
+                Upcoming plot summary...
+            </div>
+
+            <div id="csTrailerWrapper" style="display:none; margin-top:14px;">
+                <div class="servers-title-badge" style="color:#f59e0b;">
+                    <i class="fa-solid fa-play"></i> Official Trailer / Teaser:
+                </div>
+                <iframe id="csTrailerFrame" class="player-frame" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 3: 7 FULL DETAILED LEGAL & ABOUT PAGES
+         ======================================================== -->
+    <div class="modal-overlay" id="legalPageModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeModal('legalPageModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 id="legalModalTitle" style="color: var(--cyan-accent); margin-bottom: 15px; font-size: 18px;"></h2>
+            <div id="legalModalContent" style="color: #cbd3e8; font-size: 13px; line-height: 1.8;"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 4: INTERACTIVE CONTACT & SUPPORT FORM
+         ======================================================== -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-box" style="max-width: 480px;">
+            <button class="close-modal-btn" onclick="closeModal('contactModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="color: var(--cyan-accent); margin-bottom: 6px; font-size: 18px;">
+                <i class="fa-solid fa-envelope-open-text"></i> Contact & Support Desk
+            </h2>
+            <p style="color: #8c94ac; font-size: 12px; margin-bottom: 14px;">
+                Have queries, broken link reports, or DMCA inquiries? Send us a direct message:
+            </p>
+            <form id="userContactForm" onsubmit="handleContactSubmit(event)">
+                <div class="form-group">
+                    <label>Your Full Name</label>
+                    <input type="text" id="contactUserName" placeholder="e.g. Rahul Sharma" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Email Address</label>
+                    <input type="email" id="contactUserEmail" placeholder="e.g. yourname@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Subject / Purpose</label>
+                    <select id="contactUserSubject">
+                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Report Broken Link">Report Broken Video / Download Mirror</option>
+                        <option value="DMCA Removal Request">DMCA Copyright Removal</option>
+                        <option value="Movie or Series Request">Movie / Series Request</option>
+                        <option value="Business Proposal">Business / Partnership Proposal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Message / Details</label>
+                    <textarea id="contactUserMessage" rows="4" placeholder="Explain your inquiry with exact page URLs if applicable..." required></textarea>
+                </div>
+                <button type="submit" class="btn-cyan">
+                    <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 5: ADMIN LOGIN
+         ======================================================== -->
+    <div class="modal-overlay" id="adminAuthModal">
+        <div class="modal-box" style="max-width: 400px; text-align: center;">
+            <button class="close-modal-btn" onclick="closeModal('adminAuthModal')"><i class="fa-solid fa-xmark"></i></button>
+            <i class="fa-solid fa-shield-cat" style="font-size: 40px; color: var(--cyan-accent); margin-bottom: 12px;"></i>
+            <h2 style="color: #fff; margin-bottom: 15px; font-size: 18px;">Admin Staff Login</h2>
+            
+            <div class="form-group" style="text-align: left;">
+                <label>Admin Username</label>
+                <input type="text" id="authUsername" placeholder="Enter username">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+                <label>Admin Password</label>
+                <input type="password" id="authPassword" placeholder="Enter password">
+            </div>
+
+            <button class="btn-cyan" onclick="performAdminLogin()">Log In to Dashboard</button>
+            <p style="margin-top: 14px; font-size: 12px;">
+                <a style="color: #646c84; cursor: pointer; text-decoration: underline;" onclick="openForgotPassModal()">Forgot Password?</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 6: FORGOT PASSWORD
+         ======================================================== -->
+    <div class="modal-overlay" id="forgotPassModal">
+        <div class="modal-box" style="max-width: 400px;">
+            <button class="close-modal-btn" onclick="closeModal('forgotPassModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color: var(--cyan-accent); margin-bottom: 12px;">Recover Password</h3>
+            <p style="font-size: 12px; color: #9aa2ba; margin-bottom: 12px;">Enter Master Security Recovery PIN:</p>
+            <div class="form-group">
+                <input type="password" id="recoveryPinInput" placeholder="Enter Security PIN (Default: 7860)">
+            </div>
+            <button class="btn-cyan" onclick="verifyRecoveryPin()">Verify & Recover</button>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 7: CYBER POPUP FOR EDITING SEASON NAME
+         ======================================================== -->
+    <div class="modal-overlay" id="editSeasonModal">
+        <div class="modal-box" style="max-width: 380px;">
+            <button class="close-modal-btn" onclick="closeModal('editSeasonModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color: var(--cyan-accent); margin-bottom: 14px; font-size: 16px;">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Season Name
+            </h3>
+            <div class="form-group">
+                <label>Season Name</label>
+                <input type="text" id="editSeasonInputName" placeholder="e.g. Season 2">
+            </div>
+            <input type="hidden" id="editSeasonTargetIdx" value="">
+            <button type="button" class="btn-cyan" onclick="saveEditedSeasonName()">
+                <i class="fa-solid fa-check"></i> Save Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 8: CYBER POPUP FOR EDITING CATEGORY / SUBCATEGORY
+         ======================================================== -->
+    <div class="modal-overlay" id="editCategoryModal">
+        <div class="modal-box" style="max-width: 380px;">
+            <button class="close-modal-btn" onclick="closeModal('editCategoryModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color: var(--cyan-accent); margin-bottom: 14px; font-size: 16px;">
+                <i class="fa-solid fa-pen-to-square"></i> <span id="editCatModalTitle">Edit Category</span>
+            </h3>
+            <div class="form-group">
+                <label id="editCatInputLabel">Category Name</label>
+                <input type="text" id="editCategoryInputName" placeholder="Enter name">
+            </div>
+            <input type="hidden" id="editCatType" value="">
+            <input type="hidden" id="editCatMainIdx" value="">
+            <input type="hidden" id="editCatSubIdx" value="">
+            <button type="button" class="btn-cyan" onclick="saveEditedCategory()">
+                <i class="fa-solid fa-check"></i> Save Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         FULL SCREEN ADMIN DASHBOARD
+         ======================================================== -->
+    <div class="admin-dashboard-overlay" id="adminDashboard">
+        <div class="admin-top-bar">
+            <h2 style="color:var(--cyan-accent);"><i class="fa-solid fa-terminal"></i> Admin Control Center</h2>
+            <button onclick="exitAdminDashboard()" style="background:#191d2e; color:#fff; border:1px solid rgba(0,229,255,0.4); padding:8px 14px; border-radius:6px; cursor:pointer;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit to Site
+            </button>
+        </div>
+
+        <div class="admin-tabs-nav">
+            <button class="admin-tab-btn active" onclick="switchAdminTab('panelMovies')"><i class="fa-solid fa-film"></i> Upload Post</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelTopTrending')"><i class="fa-solid fa-fire-flame-curved"></i> Top 10 Trending</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelComingSoon')"><i class="fa-solid fa-hourglass-half"></i> Coming Soon</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelCategories')"><i class="fa-solid fa-layer-group"></i> Categories</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelBranding')"><i class="fa-solid fa-paint-roller"></i> Logo Setup</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelSocials')"><i class="fa-solid fa-share-nodes"></i> Social Icons</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelSecurity')"><i class="fa-solid fa-lock"></i> Security</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelBackup')"><i class="fa-solid fa-database"></i> Backup</button>
+        </div>
+
+        <!-- TAB 1: UPLOAD MOVIES & SERIES (WITH 1-CLICK MULTI-KEY IMDB FETCHER) -->
+        <div class="admin-tab-panel active" id="panelMovies">
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-circle-plus" id="formHeaderIcon"></i> 
+                    <span id="formHeaderTitle">Publish New Post</span>
+                </div>
+
+                <div class="type-selector-box">
+                    <button type="button" class="type-btn-choice active" id="typeBtnMovie" onclick="selectPostType('movie')">
+                        <i class="fa-solid fa-film"></i> Single Movie
+                    </button>
+                    <button type="button" class="type-btn-choice" id="typeBtnSeries" onclick="selectPostType('series')">
+                        <i class="fa-solid fa-tv"></i> Web Series / Drama
+                    </button>
+                </div>
+
+                <form id="adminAddMovieForm">
+                    <input type="hidden" id="editMovieId" value="">
+                    <input type="hidden" id="inPostType" value="movie">
+
+                    <div style="display: flex; gap: 10px; align-items: flex-end;">
+                        <div class="form-group" style="flex:2;">
+                            <label>Title (or IMDb ID like tt0111161)</label>
+                            <input type="text" id="inMovieTitle" placeholder="e.g. The Shawshank Redemption / tt0111161" required>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Release Year</label>
+                            <input type="text" id="inMovieYear" placeholder="e.g. 1994">
+                        </div>
+                        <div class="form-group" style="flex-shrink:0;">
+                            <button type="button" class="btn-imdb-autofetch" onclick="autoFetchImdbData()">
+                                <i class="fa-solid fa-bolt"></i> Auto-Fetch IMDb
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REAL IMDB & METADATA BUILDER -->
+                    <div class="link-builder-card" style="border-color: rgba(245, 197, 24, 0.4);">
+                        <div style="font-size:14px; font-weight:700; color:var(--imdb-yellow); margin-bottom:10px;">
+                            <i class="fa-brands fa-imdb" style="font-size:18px;"></i> Real IMDb Rating & Metadata Details (Auto-Filled)
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex:1;">
+                                <label>IMDb Score (e.g. 9.3 / 7.6)</label>
+                                <input type="text" id="inImdbRating" placeholder="e.g. 9.3">
+                            </div>
+                            <div class="form-group" style="flex:2;">
+                                <label>Genre (e.g. Drama, Crime)</label>
+                                <input type="text" id="inGenre" placeholder="e.g. Drama, Crime">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex:1;">
+                                <label>Duration / Runtime (e.g. 2h 22m)</label>
+                                <input type="text" id="inDuration" placeholder="e.g. 2h 22m">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Country (e.g. USA / India / Turkey)</label>
+                                <input type="text" id="inCountry" placeholder="e.g. USA">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Director (e.g. Frank Darabont)</label>
+                                <input type="text" id="inDirector" placeholder="e.g. Frank Darabont">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>Main Category</label>
+                            <select id="inMainCat" onchange="syncSubCatSelector()" required></select>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Sub Category</label>
+                            <select id="inSubCat" required></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Poster Image Direct URL (ImgBB Direct Link)</label>
+                        <input type="url" id="inPoster" placeholder="https://i.ibb.co/.../poster.jpg" required>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>Quality Tag</label>
+                            <input type="text" id="inQuality" value="1080p HD" required>
+                        </div>
+                        <div class="form-group" style="flex:2;">
+                            <label>SEO & Search Tags (Comma separated)</label>
+                            <input type="text" id="inTags" placeholder="e.g. Drama, Crime, Tim Robbins, Morgan Freeman">
+                        </div>
+                    </div>
+
+                    <div id="movieSpecificFields">
+                        <div class="link-builder-card">
+                            <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
+                                <i class="fa-solid fa-server"></i> Multiple Streaming Servers (Watch Players)
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label>Server Name</label>
+                                    <input type="text" id="srvNameInput" placeholder="e.g. Server 1 (Streamtape)">
+                                </div>
+                                <div class="form-group" style="flex:2;">
+                                    <label>Embed Player URL</label>
+                                    <input type="url" id="srvUrlInput" placeholder="https://streamtape.com/e/...">
+                                </div>
+                            </div>
+                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addStreamServer()">
+                                <i class="fa-solid fa-plus"></i> + Add Streaming Server
+                            </button>
+                            <div class="added-episodes-table" id="adminServersListContainer"></div>
+                        </div>
+
+                        <div class="link-builder-card">
+                            <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> Multiple Download Mirrors
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label>Source / Server Name</label>
+                                    <input type="text" id="dlNameInput" placeholder="e.g. Mega.nz (1080p HD)">
+                                </div>
+                                <div class="form-group" style="flex:2;">
+                                    <label>Download URL</label>
+                                    <input type="url" id="dlUrlInput" placeholder="https://mega.nz/... or Drive link">
+                                </div>
+                            </div>
+                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addDownloadServer()">
+                                <i class="fa-solid fa-plus"></i> + Add Download Mirror
+                            </button>
+                            <div class="added-episodes-table" id="adminDownloadsListContainer"></div>
+                        </div>
+                    </div>
+
+                    <div id="seriesSpecificFields" style="display:none;">
+                        <div class="episode-admin-card">
+                            <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
+                                <i class="fa-solid fa-folder-tree"></i> Step 1: Manage Seasons (Add, Edit, Delete)
+                            </div>
+                            
+                            <div class="season-control-row">
+                                <input type="text" id="newSeasonNameInput" placeholder="Season Name (e.g. Season 2)">
+                                <button type="button" class="btn-add-season" onclick="addSeasonToSeries()">
+                                    <i class="fa-solid fa-plus"></i> Add Season
+                                </button>
+                            </div>
+
+                            <div style="font-size:11px; color:#8c94ac; margin-bottom:6px;">Current Seasons:</div>
+                            <div class="seasons-badge-list" id="adminSeasonsBadgesContainer"></div>
+
+                            <div class="sidebar-divider" style="margin:12px 0;"></div>
+
+                            <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:12px;">
+                                <i class="fa-solid fa-list-ol"></i> Step 2: Add Episode to Selected Season
+                            </div>
+
+                            <div style="display:flex; gap:8px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label>Select Season</label>
+                                    <select id="epSeasonSelectDropdown"></select>
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label>Episode Title / No</label>
+                                    <input type="text" id="epNumberInput" placeholder="e.g. Episode 01">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Episode Streamtape Link</label>
+                                <input type="url" id="epStreamInput" placeholder="https://streamtape.com/e/...">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Episode Mega/Drive Download Link</label>
+                                <input type="url" id="epDownloadInput" placeholder="https://mega.nz/... or Drive link">
+                            </div>
+
+                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addEpisodeToList()">
+                                <i class="fa-solid fa-plus"></i> + Add This Episode to Season
+                            </button>
+
+                            <div class="added-episodes-table" id="adminEpisodeListContainer"></div>
+                        </div>
+                    </div>
+
+                    <!-- CAST & CHARACTERS BUILDER WITH ACTOR PHOTO -->
+                    <div class="cast-admin-card" style="margin-bottom:14px;">
+                        <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
+                            <i class="fa-solid fa-users"></i> Cast & Characters (Actor Photo, Real Name, Role & Social)
+                        </div>
+
+                        <div style="display:flex; gap:8px;">
+                            <div class="form-group" style="flex:1;">
+                                <label>Actor Real Name</label>
+                                <input type="text" id="castNameInput" placeholder="e.g. Tim Robbins">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Character / Role Name</label>
+                                <input type="text" id="castRoleInput" placeholder="e.g. Andy Dufresne">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Actor Portrait Photo Direct URL (ImgBB Direct .jpg/.png Link)</label>
+                            <input type="url" id="castPhotoInput" placeholder="https://i.ibb.co/.../actor.jpg">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Social Profile Link (Instagram / Twitter / IMDb)</label>
+                            <input type="url" id="castSocialInput" placeholder="https://instagram.com/yourprofile">
+                        </div>
+
+                        <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addCastMember()">
+                            <i class="fa-solid fa-user-plus"></i> + Add Cast Member
+                        </button>
+
+                        <div class="added-episodes-table" id="adminCastListContainer"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description / Storyline</label>
+                        <textarea id="inDesc" rows="3" placeholder="Write plot summary..."></textarea>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button type="submit" class="btn-cyan" id="btnSubmitMovieForm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Publish Post
+                        </button>
+                        <button type="button" class="btn-delete-item" id="btnCancelEdit" style="display:none; padding:12px 18px; font-size:13px;" onclick="cancelMovieEdit()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-list-check"></i> All Posted Content (<span id="totalMovieBadge">0</span>)</div>
+                <div id="adminMoviesList"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TOP 10 TRENDING / MOST WATCHED MANAGER -->
+        <div class="admin-tab-panel" id="panelTopTrending">
+            <div class="admin-card">
+                <div class="admin-card-title" style="color:var(--pink-accent);">
+                    <i class="fa-solid fa-fire-flame-curved" style="color:var(--pink-accent);"></i> 
+                    <span>Add to Top 10 Trending / Most Watched</span>
+                </div>
+
+                <form id="adminAddTrendingForm" onsubmit="handleSaveTrending(event)">
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:2;">
+                            <label>Select Movie / Series from Catalog</label>
+                            <select id="inTrendingMovieSelect" required></select>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Rank Number (1, 2, 3...)</label>
+                            <input type="number" id="inTrendingRank" min="1" placeholder="e.g. 1" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-pink">
+                        <i class="fa-solid fa-trophy"></i> Add to Top Trending Ranks
+                    </button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title" style="color:var(--pink-accent);">
+                    <i class="fa-solid fa-ranking-star"></i> Current Top 10 Rankings (<span id="totalTrendingBadge">0</span>)
+                </div>
+                <div id="adminTrendingList"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: COMING SOON / UPCOMING MANAGER -->
+        <div class="admin-tab-panel" id="panelComingSoon">
+            <div class="admin-card">
+                <div class="admin-card-title" style="color:var(--gold-accent);">
+                    <i class="fa-solid fa-hourglass-half" style="color:var(--gold-accent);"></i> 
+                    <span id="csFormHeaderTitle">Add Upcoming / Coming Soon Release</span>
+                </div>
+
+                <form id="adminAddComingSoonForm" onsubmit="handleSaveComingSoon(event)">
+                    <input type="hidden" id="editComingSoonId" value="">
+
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:2;">
+                            <label>Upcoming Title</label>
+                            <input type="text" id="inCsTitle" placeholder="e.g. Pushpa 2: The Rule" required>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Category / Language</label>
+                            <input type="text" id="inCsCategory" placeholder="e.g. Indian / Action" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Expected Release Day / Date (Shows under poster)</label>
+                        <input type="text" id="inCsReleaseDate" placeholder="e.g. Releasing this Friday / 15 Nov" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Poster Direct URL (ImgBB Direct Link)</label>
+                        <input type="url" id="inCsPoster" placeholder="https://i.ibb.co/.../poster.jpg" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>YouTube / Teaser Embed URL (Optional)</label>
+                        <input type="url" id="inCsTrailer" placeholder="https://www.youtube.com/embed/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Storyline / Teaser Synopsis</label>
+                        <textarea id="inCsDesc" rows="3" placeholder="Brief story or teaser description..."></textarea>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button type="submit" class="btn-gold" id="btnSubmitCsForm">
+                            <i class="fa-solid fa-hourglass-start"></i> Publish Coming Soon
+                        </button>
+                        <button type="button" class="btn-delete-item" id="btnCancelCsEdit" style="display:none; padding:12px 18px; font-size:13px;" onclick="cancelComingSoonEdit()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title" style="color:var(--gold-accent);">
+                    <i class="fa-solid fa-clock-rotate-left"></i> All Upcoming Releases (<span id="totalCsBadge">0</span>)
+                </div>
+                <div id="adminComingSoonList"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: CATEGORIES -->
+        <div class="admin-tab-panel" id="panelCategories">
+            <div class="admin-card">
+                <div class="admin-card-title">1. Create Main Category</div>
+                <div class="form-group">
+                    <input type="text" id="inNewMainCat" placeholder="e.g. Anime, South Movies">
+                </div>
+                <button class="btn-cyan" onclick="createMainCategory()">Add Main Category</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title">2. Add Subcategory under Parent</div>
+                <div class="form-group">
+                    <label>Select Parent Category</label>
+                    <select id="parentCatSelect"></select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="inNewSubCat" placeholder="e.g. Hindi Dubbed, Punjabi">
+                </div>
+                <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title">Categories Tree (Edit & Delete Available)</div>
+                <div id="categoryTree"></div>
+            </div>
+        </div>
+
+        <!-- TAB 5: BRANDING -->
+        <div class="admin-tab-panel" id="panelBranding">
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-signature"></i> Website Logo Setup</div>
+                <div class="form-group">
+                    <label>Logo Type</label>
+                    <select id="logoTypeSelect" onchange="toggleLogoInputType()">
+                        <option value="text">Text Logo (e.g. MoviesFlix)</option>
+                        <option value="image">Image Logo (ImgBB Direct URL)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="logoTextInputGroup">
+                    <label>Brand Name / Text Logo</label>
+                    <input type="text" id="inLogoText" placeholder="MoviesFlix">
+                </div>
+
+                <div class="form-group" id="logoImageInputGroup" style="display:none;">
+                    <label>Logo Image Direct Link (ImgBB Direct URL)</label>
+                    <input type="url" id="inLogoImage" placeholder="https://i.ibb.co/.../logo.png">
+                </div>
+
+                <button class="btn-cyan" onclick="saveLogoSettings()">Save Logo Settings</button>
+            </div>
+        </div>
+
+        <!-- TAB 6: SOCIAL ICONS MANAGER -->
+        <div class="admin-tab-panel" id="panelSocials">
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-plus-circle"></i> Add New Social Icon</div>
+                <div class="form-group">
+                    <label>Choose Social Network</label>
+                    <select id="newSocialPlatform">
+                        <option value="telegram">Telegram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="twitter">Twitter / X</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="discord">Discord</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Profile / Channel URL</label>
+                    <input type="url" id="newSocialUrl" placeholder="https://t.me/yourchannel">
+                </div>
+                <button class="btn-cyan" onclick="addSocialIcon()"><i class="fa-solid fa-plus"></i> Add Social Link</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-icons"></i> Active Social Icons (Click Delete to Remove)</div>
+                <div id="activeSocialIconsList"></div>
+            </div>
+        </div>
+
+        <!-- TAB 7: SECURITY -->
+        <div class="admin-tab-panel" id="panelSecurity">
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-key"></i> Change Admin Credentials</div>
+                <div class="form-group">
+                    <label>New Username</label>
+                    <input type="text" id="newUsernameInput">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPasswordInput">
+                </div>
+                <div class="form-group">
+                    <label>Master Security PIN (4-Digits)</label>
+                    <input type="password" id="newPinInput" maxlength="6">
+                </div>
+                <button class="btn-cyan" onclick="updateAdminCredentials()">Save Security Settings</button>
+            </div>
+        </div>
+
+        <!-- TAB 8: BACKUP -->
+        <div class="admin-tab-panel" id="panelBackup">
+            <div class="admin-card">
+                <div class="admin-card-title">Site Backup & Restore</div>
+                <textarea id="backupTextarea" rows="6" style="width:100%; background:#05070a; color:#00e5ff; font-family:monospace; padding:10px; border-radius:6px; border:1px solid #1f2333;"></textarea>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-cyan" onclick="exportDataBackup()">Generate Backup</button>
+                    <button class="btn-cyan" style="background:#00c853;" onclick="importDataBackup()">Restore Backup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         JAVASCRIPT LOGIC
+         ======================================================== -->
+    <script>
+        // 1. DATA INITIALIZATION
+        const defaultCats = [
+            { name: "Movies", subcategories: ["Bollywood", "Hollywood", "Indian Hindi Dubbed", "Pakistani", "Punjabi"] },
+            { name: "Web Series", subcategories: ["Turkish Drama", "Hindi Series", "Korean Drama"] }
+        ];
+
+        const defaultMovies = [
+            {
+                id: 101,
+                type: "movie",
+                title: "Animal",
+                year: "2023",
+                mainCategory: "Movies",
+                subCategory: "Bollywood",
+                quality: "1080p HD",
+                tags: "Action, Crime, Drama, Ranbir Kapoor, Bollywood 2023",
+                poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
+                desc: "A son's obsessive love for his father leads to an intense path of revenge and violent conflicts against dangerous underworld gangs.",
+                dateTime: "24 Oct 2026, 02:40 PM",
+                imdbRating: "6.2",
+                genre: "Action, Crime, Drama",
+                duration: "3h 24m",
+                country: "India",
+                director: "Sandeep Reddy Vanga",
+                servers: [
+                    { id: 1, name: "Server 1 (Streamtape Fast)", url: "https://streamtape.com/e/demo1" },
+                    { id: 2, name: "Server 2 (HD Cloud Mirror)", url: "https://streamtape.com/e/demo1" }
+                ],
+                downloads: [
+                    { id: 1, name: "Mega.nz (1080p Web-DL)", url: "https://mega.nz" },
+                    { id: 2, name: "Google Drive (Fast Direct)", url: "https://drive.google.com" }
+                ],
+                episodes: [],
+                cast: [
+                    { 
+                        id: 1, 
+                        name: "Ranbir Kapoor", 
+                        role: "Ranvijay Singh", 
+                        photo: "https://image.tmdb.org/t/p/w200/nUq8gN2hZf9Z8r5z0mQ6k3eF9Xy.jpg", 
+                        socialUrl: "https://instagram.com" 
+                    },
+                    { 
+                        id: 2, 
+                        name: "Anil Kapoor", 
+                        role: "Balbir Singh", 
+                        photo: "https://image.tmdb.org/t/p/w200/5k7rUoG98k3Y6l2bF1e8K9Vb8u.jpg", 
+                        socialUrl: "https://twitter.com" 
+                    },
+                    { 
+                        id: 3, 
+                        name: "Rashmika Mandanna", 
+                        role: "Geetanjali", 
+                        photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", 
+                        socialUrl: "https://instagram.com" 
+                    }
+                ]
+            },
+            {
+                id: 102,
+                type: "series",
+                title: "Kurulus Osman",
+                year: "2024",
+                mainCategory: "Web Series",
+                subCategory: "Turkish Drama",
+                quality: "720p HD",
+                tags: "Historical, Action, Adventure, Turkish Drama, Osman Bey",
+                poster: "https://image.tmdb.org/t/p/w500/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg",
+                desc: "The life of Osman Bey, son of Ertugrul Gazi and founder of the Ottoman Empire, fighting against Byzantine forces and Mongol threats.",
+                dateTime: "24 Oct 2026, 02:45 PM",
+                imdbRating: "7.7",
+                genre: "Action, Adventure, Drama",
+                duration: "2h 10m / ep",
+                country: "Turkey",
+                director: "Metin Günay, Ahmet Yılmaz",
+                servers: [],
+                downloads: [],
+                episodes: [
+                    { id: 1, season: "Season 1", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_ep1", downloadUrl: "https://mega.nz/file/ep1" },
+                    { id: 2, season: "Season 1", title: "Episode 02", streamUrl: "https://streamtape.com/e/demo_ep2", downloadUrl: "https://mega.nz/file/ep2" },
+                    { id: 3, season: "Season 2", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_s2ep1", downloadUrl: "https://mega.nz/file/s2ep1" }
+                ],
+                cast: [
+                    { 
+                        id: 1, 
+                        name: "Burak Özçivit", 
+                        role: "Osman Bey", 
+                        photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", 
+                        socialUrl: "https://instagram.com" 
+                    },
+                    { 
+                        id: 2, 
+                        name: "Özge Törer", 
+                        role: "Bala Hatun", 
+                        photo: "https://image.tmdb.org/t/p/w200/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg", 
+                        socialUrl: "https://instagram.com" 
+                    }
+                ]
+            }
+        ];
+
+        const defaultTrending = [
+            { id: 1, movieId: 101, rank: 1 },
+            { id: 2, movieId: 102, rank: 2 }
+        ];
+
+        const defaultComingSoon = [
+            {
+                id: 201,
+                title: "Pushpa 2: The Rule",
+                category: "Indian / Action",
+                releaseDate: "Releasing this Friday / 30 Oct",
+                poster: "https://image.tmdb.org/t/p/w500/b0Onv3t8k5pYf9R4VbB8x0K9v8u.jpg",
+                trailerUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                desc: "Pushpa Raj continues his dominance in the red sandalwood smuggling syndicate, clashing fiercely with SP Bhanwar Singh Shekhawat."
+            }
+        ];
+
+        const defaultSocials = [
+            { id: 1, platform: "telegram", icon: "fa-brands fa-telegram", url: "https://t.me" },
+            { id: 2, platform: "facebook", icon: "fa-brands fa-facebook-f", url: "https://facebook.com" },
+            { id: 3, platform: "instagram", icon: "fa-brands fa-instagram", url: "https://instagram.com" }
+        ];
+
+        let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
+        let movies = JSON.parse(localStorage.getItem('mf_movies')) || defaultMovies;
+        let trending = JSON.parse(localStorage.getItem('mf_trending')) || defaultTrending;
+        let comingSoon = JSON.parse(localStorage.getItem('mf_coming_soon')) || defaultComingSoon;
+        let socials = JSON.parse(localStorage.getItem('mf_socials')) || defaultSocials;
+        let auth = JSON.parse(localStorage.getItem('mf_auth')) || { username: "admin", password: "admin123", pin: "7860" };
+        let branding = JSON.parse(localStorage.getItem('mf_branding')) || {
+            logoType: "text",
+            logoText: "MoviesFlix",
+            logoImage: ""
+        };
+        let notifications = JSON.parse(localStorage.getItem('mf_notifs')) || [
+            { id: 1, text: "Welcome to MoviesFlix! Fast Streaming & Direct Downloads." }
+        ];
+
+        let tempEpisodesList = [];
+        let tempCastList = [];
+        let tempServersList = [];
+        let tempDownloadsList = [];
+        let currentFormSeasons = ["Season 1"];
+
+        function persistAll() {
+            localStorage.setItem('mf_categories', JSON.stringify(categories));
+            localStorage.setItem('mf_movies', JSON.stringify(movies));
+            localStorage.setItem('mf_trending', JSON.stringify(trending));
+            localStorage.setItem('mf_coming_soon', JSON.stringify(comingSoon));
+            localStorage.setItem('mf_socials', JSON.stringify(socials));
+            localStorage.setItem('mf_auth', JSON.stringify(auth));
+            localStorage.setItem('mf_branding', JSON.stringify(branding));
+            localStorage.setItem('mf_notifs', JSON.stringify(notifications));
+        }
+
+        // 2. PROFESSIONAL CYBER TOAST SYSTEM
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `cyber-toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `
+                <i class="${isError ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOutToast 0.3s forwards';
+                setTimeout(() => { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // 3. LOGO & BRANDING RENDERING
+        function renderBranding() {
+            const logoTextEl = document.getElementById('brandLogoText');
+            const logoImgEl = document.getElementById('brandLogoImg');
+
+            if (branding.logoType === 'image' && branding.logoImage) {
+                logoTextEl.style.display = 'none';
+                logoImgEl.style.display = 'block';
+                logoImgEl.src = branding.logoImage;
+            } else {
+                logoTextEl.style.display = 'block';
+                logoImgEl.style.display = 'none';
+                
+                let rawText = branding.logoText || "MoviesFlix";
+                if(rawText.toLowerCase().includes("flix")) {
+                    let base = rawText.replace(/flix/gi, '');
+                    logoTextEl.innerHTML = `${base || 'Movies'}<span>Flix</span>`;
+                } else {
+                    logoTextEl.innerHTML = `${rawText}<span>Flix</span>`;
+                }
+            }
+            renderSocialIcons();
+        }
+
+        function goHome() {
+            closeModal('movieModal');
+            closeModal('comingSoonModal');
+            closeModal('legalPageModal');
+            closeModal('contactModal');
+            closeModal('editSeasonModal');
+            closeModal('editCategoryModal');
+            closeSidebar();
+            document.getElementById('searchInput').value = '';
+            renderMoviesGrid(movies, true);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderSocialIcons() {
+            const container = document.getElementById('socialIconsContainer');
+            container.innerHTML = '';
+            socials.forEach(s => {
+                const a = document.createElement('a');
+                a.href = s.url;
+                a.target = "_blank";
+                a.className = "social-pill";
+                a.innerHTML = `<i class="${s.icon}"></i>`;
+                container.appendChild(a);
+            });
+        }
+
+        // 4. RENDER MOVIES (HOME ORDER: COMING SOON -> TOP 10 TRENDING -> RECENTLY ADDED -> CATEGORIES)
+        function renderMoviesGrid(list, isHomePage = false) {
+            const container = document.getElementById('mainContent');
+            container.innerHTML = '';
+
+            if (list.length === 0 && (!isHomePage || (comingSoon.length === 0 && trending.length === 0))) {
+                container.innerHTML = '<p style="text-align:center; padding: 50px 0; color:#5d657d; font-size:14px;">No content found.</p>';
+                return;
+            }
+
+            // A. COMING SOON SECTION (ONLY ON HOME PAGE)
+            if (isHomePage && comingSoon.length > 0) {
+                const csSection = document.createElement('section');
+                csSection.className = 'category-section';
+                csSection.innerHTML = `
+                    <div class="category-heading">
+                        <div class="cat-line" style="background:#f59e0b; box-shadow:0 0 10px rgba(245,158,11,0.5);"></div>
+                        <h2><i class="fa-solid fa-hourglass-half" style="color:#f59e0b; margin-right:4px;"></i> Coming Soon / Upcoming Releases</h2>
+                    </div>
+                    <div class="movie-grid" id="grid-coming-soon"></div>
+                `;
+                container.appendChild(csSection);
+
+                const csGrid = document.getElementById('grid-coming-soon');
+                comingSoon.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'movie-card coming-soon-card';
+                    card.onclick = () => openComingSoonModal(item.id);
+                    card.innerHTML = `
+                        <div class="poster-box">
+                            <span class="coming-soon-badge">COMING SOON</span>
+                            <img src="${item.poster}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x450/111422/f59e0b?text=Coming+Soon'">
+                        </div>
+                        <div class="movie-details">
+                            <div class="movie-name">${item.title}</div>
+                            <div class="movie-meta-sub">
+                                <span class="expected-date-tag"><i class="fa-regular fa-clock"></i> ${item.releaseDate}</span>
+                            </div>
+                        </div>
+                    `;
+                    csGrid.appendChild(card);
+                });
+            }
+
+            // B. TOP 10 TRENDING SECTION (BETWEEN COMING SOON & RECENTLY)
+            if (isHomePage && trending.length > 0) {
+                const trendingSection = document.createElement('section');
+                trendingSection.className = 'category-section';
+                trendingSection.innerHTML = `
+                    <div class="category-heading">
+                        <div class="cat-line" style="background:linear-gradient(180deg, #ec4899, #8b5cf6); box-shadow:0 0 10px rgba(236,72,153,0.5);"></div>
+                        <h2><i class="fa-solid fa-fire-flame-curved" style="color:#ec4899; margin-right:4px;"></i> Top 10 Trending / Most Watched</h2>
+                    </div>
+                    <div class="movie-grid" id="grid-top-trending"></div>
+                `;
+                container.appendChild(trendingSection);
+
+                const trendingGrid = document.getElementById('grid-top-trending');
+                const sortedTrending = [...trending].sort((a, b) => a.rank - b.rank);
+
+                sortedTrending.forEach(t => {
+                    const movie = movies.find(m => m.id === t.movieId);
+                    if (movie) {
+                        const card = document.createElement('div');
+                        card.className = 'movie-card top-trending-card';
+                        card.onclick = () => openMoviePost(movie.id);
+                        card.innerHTML = `
+                            <div class="poster-box">
+                                <span class="top-10-badge">TOP 10</span>
+                                <span class="quality-badge">${movie.quality}</span>
+                                <div class="rank-badge-watermark">#${t.rank}</div>
+                                <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/111422/ec4899?text=Trending'">
+                            </div>
+                            <div class="movie-details">
+                                <div class="movie-name">${movie.title}</div>
+                                <div class="movie-meta-sub">
+                                    <span>${movie.subCategory}</span>
+                                    <span><i class="fa-regular fa-calendar"></i> ${movie.year || '2024'}</span>
+                                </div>
+                            </div>
+                        `;
+                        trendingGrid.appendChild(card);
+                    }
+                });
+            }
+
+            // C. RECENTLY ADDED SECTION (ONLY ON HOME PAGE)
+            if (isHomePage && list.length > 0) {
+                const recentSection = document.createElement('section');
+                recentSection.className = 'category-section';
+                recentSection.innerHTML = `
+                    <div class="category-heading">
+                        <div class="cat-line" style="background:#ff0055; box-shadow:0 0 10px rgba(255,0,85,0.5);"></div>
+                        <h2><i class="fa-solid fa-fire" style="color:#ff0055; margin-right:4px;"></i> Recently Added / Latest Releases</h2>
+                    </div>
+                    <div class="movie-grid" id="grid-recently-added"></div>
+                `;
+                container.appendChild(recentSection);
+
+                const recentGrid = document.getElementById('grid-recently-added');
+                const recentMovies = [...list].slice(0, 6);
+                recentMovies.forEach(movie => {
+                    recentGrid.appendChild(createMovieCardElement(movie));
+                });
+            }
+
+            // D. REGULAR CATEGORY SECTIONS
+            const subCats = [...new Set(list.map(m => m.subCategory))];
+            subCats.forEach(sub => {
+                const section = document.createElement('section');
+                section.className = 'category-section';
+                section.innerHTML = `
+                    <div class="category-heading">
+                        <div class="cat-line"></div>
+                        <h2>Category - ${sub}</h2>
+                    </div>
+                    <div class="movie-grid" id="grid-${sub.replace(/\s+/g, '-')}"></div>
+                `;
+                container.appendChild(section);
+
+                const grid = document.getElementById(`grid-${sub.replace(/\s+/g, '-')}`);
+                const subMovies = list.filter(m => m.subCategory === sub);
+                subMovies.forEach(movie => {
+                    grid.appendChild(createMovieCardElement(movie));
+                });
+            });
+        }
+
+        function createMovieCardElement(movie) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.onclick = () => openMoviePost(movie.id);
+            const isSeries = movie.type === 'series';
+            card.innerHTML = `
+                <div class="poster-box">
+                    <span class="type-badge" style="${isSeries ? 'background: #00e5ff; color:#000;' : 'background: #6366f1; color:#fff;'}">${isSeries ? 'Series' : 'Movie'}</span>
+                    <span class="quality-badge">${movie.quality}</span>
+                    <span class="year-badge">${movie.year || '2024'}</span>
+                    <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/111422/00e5ff?text=No+Poster'">
+                </div>
+                <div class="movie-details">
+                    <div class="movie-name">${movie.title}</div>
+                    <div class="movie-meta-sub">
+                        <span>${movie.subCategory}</span>
+                        <span><i class="fa-regular fa-calendar"></i> ${movie.year || '2024'}</span>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // 5. SIDEBAR RENDERING
+        function renderSidebarMenu() {
+            const menu = document.getElementById('sidebarDynamicMenu');
+            menu.innerHTML = '';
+
+            categories.forEach((cat, idx) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <button class="menu-cat-btn" onclick="toggleSubmenu('sub-${idx}')">
+                        <span><i class="fa-solid fa-folder-closed" style="color:var(--cyan-accent); margin-right:8px;"></i> ${cat.name}</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
+                    </button>
+                    <ul class="submenu" id="sub-${idx}">
+                        ${cat.subcategories.map(s => `
+                            <li><a href="#" onclick="filterBySubCategory('${s}')">${s}</a></li>
+                        `).join('')}
+                    </ul>
+                `;
+                menu.appendChild(li);
+            });
+        }
+
+        function toggleSubmenu(id) {
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        function filterBySubCategory(subName) {
+            closeSidebar();
+            const filtered = movies.filter(m => m.subCategory.toLowerCase() === subName.toLowerCase());
+            renderMoviesGrid(filtered, false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 6. NOTIFICATION LOGIC
+        const notifBadge = document.getElementById('notifBadge');
+        const notifDropdown = document.getElementById('notifDropdown');
+        const notifList = document.getElementById('notifList');
+
+        function updateNotificationsUI() {
+            notifList.innerHTML = '';
+            if (notifications.length > 0) {
+                notifBadge.style.display = 'block';
+                notifBadge.innerText = notifications.length;
+
+                notifications.forEach(n => {
+                    const li = document.createElement('li');
+                    li.className = 'notif-item';
+                    li.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--cyan-accent); margin-right:5px;"></i> ${n.text}`;
+                    notifList.appendChild(li);
+                });
+            } else {
+                notifBadge.style.display = 'none';
+                notifList.innerHTML = '<li class="notif-item" style="color:#555;">No updates right now</li>';
+            }
+        }
+
+        document.getElementById('notifBox').onclick = (e) => {
+            e.stopPropagation();
+            notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+        };
+
+        document.getElementById('clearNotifBtn').onclick = (e) => {
+            e.stopPropagation();
+            notifications = [];
+            persistAll();
+            updateNotificationsUI();
+            showToast("All notifications cleared!");
+        };
+
+        window.onclick = () => { notifDropdown.style.display = 'none'; };
+
+        // 7. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
+        const legalTexts = {
+            about: {
+                title: "About MoviesFlix Streaming Company",
+                content: `
+                    <p>Welcome to <strong>MoviesFlix</strong>, your premier online destination for high-definition cinema discovery, streaming curation, and media entertainment. Established with the vision to make global cinema accessible to viewers everywhere, MoviesFlix curates and catalogs the world's finest cinematographic works—spanning Hollywood, Bollywood, Turkish Dramas, Korean Series, Pakistani hits, and regional South Asian cinema.</p>
+                    <br>
+                    <p><strong>Our Platform Mission:</strong> In an era of fragmented entertainment services, MoviesFlix provides a centralized, ultra-fast index where cinema enthusiasts can explore upcoming titles, comprehensive cast profiles, release chronologies, and verified high-speed media mirrors without intrusive obstacles.</p>
+                    <br>
+                    <p><strong>High-Speed Multi-Server Infrastructure:</strong> We prioritize smooth playback and zero buffering. Every cataloged release features multi-server video switches (Server 1, Server 2) alongside high-speed direct download mirrors (including Mega, Google Drive, and cloud CDN storage). If one server experiences latency, users can switch streaming servers with a single tap.</p>
+                    <br>
+                    <p><strong>Safe & Responsible Browsing:</strong> We operate with full compliance to digital privacy guidelines and international intellectual property frameworks. MoviesFlix does not host or store unauthorized files on its servers; we act strictly as an interactive index directory. We encourage all cinema lovers to support creative artists by buying official movie tickets and subscribing to legitimate streaming platforms.</p>
+                `
+            },
+            dmca: {
+                title: "Digital Millennium Copyright Act (DMCA) Notice & Policy",
+                content: `
+                    <p>MoviesFlix operates in compliance with 17 U.S.C. § 512 and the Digital Millennium Copyright Act (DMCA). It is our policy to respond immediately to any infringement notices and take appropriate actions under the DMCA and other applicable intellectual property laws.</p>
+                    <br>
+                    <p><strong>Non-Hosting & Third-Party Indexing Disclaimer:</strong> None of the video files, multimedia streams, or copyrighted media shown on this website are hosted on, stored on, or transmitted from our servers. All video streams and download links indexed on MoviesFlix are hosted by non-affiliated third-party servers, including but not limited to Streamtape, Google Drive, Mega, and similar cloud storage providers.</p>
+                    <br>
+                    <p><strong>Notice of Copyright Infringement:</strong> If you are a copyright owner, or are authorized to act on behalf of one, please report alleged copyright infringements by providing a written notification with the following details:</p>
+                    <ul style="padding-left:18px; margin: 8px 0;">
+                        <li>Identification of the copyrighted work claimed to have been infringed.</li>
+                        <li>Identification of the material that is claimed to be infringing, with exact web page URLs.</li>
+                        <li>Your full name, address, telephone number, and official email address.</li>
+                        <li>A statement that you have a good faith belief that use of the material is unauthorized.</li>
+                        <li>A physical or electronic signature of a person authorized to act on behalf of the owner.</li>
+                    </ul>
+                    <p>Please submit all official DMCA requests directly to: <strong>dmca@moviesflix.com</strong>. Upon receiving a valid notice, we will remove the indexed links within 24 to 48 hours.</p>
+                `
+            },
+            copyright: {
+                title: "Copyright Disclaimer (Fair Use Section 107)",
+                content: `
+                    <p>Under Section 107 of the US Copyright Act 1976, allowance is made for "fair use" for purposes such as criticism, comment, news reporting, teaching, scholarship, education, and research.</p>
+                    <br>
+                    <p><strong>Trademarks & Artwork:</strong> All movie posters, titles, trademarks, and logos displayed on this website belong to their respective film production studios, distributors, and copyright holders. MoviesFlix uses these visual elements purely for promotional and identification purposes to assist audiences in discovering official releases.</p>
+                    <br>
+                    <p>MoviesFlix does not claim ownership over any cinematographic content. We strongly encourage all visitors to support filmmakers by purchasing original tickets, DVDs, and authorized streaming platform subscriptions (Netflix, Amazon Prime, Disney+, etc.).</p>
+                `
+            },
+            privacy: {
+                title: "Privacy Policy & Data Protection",
+                content: `
+                    <p>At MoviesFlix, your digital privacy is our top priority. We are committed to maintaining a safe, transparent, and user-centric platform:</p>
+                    <br>
+                    <ul style="padding-left:18px; margin: 8px 0;">
+                        <li><strong>Zero User Registration:</strong> We do not require, collect, or store any personal credentials, phone numbers, or passwords.</li>
+                        <li><strong>Local Browser Storage:</strong> We use your browser's local storage solely to preserve your visual theme preferences and notification read status locally on your device.</li>
+                        <li><strong>No Data Harvesting:</strong> We do not sell, rent, or trade user activity logs to third-party data brokers or marketing firms.</li>
+                        <li><strong>External Links:</strong> When you click on third-party video stream providers (such as Streamtape or Mega), you are subject to the privacy terms of those respective platforms.</li>
+                    </ul>
+                `
+            },
+            terms: {
+                title: "Terms of Service (TOS)",
+                content: `
+                    <p>By browsing and accessing MoviesFlix, you acknowledge and agree to comply with the following terms:</p>
+                    <br>
+                    <ol style="padding-left:18px; margin: 8px 0;">
+                        <li>You confirm that you are at least 18 years old or are accessing this service under the direct supervision of a legal guardian.</li>
+                        <li>You recognize that MoviesFlix operates strictly as an indexing directory and possesses no control over the continuity, safety, or legality of third-party video storage servers.</li>
+                        <li>You agree not to execute automated scraping software, malicious attacks, or high-volume automated scripts that burden platform operations.</li>
+                        <li>The website and all index records are provided on an 'as-is' and 'as-available' basis without warranties of uninterrupted uptime.</li>
+                    </ol>
+                `
+            },
+            disclaimer: {
+                title: "18+ Age & Content Advisory Disclaimer",
+                content: `
+                    <p>Certain cinematographic titles cataloged within this directory may contain adult themes, intense action, strong language, psychological suspense, or mature scenes appropriate solely for adult audiences (18+).</p>
+                    <br>
+                    <p>Viewer discretion is strictly advised. Parents and legal guardians are urged to monitor minors' browsing habits. MoviesFlix assumes no liability for the interpretation, emotional impact, or viewing choices made by individual users.</p>
+                `
+            }
+        };
+
+        function openLegalPage(pageKey) {
+            closeSidebar();
+            const data = legalTexts[pageKey];
+            if (!data) return;
+            document.getElementById('legalModalTitle').innerText = data.title;
+            document.getElementById('legalModalContent').innerHTML = data.content;
+            document.getElementById('legalPageModal').style.display = 'flex';
+        }
+
+        // INTERACTIVE CONTACT FORM MODAL
+        function openContactFormModal() {
+            closeSidebar();
+            document.getElementById('contactModal').style.display = 'flex';
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactUserName').value.trim();
+            const email = document.getElementById('contactUserEmail').value.trim();
+            const subject = document.getElementById('contactUserSubject').value;
+            const message = document.getElementById('contactUserMessage').value.trim();
+
+            if (!name || !email || !message) {
+                return showToast("Please fill all required fields!", true);
+            }
+
+            document.getElementById('userContactForm').reset();
+            closeModal('contactModal');
+            showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received. Our team will email you within 24 hours.`);
+        }
+
+        // 8. OPEN COMING SOON PREVIEW MODAL
+        function openComingSoonModal(id) {
+            const item = comingSoon.find(cs => cs.id === id);
+            if (!item) return;
+
+            document.getElementById('csModalTitle').innerText = item.title;
+            document.getElementById('csModalPoster').src = item.poster;
+            document.getElementById('csModalCat').innerText = item.category || 'Upcoming';
+            document.getElementById('csModalDate').innerText = `Releasing: ${item.releaseDate}`;
+            document.getElementById('csModalDesc').innerText = item.desc || "Teaser & release details coming soon.";
+
+            const trailerWrapper = document.getElementById('csTrailerWrapper');
+            const trailerFrame = document.getElementById('csTrailerFrame');
+
+            if (item.trailerUrl && item.trailerUrl.trim() !== '') {
+                trailerWrapper.style.display = 'block';
+                trailerFrame.src = item.trailerUrl;
+            } else {
+                trailerWrapper.style.display = 'none';
+                trailerFrame.src = '';
+            }
+
+            document.getElementById('comingSoonModal').style.display = 'flex';
+        }
+
+        // 9. FULL POST VIEW ENGINE
+        let currentMovieServers = [];
+
+        function openMoviePost(id) {
+            const movie = movies.find(m => m.id === id);
+            if (!movie) return;
+
+            document.getElementById('modalMovieTitle').innerText = `${movie.title} (${movie.year || '2024'})`;
+            document.getElementById('postPosterImg').src = movie.poster;
+            document.getElementById('badgeQuality').innerText = movie.quality || '1080p HD';
+            document.getElementById('badgeYear').innerText = movie.year || '2024';
+            document.getElementById('badgeMainCat').innerText = movie.mainCategory;
+            document.getElementById('badgeSubCat').innerText = movie.subCategory;
+            document.getElementById('badgeDateTime').innerText = `Posted: ${movie.dateTime || 'Just Now'}`;
+            document.getElementById('modalMovieDesc').innerText = movie.desc || "No plot summary provided.";
+
+            const isSeries = movie.type === 'series';
+            document.getElementById('badgeType').innerText = isSeries ? 'Series / Drama' : 'Single Movie';
+
+            // SHOW REAL IMDB METADATA BOX
+            const imdbPanel = document.getElementById('modalImdbPanel');
+            if (movie.imdbRating || movie.genre || movie.duration || movie.director) {
+                imdbPanel.style.display = 'block';
+                document.getElementById('modalImdbScore').innerText = movie.imdbRating || 'N/A';
+                document.getElementById('modalGenreVal').innerText = movie.genre || 'Action, Drama';
+                document.getElementById('modalDurationVal').innerText = movie.duration || '2h 10m';
+                document.getElementById('modalCountryVal').innerText = movie.country || 'USA';
+                document.getElementById('modalDirectorVal').innerText = movie.director || 'N/A';
+            } else {
+                imdbPanel.style.display = 'none';
+            }
+
+            const tagsWrapper = document.getElementById('modalPostTags');
+            tagsWrapper.innerHTML = '';
+            if (movie.tags && movie.tags.trim() !== '') {
+                const tagList = movie.tags.split(',');
+                tagList.forEach(t => {
+                    const cleanTag = t.trim();
+                    if (cleanTag) {
+                        const span = document.createElement('span');
+                        span.className = 'seo-tag-pill';
+                        span.innerText = `#${cleanTag}`;
+                        span.onclick = () => {
+                            closeModal('movieModal');
+                            document.getElementById('searchInput').value = cleanTag;
+                            const filtered = movies.filter(m => 
+                                (m.tags && m.tags.toLowerCase().includes(cleanTag.toLowerCase())) ||
+                                m.title.toLowerCase().includes(cleanTag.toLowerCase())
+                            );
+                            renderMoviesGrid(filtered, false);
+                        };
+                        tagsWrapper.appendChild(span);
+                    }
+                });
+            }
+
+            // RENDERING CAST & CHARACTERS
+            const castContainer = document.getElementById('modalCastContainer');
+            const castGrid = document.getElementById('modalCastGrid');
+            const castCount = document.getElementById('modalCastCount');
+            castGrid.innerHTML = '';
+
+            if (movie.cast && movie.cast.length > 0) {
+                castContainer.style.display = 'block';
+                castCount.innerText = `${movie.cast.length} members`;
+
+                movie.cast.forEach(c => {
+                    const card = document.createElement('a');
+                    card.className = 'cast-actor-card';
+                    if (c.socialUrl && c.socialUrl.trim() !== '') {
+                        card.href = c.socialUrl;
+                        card.target = '_blank';
+                        card.title = `View profile of ${c.name}`;
+                    } else {
+                        card.href = 'javascript:void(0)';
+                    }
+
+                    const actorImg = c.photo && c.photo.trim() !== '' ? c.photo : 'https://via.placeholder.com/200x260/151828/00e5ff?text=Actor';
+
+                    card.innerHTML = `
+                        <div class="cast-photo-box">
+                            <img src="${actorImg}" alt="${c.name}" onerror="this.src='https://via.placeholder.com/200x260/151828/00e5ff?text=Actor'">
+                            ${c.socialUrl && c.socialUrl.trim() !== '' ? `<span class="cast-social-overlay-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>` : ''}
+                        </div>
+                        <div class="cast-actor-realname">${c.name}</div>
+                        <div class="cast-character-name">${c.role}</div>
+                    `;
+                    castGrid.appendChild(card);
+                });
+            } else {
+                castContainer.style.display = 'none';
+            }
+
+            const serversSwitchContainer = document.getElementById('serversSwitchContainer');
+            const serversGrid = document.getElementById('modalServersGrid');
+            serversGrid.innerHTML = '';
+            currentMovieServers = movie.servers && movie.servers.length > 0 ? movie.servers : [];
+
+            if (!isSeries && currentMovieServers.length > 0) {
+                serversSwitchContainer.style.display = 'block';
+                currentMovieServers.forEach((srv, sIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `server-switch-btn ${sIdx === 0 ? 'active' : ''}`;
+                    btn.innerHTML = `<i class="fa-solid fa-play"></i> ${srv.name}`;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.server-switch-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        switchStreamServer(srv.url);
+                    };
+                    serversGrid.appendChild(btn);
+                });
+            } else {
+                serversSwitchContainer.style.display = 'none';
+            }
+
+            const downloadsList = document.getElementById('modalDownloadsList');
+            const movieDownloadsWrapper = document.getElementById('movieDownloadsWrapper');
+            downloadsList.innerHTML = '';
+
+            const availableDownloads = movie.downloads && movie.downloads.length > 0 ? movie.downloads : [];
+
+            if (!isSeries) {
+                movieDownloadsWrapper.style.display = 'block';
+                if (availableDownloads.length > 0) {
+                    availableDownloads.forEach(dl => {
+                        const dlBtn = document.createElement('a');
+                        dlBtn.href = dl.url;
+                        dlBtn.target = "_blank";
+                        dlBtn.className = "btn-download-server-pill";
+                        dlBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Download via ${dl.name}`;
+                        downloadsList.appendChild(dlBtn);
+                    });
+                } else {
+                    downloadsList.innerHTML = `<p style="color:#777; font-size:12px;">No direct download links added.</p>`;
+                }
+            } else {
+                movieDownloadsWrapper.style.display = 'none';
+            }
+
+            const playerWrapper = document.getElementById('playerWrapper');
+            playerWrapper.style.display = 'none';
+            document.getElementById('modalPlayerFrame').src = '';
+
+            const seriesPanel = document.getElementById('seriesEpisodePanel');
+            const movieBtnGroup = document.getElementById('movieActionButtons');
+            const seriesDownloadGroup = document.getElementById('seriesDownloadGroup');
+
+            if (isSeries && movie.episodes && movie.episodes.length > 0) {
+                movieBtnGroup.style.display = 'none';
+                seriesPanel.style.display = 'block';
+                seriesDownloadGroup.style.display = 'block';
+                setupSeriesEpisodesView(movie.episodes);
+            } else {
+                seriesPanel.style.display = 'none';
+                seriesDownloadGroup.style.display = 'none';
+                movieBtnGroup.style.display = 'flex';
+                document.getElementById('btnTriggerPlayer').innerHTML = `<i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)`;
+            }
+
+            document.getElementById('movieModal').style.display = 'flex';
+        }
+
+        function switchStreamServer(url) {
+            document.getElementById('modalPlayerFrame').src = url;
+            showToast("Switched video server!");
+        }
+
+        function setupSeriesEpisodesView(episodesList) {
+            const seasonTabs = document.getElementById('seasonTabsContainer');
+            const epGrid = document.getElementById('episodesGridContainer');
+            seasonTabs.innerHTML = '';
+            epGrid.innerHTML = '';
+
+            const seasons = [...new Set(episodesList.map(e => e.season || 'Season 1'))];
+
+            seasons.forEach((season, sIdx) => {
+                const sBtn = document.createElement('button');
+                sBtn.className = `season-tab-btn ${sIdx === 0 ? 'active' : ''}`;
+                sBtn.innerText = season;
+                sBtn.onclick = () => {
+                    document.querySelectorAll('.season-tab-btn').forEach(b => b.classList.remove('active'));
+                    sBtn.classList.add('active');
+                    renderSeasonEpisodes(season, episodesList);
+                };
+                seasonTabs.appendChild(sBtn);
+            });
+
+            renderSeasonEpisodes(seasons[0], episodesList);
+        }
+
+        function renderSeasonEpisodes(seasonName, episodesList) {
+            const epGrid = document.getElementById('episodesGridContainer');
+            epGrid.innerHTML = '';
+
+            const filteredEps = episodesList.filter(e => (e.season || 'Season 1') === seasonName);
+
+            filteredEps.forEach((ep, idx) => {
+                const epBtn = document.createElement('button');
+                epBtn.className = 'ep-btn';
+                epBtn.innerText = ep.title || `Ep ${idx + 1}`;
+                epBtn.onclick = () => {
+                    document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                    epBtn.classList.add('active');
+                    playSeriesEpisode(ep);
+                };
+                epGrid.appendChild(epBtn);
+            });
+
+            if (filteredEps.length > 0) {
+                const firstBtn = epGrid.querySelector('.ep-btn');
+                if (firstBtn) firstBtn.classList.add('active');
+                playSeriesEpisode(filteredEps[0]);
+            }
+        }
+
+        function playSeriesEpisode(episode) {
+            document.getElementById('nowPlayingText').innerHTML = `
+                <i class="fa-solid fa-play" style="color:var(--cyan-accent);"></i> Playing: <strong>${episode.season} - ${episode.title}</strong>
+            `;
+
+            const playerWrapper = document.getElementById('playerWrapper');
+            playerWrapper.style.display = 'block';
+            document.getElementById('modalPlayerFrame').src = episode.streamUrl;
+
+            const dlBtn = document.getElementById('seriesEpisodeDownloadBtn');
+            dlBtn.href = episode.downloadUrl || '#';
+            dlBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Download ${episode.title} (Mega / GDrive)`;
+        }
+
+        function toggleOnlinePlayer() {
+            const playerWrapper = document.getElementById('playerWrapper');
+            const frame = document.getElementById('modalPlayerFrame');
+            const btn = document.getElementById('btnTriggerPlayer');
+
+            if (playerWrapper.style.display === 'block') {
+                playerWrapper.style.display = 'none';
+                frame.src = '';
+                btn.innerHTML = `<i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)`;
+            } else {
+                playerWrapper.style.display = 'block';
+                if (currentMovieServers.length > 0) {
+                    frame.src = currentMovieServers[0].url;
+                }
+                btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Stream Player`;
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            if (id === 'movieModal') {
+                document.getElementById('modalPlayerFrame').src = '';
+                document.getElementById('playerWrapper').style.display = 'none';
+            }
+            if (id === 'comingSoonModal') {
+                document.getElementById('csTrailerFrame').src = '';
+            }
+        }
+
+        // 10. ADMIN AUTHENTICATION
+        document.getElementById('secretAdminTrigger').onclick = () => {
+            document.getElementById('adminAuthModal').style.display = 'flex';
+        };
+
+        function performAdminLogin() {
+            const u = document.getElementById('authUsername').value.trim();
+            const p = document.getElementById('authPassword').value.trim();
+
+            if (u === auth.username && p === auth.password) {
+                closeModal('adminAuthModal');
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAdminDashboardData();
+                document.getElementById('authUsername').value = '';
+                document.getElementById('authPassword').value = '';
+                showToast("Welcome Admin! Dashboard Loaded.");
+            } else {
+                showToast("Invalid Credentials!", true);
+            }
+        }
+
+        function openForgotPassModal() {
+            closeModal('adminAuthModal');
+            document.getElementById('forgotPassModal').style.display = 'flex';
+        }
+
+        function verifyRecoveryPin() {
+            const entered = document.getElementById('recoveryPinInput').value.trim();
+            if (entered === auth.pin) {
+                closeModal('forgotPassModal');
+                document.getElementById('adminAuthModal').style.display = 'flex';
+                showToast(`PIN Verified! User: ${auth.username} | Pass: ${auth.password}`);
+            } else {
+                showToast("Wrong Recovery PIN!", true);
+            }
+        }
+
+        function exitAdminDashboard() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            renderBranding();
+            renderMoviesGrid(movies, true);
+            renderSidebarMenu();
+        }
+
+        function switchAdminTab(panelId) {
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        // 11. 100% REAL & AUTOMATIC IMDB FETCHER ENGINE WITH MULTI-KEY ROTATING POOL
+        async function autoFetchImdbData() {
+            const title = document.getElementById('inMovieTitle').value.trim();
+            const year = document.getElementById('inMovieYear').value.trim();
+
+            if (!title) {
+                return showToast("Pehle Movie ya Series ka Title likhein!", true);
+            }
+
+            showToast(`Connecting to IMDb for "${title}"...`);
+
+            // SMART MULTI-KEY ROTATING POOL (Never runs out of limits!)
+            const apiKeysPool = [
+                "e2960f27",
+                "4f458a6f",
+                "7282b8a7",
+                "85a6a568",
+                "a39a9d8c",
+                "trilogy",
+                "b9a5e69d"
+            ];
+
+            let foundData = null;
+            let lastError = "";
+
+            for (let i = 0; i < apiKeysPool.length; i++) {
+                const currentKey = apiKeysPool[i];
+                let queryUrl = "";
+
+                // Supports both Title and IMDb ID (e.g. tt0111161)
+                if (title.toLowerCase().startsWith("tt") && !title.includes(" ")) {
+                    queryUrl = `https://www.omdbapi.com/?i=${encodeURIComponent(title)}&apikey=${currentKey}`;
+                } else {
+                    queryUrl = `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${currentKey}`;
+                    if (year) queryUrl += `&y=${encodeURIComponent(year)}`;
+                }
+
+                try {
+                    const res = await fetch(queryUrl);
+                    const data = await res.json();
+
+                    if (data.Response === "True") {
+                        foundData = data;
+                        break; // Successful fetch, break loop!
+                    } else {
+                        lastError = data.Error || "Not found";
+                        // If it's a request limit on this key, instantly try the next key!
+                        if (data.Error && data.Error.toLowerCase().includes("limit")) {
+                            continue;
+                        }
+                    }
+                } catch (err) {
+                    lastError = "Connection error";
+                }
+            }
+
+            if (foundData) {
+                if (foundData.imdbRating && foundData.imdbRating !== "N/A") {
+                    document.getElementById('inImdbRating').value = foundData.imdbRating;
+                }
+                if (foundData.Genre && foundData.Genre !== "N/A") {
+                    document.getElementById('inGenre').value = foundData.Genre;
+                }
+                if (foundData.Runtime && foundData.Runtime !== "N/A") {
+                    document.getElementById('inDuration').value = foundData.Runtime;
+                }
+                if (foundData.Country && foundData.Country !== "N/A") {
+                    document.getElementById('inCountry').value = foundData.Country;
+                }
+                if (foundData.Director && foundData.Director !== "N/A") {
+                    document.getElementById('inDirector').value = foundData.Director;
+                }
+                if (foundData.Plot && foundData.Plot !== "N/A" && !document.getElementById('inDesc').value.trim()) {
+                    document.getElementById('inDesc').value = foundData.Plot;
+                }
+                if (foundData.Year && !document.getElementById('inMovieYear').value.trim()) {
+                    document.getElementById('inMovieYear').value = foundData.Year;
+                }
+
+                showToast(`IMDb Verified! Rating: ${foundData.imdbRating || 'N/A'}`);
+            } else {
+                showToast(lastError || "IMDb record nahi mila, aap manually likh sakte hain.", true);
+            }
+        }
+
+        // 12. TOP 10 TRENDING / MOST WATCHED MANAGER LOGIC
+        function handleSaveTrending(e) {
+            e.preventDefault();
+            const movieId = parseInt(document.getElementById('inTrendingMovieSelect').value);
+            const rank = parseInt(document.getElementById('inTrendingRank').value);
+
+            if (!movieId || isNaN(rank)) {
+                return showToast("Please select a movie and enter rank!", true);
+            }
+
+            const existingIdx = trending.findIndex(t => t.movieId === movieId);
+            if (existingIdx !== -1) {
+                trending[existingIdx].rank = rank;
+                showToast("Updated existing movie rank in Top Trending!");
+            } else {
+                trending.push({ id: Date.now(), movieId, rank });
+                showToast(`Added movie to Top Trending at Rank #${rank}!`);
+            }
+
+            persistAll();
+            renderAdminTrendingList();
+            document.getElementById('adminAddTrendingForm').reset();
+        }
+
+        function renderAdminTrendingList() {
+            const list = document.getElementById('adminTrendingList');
+            document.getElementById('totalTrendingBadge').innerText = trending.length;
+            list.innerHTML = '';
+
+            const sorted = [...trending].sort((a, b) => a.rank - b.rank);
+
+            sorted.forEach(t => {
+                const movie = movies.find(m => m.id === t.movieId);
+                const title = movie ? movie.title : `Movie #${t.movieId}`;
+
+                const item = document.createElement('div');
+                item.className = 'manage-item-row';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:var(--pink-accent);">Rank #${t.rank}</strong>
+                        <span style="color:#fff; margin-left:8px;">${title}</span>
+                    </div>
+                    <button class="btn-delete-item" onclick="removeTrending(${t.id})">Remove</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function removeTrending(id) {
+            trending = trending.filter(t => t.id !== id);
+            persistAll();
+            renderAdminTrendingList();
+            showToast("Movie removed from Top Trending!");
+        }
+
+        // 13. COMING SOON / UPCOMING MANAGER LOGIC
+        function handleSaveComingSoon(e) {
+            e.preventDefault();
+
+            const editId = document.getElementById('editComingSoonId').value;
+            const title = document.getElementById('inCsTitle').value.trim();
+            const category = document.getElementById('inCsCategory').value.trim();
+            const releaseDate = document.getElementById('inCsReleaseDate').value.trim();
+            const poster = document.getElementById('inCsPoster').value.trim();
+            const trailerUrl = document.getElementById('inCsTrailer').value.trim();
+            const desc = document.getElementById('inCsDesc').value.trim();
+
+            if (editId) {
+                const idx = comingSoon.findIndex(cs => cs.id == editId);
+                if (idx !== -1) {
+                    comingSoon[idx].title = title;
+                    comingSoon[idx].category = category;
+                    comingSoon[idx].releaseDate = releaseDate;
+                    comingSoon[idx].poster = poster;
+                    comingSoon[idx].trailerUrl = trailerUrl;
+                    comingSoon[idx].desc = desc;
+
+                    persistAll();
+                    cancelComingSoonEdit();
+                    renderAdminComingSoonList();
+                    showToast("Upcoming Release Updated!");
+                }
+            } else {
+                const newCs = {
+                    id: Date.now(),
+                    title,
+                    category,
+                    releaseDate,
+                    poster,
+                    trailerUrl,
+                    desc
+                };
+
+                comingSoon.unshift(newCs);
+                persistAll();
+                renderAdminComingSoonList();
+                cancelComingSoonEdit();
+                showToast("Coming Soon Release Published!");
+            }
+        }
+
+        function renderAdminComingSoonList() {
+            const list = document.getElementById('adminComingSoonList');
+            document.getElementById('totalCsBadge').innerText = comingSoon.length;
+            list.innerHTML = '';
+
+            comingSoon.forEach(cs => {
+                const item = document.createElement('div');
+                item.className = 'manage-item-row';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:var(--gold-accent);">${cs.title}</strong>
+                        <div style="font-size:11px; color:#8c94ac;">${cs.releaseDate} • ${cs.category}</div>
+                    </div>
+                    <div class="btn-group-actions">
+                        <button class="btn-edit-item" onclick="editComingSoon(${cs.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button class="btn-delete-item" onclick="deleteComingSoon(${cs.id})"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function editComingSoon(id) {
+            const cs = comingSoon.find(item => item.id === id);
+            if (!cs) return;
+
+            document.getElementById('editComingSoonId').value = cs.id;
+            document.getElementById('inCsTitle').value = cs.title;
+            document.getElementById('inCsCategory').value = cs.category || '';
+            document.getElementById('inCsReleaseDate').value = cs.releaseDate;
+            document.getElementById('inCsPoster').value = cs.poster;
+            document.getElementById('inCsTrailer').value = cs.trailerUrl || '';
+            document.getElementById('inCsDesc').value = cs.desc || '';
+
+            document.getElementById('csFormHeaderTitle').innerText = "Edit Upcoming Release";
+            document.getElementById('btnSubmitCsForm').innerHTML = `<i class="fa-solid fa-check"></i> Save Changes`;
+            document.getElementById('btnCancelCsEdit').style.display = "block";
+
+            document.getElementById('adminDashboard').scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Loaded Coming Soon into Edit Form!");
+        }
+
+        function cancelComingSoonEdit() {
+            document.getElementById('editComingSoonId').value = "";
+            document.getElementById('adminAddComingSoonForm').reset();
+            document.getElementById('csFormHeaderTitle').innerText = "Add Upcoming / Coming Soon Release";
+            document.getElementById('btnSubmitCsForm').innerHTML = `<i class="fa-solid fa-hourglass-start"></i> Publish Coming Soon`;
+            document.getElementById('btnCancelCsEdit').style.display = "none";
+        }
+
+        function deleteComingSoon(id) {
+            comingSoon = comingSoon.filter(cs => cs.id !== id);
+            persistAll();
+            renderAdminComingSoonList();
+            showToast("Upcoming post removed!");
+        }
+
+        // 14. ADMIN DASHBOARD OPERATIONS (MULTI-SERVERS & SERIES)
+        function selectPostType(type) {
+            document.getElementById('inPostType').value = type;
+            const btnM = document.getElementById('typeBtnMovie');
+            const btnS = document.getElementById('typeBtnSeries');
+            const movieFields = document.getElementById('movieSpecificFields');
+            const seriesFields = document.getElementById('seriesSpecificFields');
+
+            if (type === 'series') {
+                btnS.classList.add('active');
+                btnM.classList.remove('active');
+                movieFields.style.display = 'none';
+                seriesFields.style.display = 'block';
+                renderAdminSeasonBadges();
+            } else {
+                btnM.classList.add('active');
+                btnS.classList.remove('active');
+                movieFields.style.display = 'block';
+                seriesFields.style.display = 'none';
+            }
+        }
+
+        function addStreamServer() {
+            const name = document.getElementById('srvNameInput').value.trim();
+            const url = document.getElementById('srvUrlInput').value.trim();
+
+            if (!name) return showToast("Enter Server Name (e.g. Server 1)!", true);
+            if (!url) return showToast("Enter Embed Player URL!", true);
+
+            tempServersList.push({ id: Date.now(), name, url });
+            document.getElementById('srvNameInput').value = '';
+            document.getElementById('srvUrlInput').value = '';
+            renderAdminServersPreview();
+            showToast(`${name} added!`);
+        }
+
+        function renderAdminServersPreview() {
+            const container = document.getElementById('adminServersListContainer');
+            container.innerHTML = '';
+            tempServersList.forEach((s, idx) => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.innerHTML = `
+                    <div>
+                        <strong style="color:var(--cyan-accent);">${s.name}</strong>
+                        <div style="font-size:10px; color:#777;">${s.url}</div>
+                    </div>
+                    <button type="button" class="btn-delete-item" onclick="removeTempServer(${idx})">Remove</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeTempServer(idx) {
+            tempServersList.splice(idx, 1);
+            renderAdminServersPreview();
+        }
+
+        function addDownloadServer() {
+            const name = document.getElementById('dlNameInput').value.trim();
+            const url = document.getElementById('dlUrlInput').value.trim();
+
+            if (!name) return showToast("Enter Source Name (e.g. Mega.nz 1080p)!", true);
+            if (!url) return showToast("Enter Download URL link!", true);
+
+            tempDownloadsList.push({ id: Date.now(), name, url });
+            document.getElementById('dlNameInput').value = '';
+            document.getElementById('dlUrlInput').value = '';
+            renderAdminDownloadsPreview();
+            showToast(`${name} added!`);
+        }
+
+        function renderAdminDownloadsPreview() {
+            const container = document.getElementById('adminDownloadsListContainer');
+            container.innerHTML = '';
+            tempDownloadsList.forEach((d, idx) => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.innerHTML = `
+                    <div>
+                        <strong style="color:#00e676;">${d.name}</strong>
+                        <div style="font-size:10px; color:#777;">${d.url}</div>
+                    </div>
+                    <button type="button" class="btn-delete-item" onclick="removeTempDownload(${idx})">Remove</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeTempDownload(idx) {
+            tempDownloadsList.splice(idx, 1);
+            renderAdminDownloadsPreview();
+        }
+
+        function addSeasonToSeries() {
+            const seasonInput = document.getElementById('newSeasonNameInput');
+            const name = seasonInput.value.trim();
+            if (!name) return showToast("Enter Season Name (e.g. Season 2)!", true);
+
+            if (!currentFormSeasons.includes(name)) {
+                currentFormSeasons.push(name);
+                seasonInput.value = '';
+                renderAdminSeasonBadges();
+                showToast(`${name} added!`);
+            } else {
+                showToast("This season already exists!", true);
+            }
+        }
+
+        function editSeasonName(idx) {
+            const oldName = currentFormSeasons[idx];
+            document.getElementById('editSeasonTargetIdx').value = idx;
+            document.getElementById('editSeasonInputName').value = oldName;
+            document.getElementById('editSeasonModal').style.display = 'flex';
+        }
+
+        function saveEditedSeasonName() {
+            const idx = parseInt(document.getElementById('editSeasonTargetIdx').value);
+            const oldName = currentFormSeasons[idx];
+            const newName = document.getElementById('editSeasonInputName').value.trim();
+
+            if (!newName) return showToast("Season name cannot be empty!", true);
+
+            tempEpisodesList.forEach(ep => {
+                if (ep.season === oldName) ep.season = newName;
+            });
+            currentFormSeasons[idx] = newName;
+            closeModal('editSeasonModal');
+            renderAdminSeasonBadges();
+            renderAdminEpisodesPreview();
+            showToast(`Season renamed to ${newName}!`);
+        }
+
+        function deleteSeason(idx) {
+            if (currentFormSeasons.length <= 1) {
+                return showToast("At least 1 season is required!", true);
+            }
+            const seasonToDelete = currentFormSeasons[idx];
+            tempEpisodesList = tempEpisodesList.filter(ep => ep.season !== seasonToDelete);
+            currentFormSeasons.splice(idx, 1);
+            renderAdminSeasonBadges();
+            renderAdminEpisodesPreview();
+            showToast(`${seasonToDelete} deleted!`);
+        }
+
+        function renderAdminSeasonBadges() {
+            const container = document.getElementById('adminSeasonsBadgesContainer');
+            const dropdown = document.getElementById('epSeasonSelectDropdown');
+            container.innerHTML = '';
+            dropdown.innerHTML = '';
+
+            currentFormSeasons.forEach((s, idx) => {
+                dropdown.innerHTML += `<option value="${s}">${s}</option>`;
+
+                const chip = document.createElement('div');
+                chip.className = 'season-chip';
+                chip.innerHTML = `
+                    <span class="chip-name"><i class="fa-solid fa-folder"></i> ${s}</span>
+                    <div class="season-chip-actions">
+                        <button type="button" class="btn-chip-edit" onclick="editSeasonName(${idx})" title="Edit Season"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" class="btn-chip-del" onclick="deleteSeason(${idx})" title="Delete Season"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
+        function addEpisodeToList() {
+            const season = document.getElementById('epSeasonSelectDropdown').value;
+            const title = document.getElementById('epNumberInput').value.trim();
+            const stream = document.getElementById('epStreamInput').value.trim();
+            const download = document.getElementById('epDownloadInput').value.trim();
+
+            if (!season) return showToast("Create/Select a Season first!", true);
+            if (!title) return showToast("Enter Episode Title/Number!", true);
+            if (!stream) return showToast("Enter Episode Streamtape URL!", true);
+
+            tempEpisodesList.push({
+                id: Date.now(),
+                season: season,
+                title: title,
+                streamUrl: stream,
+                downloadUrl: download
+            });
+
+            document.getElementById('epNumberInput').value = '';
+            document.getElementById('epStreamInput').value = '';
+            document.getElementById('epDownloadInput').value = '';
+            renderAdminEpisodesPreview();
+            showToast(`${title} added to ${season}!`);
+        }
+
+        function renderAdminEpisodesPreview() {
+            const container = document.getElementById('adminEpisodeListContainer');
+            container.innerHTML = '';
+
+            tempEpisodesList.forEach((ep, idx) => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.innerHTML = `
+                    <div>
+                        <strong style="color:var(--cyan-accent);">${ep.season} - ${ep.title}</strong>
+                        <div style="font-size:10px; color:#777;">Streamtape & Download Links Attached</div>
+                    </div>
+                    <button type="button" class="btn-delete-item" onclick="removeTempEpisode(${idx})">Remove</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeTempEpisode(idx) {
+            tempEpisodesList.splice(idx, 1);
+            renderAdminEpisodesPreview();
+        }
+
+        function addCastMember() {
+            const name = document.getElementById('castNameInput').value.trim();
+            const role = document.getElementById('castRoleInput').value.trim() || 'Cast';
+            const photo = document.getElementById('castPhotoInput').value.trim();
+            const social = document.getElementById('castSocialInput').value.trim();
+
+            if (!name) return showToast("Enter Actor / Person Name!", true);
+
+            tempCastList.push({ 
+                id: Date.now(), 
+                name, 
+                role, 
+                photo, 
+                socialUrl: social 
+            });
+
+            document.getElementById('castNameInput').value = '';
+            document.getElementById('castRoleInput').value = '';
+            document.getElementById('castPhotoInput').value = '';
+            document.getElementById('castSocialInput').value = '';
+            renderAdminCastPreview();
+            showToast(`${name} added to Cast & Characters!`);
+        }
+
+        function renderAdminCastPreview() {
+            const container = document.getElementById('adminCastListContainer');
+            container.innerHTML = '';
+            tempCastList.forEach((c, idx) => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${c.photo || 'https://via.placeholder.com/40x50/151828/00e5ff?text=Actor'}" style="width:36px; height:46px; object-fit:cover; border-radius:4px; border:1px solid rgba(0,229,255,0.3);">
+                        <div>
+                            <strong style="color:#fff;">${c.name}</strong>
+                            <div style="font-size:11px; color:var(--cyan-accent);">${c.role}</div>
+                            ${c.socialUrl ? `<div style="font-size:10px; color:#777;">Link: ${c.socialUrl}</div>` : ''}
+                        </div>
+                    </div>
+                    <button type="button" class="btn-delete-item" onclick="removeTempCast(${idx})">Remove</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeTempCast(idx) {
+            tempCastList.splice(idx, 1);
+            renderAdminCastPreview();
+        }
+
+        function loadAdminDashboardData() {
+            const inMain = document.getElementById('inMainCat');
+            const parentSelect = document.getElementById('parentCatSelect');
+            inMain.innerHTML = '';
+            parentSelect.innerHTML = '';
+
+            categories.forEach(c => {
+                inMain.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                parentSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            const trendingSelect = document.getElementById('inTrendingMovieSelect');
+            trendingSelect.innerHTML = '';
+            movies.forEach(m => {
+                trendingSelect.innerHTML += `<option value="${m.id}">${m.title} (${m.year || '2024'}) - [${m.mainCategory}]</option>`;
+            });
+
+            syncSubCatSelector();
+            renderAdminMoviesList();
+            renderAdminTrendingList();
+            renderAdminComingSoonList();
+            renderAdminCategoryTree();
+            renderActiveSocialsInAdmin();
+
+            document.getElementById('logoTypeSelect').value = branding.logoType;
+            document.getElementById('inLogoText').value = branding.logoText;
+            document.getElementById('inLogoImage').value = branding.logoImage;
+            toggleLogoInputType();
+
+            document.getElementById('newUsernameInput').value = auth.username;
+            document.getElementById('newPasswordInput').value = auth.password;
+            document.getElementById('newPinInput').value = auth.pin;
+
+            renderAdminSeasonBadges();
+            renderAdminCastPreview();
+            renderAdminServersPreview();
+            renderAdminDownloadsPreview();
+        }
+
+        function syncSubCatSelector() {
+            const mainVal = document.getElementById('inMainCat').value;
+            const subDropdown = document.getElementById('inSubCat');
+            subDropdown.innerHTML = '';
+
+            const matched = categories.find(c => c.name === mainVal);
+            if (matched && matched.subcategories.length > 0) {
+                matched.subcategories.forEach(s => {
+                    subDropdown.innerHTML += `<option value="${s}">${s}</option>`;
+                });
+            } else {
+                subDropdown.innerHTML = `<option value="General">General</option>`;
+            }
+        }
+
+        function getRealDateTimeString() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            return `${dateStr}, ${timeStr}`;
+        }
+
+        // SAVE / UPDATE POST WITH IMDB METADATA
+        document.getElementById('adminAddMovieForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const editId = document.getElementById('editMovieId').value;
+            const currentRealTime = getRealDateTimeString();
+            const postType = document.getElementById('inPostType').value;
+
+            if (postType === 'series' && tempEpisodesList.length === 0) {
+                return showToast("Please add at least 1 episode for this series!", true);
+            }
+            if (postType === 'movie' && tempServersList.length === 0) {
+                return showToast("Please add at least 1 Streaming Server!", true);
+            }
+
+            const imdbRating = document.getElementById('inImdbRating').value.trim();
+            const genre = document.getElementById('inGenre').value.trim();
+            const duration = document.getElementById('inDuration').value.trim();
+            const country = document.getElementById('inCountry').value.trim();
+            const director = document.getElementById('inDirector').value.trim();
+
+            if (editId) {
+                const movieIndex = movies.findIndex(m => m.id == editId);
+                if (movieIndex !== -1) {
+                    movies[movieIndex].type = postType;
+                    movies[movieIndex].title = document.getElementById('inMovieTitle').value.trim();
+                    movies[movieIndex].year = document.getElementById('inMovieYear').value.trim();
+                    movies[movieIndex].mainCategory = document.getElementById('inMainCat').value;
+                    movies[movieIndex].subCategory = document.getElementById('inSubCat').value;
+                    movies[movieIndex].quality = document.getElementById('inQuality').value.trim();
+                    movies[movieIndex].tags = document.getElementById('inTags').value.trim();
+                    movies[movieIndex].poster = document.getElementById('inPoster').value.trim();
+                    movies[movieIndex].desc = document.getElementById('inDesc').value.trim();
+                    movies[movieIndex].dateTime = currentRealTime;
+
+                    movies[movieIndex].imdbRating = imdbRating;
+                    movies[movieIndex].genre = genre;
+                    movies[movieIndex].duration = duration;
+                    movies[movieIndex].country = country;
+                    movies[movieIndex].director = director;
+
+                    movies[movieIndex].servers = postType === 'movie' ? [...tempServersList] : [];
+                    movies[movieIndex].downloads = postType === 'movie' ? [...tempDownloadsList] : [];
+                    movies[movieIndex].episodes = postType === 'series' ? [...tempEpisodesList] : [];
+                    movies[movieIndex].cast = [...tempCastList];
+
+                    persistAll();
+                    cancelMovieEdit();
+                    renderAdminMoviesList();
+                    loadAdminDashboardData();
+                    showToast("Post Updated Successfully!");
+                }
+            } else {
+                const newPost = {
+                    id: Date.now(),
+                    type: postType,
+                    title: document.getElementById('inMovieTitle').value.trim(),
+                    year: document.getElementById('inMovieYear').value.trim() || '2024',
+                    mainCategory: document.getElementById('inMainCat').value,
+                    subCategory: document.getElementById('inSubCat').value,
+                    quality: document.getElementById('inQuality').value.trim(),
+                    tags: document.getElementById('inTags').value.trim(),
+                    poster: document.getElementById('inPoster').value.trim(),
+                    desc: document.getElementById('inDesc').value.trim(),
+                    dateTime: currentRealTime,
+                    imdbRating,
+                    genre,
+                    duration,
+                    country,
+                    director,
+                    servers: postType === 'movie' ? [...tempServersList] : [],
+                    downloads: postType === 'movie' ? [...tempDownloadsList] : [],
+                    episodes: postType === 'series' ? [...tempEpisodesList] : [],
+                    cast: [...tempCastList]
+                };
+
+                movies.unshift(newPost);
+                notifications.unshift({ 
+                    id: Date.now(), 
+                    text: `New ${postType === 'series' ? 'Series' : 'Movie'} (${newPost.year}): ${newPost.title} - ${newPost.subCategory}` 
+                });
+
+                persistAll();
+                updateNotificationsUI();
+                renderAdminMoviesList();
+                loadAdminDashboardData();
+                cancelMovieEdit();
+                showToast("Post Published Live!");
+            }
+        });
+
+        function editMovie(id) {
+            const movie = movies.find(m => m.id === id);
+            if (!movie) return;
+
+            document.getElementById('editMovieId').value = movie.id;
+            selectPostType(movie.type || 'movie');
+
+            document.getElementById('inMovieTitle').value = movie.title;
+            document.getElementById('inMovieYear').value = movie.year || '2024';
+            document.getElementById('inMainCat').value = movie.mainCategory;
+            syncSubCatSelector();
+            document.getElementById('inSubCat').value = movie.subCategory;
+            document.getElementById('inQuality').value = movie.quality;
+            document.getElementById('inTags').value = movie.tags || '';
+            document.getElementById('inPoster').value = movie.poster;
+            document.getElementById('inDesc').value = movie.desc;
+
+            document.getElementById('inImdbRating').value = movie.imdbRating || '';
+            document.getElementById('inGenre').value = movie.genre || '';
+            document.getElementById('inDuration').value = movie.duration || '';
+            document.getElementById('inCountry').value = movie.country || '';
+            document.getElementById('inDirector').value = movie.director || '';
+
+            tempServersList = movie.servers ? [...movie.servers] : [];
+            tempDownloadsList = movie.downloads ? [...movie.downloads] : [];
+            renderAdminServersPreview();
+            renderAdminDownloadsPreview();
+
+            tempEpisodesList = movie.episodes ? [...movie.episodes] : [];
+            const existingSeasons = [...new Set(tempEpisodesList.map(e => e.season))];
+            currentFormSeasons = existingSeasons.length > 0 ? existingSeasons : ["Season 1"];
+            renderAdminSeasonBadges();
+            renderAdminEpisodesPreview();
+
+            tempCastList = movie.cast ? [...movie.cast] : [];
+            renderAdminCastPreview();
+
+            document.getElementById('formHeaderTitle').innerText = "Edit Post";
+            document.getElementById('formHeaderIcon').className = "fa-solid fa-pen-to-square";
+            document.getElementById('btnSubmitMovieForm').innerHTML = `<i class="fa-solid fa-check"></i> Save Changes`;
+            document.getElementById('btnCancelEdit').style.display = "block";
+
+            document.getElementById('adminDashboard').scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Loaded into Edit Form!");
+        }
+
+        function cancelMovieEdit() {
+            document.getElementById('editMovieId').value = "";
+            document.getElementById('adminAddMovieForm').reset();
+            tempEpisodesList = [];
+            tempCastList = [];
+            tempServersList = [];
+            tempDownloadsList = [];
+            currentFormSeasons = ["Season 1"];
+            renderAdminEpisodesPreview();
+            renderAdminSeasonBadges();
+            renderAdminCastPreview();
+            renderAdminServersPreview();
+            renderAdminDownloadsPreview();
+            selectPostType('movie');
+
+            document.getElementById('formHeaderTitle').innerText = "Publish New Post";
+            document.getElementById('formHeaderIcon').className = "fa-solid fa-circle-plus";
+            document.getElementById('btnSubmitMovieForm').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publish Post`;
+            document.getElementById('btnCancelEdit').style.display = "none";
+        }
+
+        function renderAdminMoviesList() {
+            const list = document.getElementById('adminMoviesList');
+            document.getElementById('totalMovieBadge').innerText = movies.length;
+            list.innerHTML = '';
+
+            movies.forEach(m => {
+                const item = document.createElement('div');
+                item.className = 'manage-item-row';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:#fff;">${m.title} (${m.year || '2024'})</strong>
+                        <span style="font-size:10px; color:var(--cyan-accent); margin-left:5px;">[${m.type === 'series' ? 'Series' : 'Movie'}]</span>
+                        <span style="font-size:10px; color:var(--imdb-yellow); margin-left:5px;">[IMDb ${m.imdbRating || 'N/A'}]</span>
+                        <div style="font-size:11px; color:#6b7280;">${m.subCategory} • ${m.quality} • ${m.dateTime || 'Recent'}</div>
+                    </div>
+                    <div class="btn-group-actions">
+                        <button class="btn-edit-item" onclick="editMovie(${m.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button class="btn-delete-item" onclick="deleteMovie(${m.id})"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function deleteMovie(id) {
+            movies = movies.filter(m => m.id !== id);
+            trending = trending.filter(t => t.movieId !== id);
+            persistAll();
+            renderAdminMoviesList();
+            renderAdminTrendingList();
+            loadAdminDashboardData();
+            showToast("Post deleted!");
+        }
+
+        // CATEGORY OPERATIONS
+        function createMainCategory() {
+            const val = document.getElementById('inNewMainCat').value.trim();
+            if (!val) return showToast("Category name empty!", true);
+            categories.push({ name: val, subcategories: [] });
+            persistAll();
+            document.getElementById('inNewMainCat').value = '';
+            loadAdminDashboardData();
+            showToast("Main Category Added!");
+        }
+
+        function createSubCategory() {
+            const parent = document.getElementById('parentCatSelect').value;
+            const subVal = document.getElementById('inNewSubCat').value.trim();
+            if (!subVal) return showToast("Subcategory name empty!", true);
+            const target = categories.find(c => c.name === parent);
+            if (target) {
+                target.subcategories.push(subVal);
+                persistAll();
+                document.getElementById('inNewSubCat').value = '';
+                loadAdminDashboardData();
+                showToast("Subcategory Added!");
+            }
+        }
+
+        function editMainCategory(idx) {
+            const currentName = categories[idx].name;
+            document.getElementById('editCatModalTitle').innerText = "Edit Main Category";
+            document.getElementById('editCatInputLabel').innerText = "Main Category Name";
+            document.getElementById('editCategoryInputName').value = currentName;
+            document.getElementById('editCatType').value = 'main';
+            document.getElementById('editCatMainIdx').value = idx;
+            document.getElementById('editCategoryModal').style.display = 'flex';
+        }
+
+        function editSubCategory(cIdx, sIdx) {
+            const currentSub = categories[cIdx].subcategories[sIdx];
+            document.getElementById('editCatModalTitle').innerText = `Edit Subcategory (${categories[cIdx].name})`;
+            document.getElementById('editCatInputLabel').innerText = "Subcategory Name";
+            document.getElementById('editCategoryInputName').value = currentSub;
+            document.getElementById('editCatType').value = 'sub';
+            document.getElementById('editCatMainIdx').value = cIdx;
+            document.getElementById('editCatSubIdx').value = sIdx;
+            document.getElementById('editCategoryModal').style.display = 'flex';
+        }
+
+        function saveEditedCategory() {
+            const type = document.getElementById('editCatType').value;
+            const newName = document.getElementById('editCategoryInputName').value.trim();
+            if (!newName) return showToast("Category name cannot be empty!", true);
+
+            if (type === 'main') {
+                const idx = parseInt(document.getElementById('editCatMainIdx').value);
+                const oldName = categories[idx].name;
+                movies.forEach(m => {
+                    if (m.mainCategory === oldName) m.mainCategory = newName;
+                });
+                categories[idx].name = newName;
+                persistAll();
+                loadAdminDashboardData();
+                closeModal('editCategoryModal');
+                showToast(`Main Category renamed to "${newName}"!`);
+            } else if (type === 'sub') {
+                const cIdx = parseInt(document.getElementById('editCatMainIdx').value);
+                const sIdx = parseInt(document.getElementById('editCatSubIdx').value);
+                const oldSub = categories[cIdx].subcategories[sIdx];
+                movies.forEach(m => {
+                    if (m.subCategory === oldSub) m.subCategory = newName;
+                });
+                categories[cIdx].subcategories[sIdx] = newName;
+                persistAll();
+                loadAdminDashboardData();
+                closeModal('editCategoryModal');
+                showToast(`Subcategory renamed to "${newName}"!`);
+            }
+        }
+
+        function renderAdminCategoryTree() {
+            const tree = document.getElementById('categoryTree');
+            tree.innerHTML = '';
+
+            categories.forEach((cat, cIdx) => {
+                const box = document.createElement('div');
+                box.style.background = '#090a10';
+                box.style.padding = '12px';
+                box.style.marginBottom = '10px';
+                box.style.borderRadius = '6px';
+                box.style.border = '1px solid rgba(255,255,255,0.08)';
+
+                box.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="color:var(--cyan-accent); font-size:14px;"><i class="fa-solid fa-folder"></i> ${cat.name}</strong>
+                        <div class="btn-group-actions">
+                            <button class="btn-edit-item" onclick="editMainCategory(${cIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button class="btn-delete-item" onclick="deleteMainCategory(${cIdx})">Delete</button>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px; padding-left:12px;">
+                        ${cat.subcategories.map((sub, sIdx) => `
+                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin:6px 0; color:#8c93a8;">
+                                <span>↳ ${sub}</span>
+                                <div style="display:flex; gap:8px;">
+                                    <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${cIdx}, ${sIdx})"><i class="fa-solid fa-pen"></i></span>
+                                    <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${cIdx}, ${sIdx})"><i class="fa-solid fa-xmark"></i></span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                tree.appendChild(box);
+            });
+        }
+
+        function deleteMainCategory(idx) {
+            categories.splice(idx, 1);
+            persistAll();
+            loadAdminDashboardData();
+            showToast("Main Category Deleted!");
+        }
+
+        function deleteSubCategory(cIdx, sIdx) {
+            categories[cIdx].subcategories.splice(sIdx, 1);
+            persistAll();
+            loadAdminDashboardData();
+            showToast("Subcategory Deleted!");
+        }
+
+        // BRANDING
+        function toggleLogoInputType() {
+            const type = document.getElementById('logoTypeSelect').value;
+            if (type === 'image') {
+                document.getElementById('logoTextInputGroup').style.display = 'none';
+                document.getElementById('logoImageInputGroup').style.display = 'block';
+            } else {
+                document.getElementById('logoTextInputGroup').style.display = 'block';
+                document.getElementById('logoImageInputGroup').style.display = 'none';
+            }
+        }
+
+        function saveLogoSettings() {
+            branding.logoType = document.getElementById('logoTypeSelect').value;
+            branding.logoText = document.getElementById('inLogoText').value.trim() || "MoviesFlix";
+            branding.logoImage = document.getElementById('inLogoImage').value.trim();
+            persistAll();
+            renderBranding();
+            showToast("Logo branding updated!");
+        }
+
+        // SOCIAL ICONS
+        const platformIcons = {
+            telegram: "fa-brands fa-telegram",
+            facebook: "fa-brands fa-facebook-f",
+            instagram: "fa-brands fa-instagram",
+            whatsapp: "fa-brands fa-whatsapp",
+            twitter: "fa-brands fa-x-twitter",
+            youtube: "fa-brands fa-youtube",
+            discord: "fa-brands fa-discord"
+        };
+
+        function addSocialIcon() {
+            const platform = document.getElementById('newSocialPlatform').value;
+            const url = document.getElementById('newSocialUrl').value.trim();
+
+            if (!url) return showToast("Enter social media URL link!", true);
+
+            socials.push({ id: Date.now(), platform, icon: platformIcons[platform] || "fa-solid fa-link", url });
+            persistAll();
+            document.getElementById('newSocialUrl').value = '';
+            renderSocialIcons();
+            renderActiveSocialsInAdmin();
+            showToast("Social icon added!");
+        }
+
+        function renderActiveSocialsInAdmin() {
+            const list = document.getElementById('activeSocialIconsList');
+            list.innerHTML = '';
+            socials.forEach(s => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.innerHTML = `
+                    <div>
+                        <i class="${s.icon}" style="color:var(--cyan-accent); margin-right:8px;"></i>
+                        <strong style="text-transform:capitalize;">${s.platform}</strong>
+                        <div style="font-size:11px; color:#888;">${s.url}</div>
+                    </div>
+                    <button class="btn-delete-item" onclick="deleteSocialIcon(${s.id})">Delete</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function deleteSocialIcon(id) {
+            socials = socials.filter(s => s.id !== id);
+            persistAll();
+            renderSocialIcons();
+            renderActiveSocialsInAdmin();
+            showToast("Social icon removed!");
+        }
+
+        // SECURITY
+        function updateAdminCredentials() {
+            const u = document.getElementById('newUsernameInput').value.trim();
+            const p = document.getElementById('newPasswordInput').value.trim();
+            const pin = document.getElementById('newPinInput').value.trim();
+
+            if (!u || !p || !pin) return showToast("Fill all credential fields!", true);
+
+            auth.username = u;
+            auth.password = p;
+            auth.pin = pin;
+            persistAll();
+            showToast("Admin Credentials & PIN Saved!");
+        }
+
+        // BACKUP
+        function exportDataBackup() {
+            const payload = { categories, movies, trending, comingSoon, socials, auth, branding, notifications };
+            document.getElementById('backupTextarea').value = JSON.stringify(payload, null, 2);
+            showToast("Backup generated in textarea!");
+        }
+
+        function importDataBackup() {
+            try {
+                const parsed = JSON.parse(document.getElementById('backupTextarea').value);
+                if (parsed.categories && parsed.movies) {
+                    categories = parsed.categories;
+                    movies = parsed.movies;
+                    trending = parsed.trending || trending;
+                    comingSoon = parsed.comingSoon || comingSoon;
+                    socials = parsed.socials || socials;
+                    auth = parsed.auth || auth;
+                    branding = parsed.branding || branding;
+                    notifications = parsed.notifications || notifications;
+                    persistAll();
+                    loadAdminDashboardData();
+                    showToast("Backup restored successfully!");
+                }
+            } catch(e) {
+                showToast("Invalid JSON format!", true);
+            }
+        }
+
+        // 15. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY & TAGS)
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (query === '') {
+                renderMoviesGrid(movies, true);
+            } else {
+                const filtered = movies.filter(m => 
+                    m.title.toLowerCase().includes(query) || 
+                    (m.year && m.year.toLowerCase().includes(query)) ||
+                    m.subCategory.toLowerCase().includes(query) ||
+                    m.mainCategory.toLowerCase().includes(query) ||
+                    (m.tags && m.tags.toLowerCase().includes(query))
+                );
+                renderMoviesGrid(filtered, false);
+            }
+        });
+
+        // SIDEBAR ACTIONS
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        document.getElementById('menuToggleBtn').onclick = () => {
+            sidebar.classList.add('active');
+            overlay.style.display = 'block';
+        };
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.style.display = 'none';
+        }
+        document.getElementById('closeSidebarBtn').onclick = closeSidebar;
+        overlay.onclick = closeSidebar;
+
+        // INITIAL LOAD
+        renderBranding();
+        renderMoviesGrid(movies, true);
+        renderSidebarMenu();
+        updateNotificationsUI();
+    </script>
+</body>
+</html>
