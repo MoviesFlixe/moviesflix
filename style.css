@@ -40,7 +40,7 @@ body {
    ======================================================== */
 .top-header {
     background-color: #0d101a;
-    padding: 8px 18px;
+    padding: 14px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,8 +71,8 @@ body {
 }
 
 .logo-img {
-    height: 54px;
-    max-width: 200px;
+    height: 34px;
+    max-width: 140px;
     object-fit: contain;
 }
 
@@ -1000,6 +1000,7 @@ body {
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2; /* FIXED: Standard property added to resolve vendor-prefix warning */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
