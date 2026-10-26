@@ -61,7 +61,7 @@
     </div>
 
     <!-- ========================================================
-         SIDEBAR (CYAN ICONS, ABOUT, CONTACT & FOOTER LINE)
+         SIDEBAR (CYAN ICONS, SITEMAP, ABOUT, CONTACT & FOOTER LINE)
          ======================================================== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="sidebar" id="sidebar">
@@ -78,6 +78,7 @@
         <div class="pages-title">Legal & Information</div>
 
         <a class="page-item-link" onclick="openLegalPage('about')"><i class="fa-solid fa-circle-info"></i> About Us</a>
+        <a class="page-item-link" onclick="openSitemapModal()"><i class="fa-solid fa-sitemap"></i> HTML Sitemap Directory</a>
         <a class="page-item-link" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
         <a class="page-item-link" onclick="openLegalPage('copyright')"><i class="fa-regular fa-copyright"></i> Copyright Disclaimer</a>
         <a class="page-item-link" onclick="openLegalPage('privacy')"><i class="fa-solid fa-user-lock"></i> Privacy Policy</a>
@@ -91,7 +92,7 @@
     </div>
 
     <!-- ========================================================
-         MAIN CONTENT CONTAINER (HOME: COMING SOON -> TOP 10 -> RECENTLY -> CATEGORIES)
+         MAIN CONTENT CONTAINER (COMING SOON -> TOP 10 -> RECENTLY -> CATEGORIES)
          ======================================================== -->
     <main class="main-content" id="mainContent"></main>
 
@@ -102,6 +103,7 @@
         <div class="footer-nav">
             <a onclick="goHome()">Home</a>
             <a onclick="openLegalPage('about')">About Us</a>
+            <a onclick="openSitemapModal()">Sitemap</a>
             <a onclick="openLegalPage('dmca')">DMCA</a>
             <a onclick="openLegalPage('copyright')">Copyright</a>
             <a onclick="openLegalPage('privacy')">Privacy</a>
@@ -169,7 +171,7 @@
 
             <div class="post-tags-wrapper" id="modalPostTags"></div>
 
-            <!-- CINEMA STYLE CAST & CHARACTERS -->
+            <!-- CAST & CHARACTERS -->
             <div class="post-cast-container" id="modalCastContainer" style="display:none;">
                 <div class="cast-section-header">
                     <div class="cast-section-title">
@@ -254,7 +256,57 @@
     </div>
 
     <!-- ========================================================
-         MODAL 3: 7 FULL DETAILED LEGAL & ABOUT PAGES
+         MODAL 3: HTML SITEMAP DIRECTORY (SEO FOR GOOGLE & USERS)
+         ======================================================== -->
+    <div class="modal-overlay" id="sitemapModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeModal('sitemapModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="color: var(--cyan-accent); margin-bottom: 6px; font-size: 19px;">
+                <i class="fa-solid fa-sitemap"></i> Website HTML Sitemap
+            </h2>
+            <p style="color: #8c94ac; font-size: 12px; margin-bottom: 14px;">
+                Official index and directory map of all pages, categories, and published titles for fast indexing and navigation.
+            </p>
+
+            <div class="sitemap-directory-wrapper">
+                <!-- Section 1: Main Pages -->
+                <div class="sitemap-section-card">
+                    <div class="sitemap-section-title">
+                        <i class="fa-solid fa-globe"></i> Main Pages & Legal Information
+                    </div>
+                    <div class="sitemap-links-grid">
+                        <a class="sitemap-link-item" onclick="goHome()"><i class="fa-solid fa-chevron-right"></i> Home Page</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('about')"><i class="fa-solid fa-chevron-right"></i> About Us</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('dmca')"><i class="fa-solid fa-chevron-right"></i> DMCA Policy</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-solid fa-chevron-right"></i> Copyright</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('privacy')"><i class="fa-solid fa-chevron-right"></i> Privacy Policy</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('terms')"><i class="fa-solid fa-chevron-right"></i> Terms of Service</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-chevron-right"></i> 18+ Disclaimer</a>
+                        <a class="sitemap-link-item" onclick="openContactFormModal()"><i class="fa-solid fa-chevron-right"></i> Contact Us</a>
+                    </div>
+                </div>
+
+                <!-- Section 2: Categories Directory -->
+                <div class="sitemap-section-card">
+                    <div class="sitemap-section-title">
+                        <i class="fa-solid fa-folder-tree"></i> Categories & Genres Directory
+                    </div>
+                    <div class="sitemap-links-grid" id="sitemapCategoriesList"></div>
+                </div>
+
+                <!-- Section 3: Published Movies & Series Index -->
+                <div class="sitemap-section-card">
+                    <div class="sitemap-section-title">
+                        <i class="fa-solid fa-film"></i> Movies & Web Series Index (<span id="sitemapTotalCount">0</span>)
+                    </div>
+                    <div class="sitemap-links-grid" id="sitemapMoviesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 4: 7 FULL DETAILED LEGAL & ABOUT PAGES
          ======================================================== -->
     <div class="modal-overlay" id="legalPageModal">
         <div class="modal-box">
@@ -265,7 +317,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 4: INTERACTIVE CONTACT & SUPPORT FORM
+         MODAL 5: INTERACTIVE CONTACT & SUPPORT FORM
          ======================================================== -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal-box" style="max-width: 480px;">
@@ -307,7 +359,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 5: ADMIN LOGIN
+         MODAL 6: ADMIN LOGIN
          ======================================================== -->
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-box" style="max-width: 400px; text-align: center;">
@@ -333,7 +385,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 6: FORGOT PASSWORD
+         MODAL 7: FORGOT PASSWORD
          ======================================================== -->
     <div class="modal-overlay" id="forgotPassModal">
         <div class="modal-box" style="max-width: 400px;">
@@ -348,7 +400,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 7: CYBER POPUP FOR EDITING SEASON NAME
+         MODAL 8: CYBER POPUP FOR EDITING SEASON NAME
          ======================================================== -->
     <div class="modal-overlay" id="editSeasonModal">
         <div class="modal-box" style="max-width: 380px;">
@@ -368,7 +420,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 8: CYBER POPUP FOR EDITING CATEGORY / SUBCATEGORY
+         MODAL 9: CYBER POPUP FOR EDITING CATEGORY / SUBCATEGORY
          ======================================================== -->
     <div class="modal-overlay" id="editCategoryModal">
         <div class="modal-box" style="max-width: 380px;">
@@ -408,10 +460,10 @@
             <button class="admin-tab-btn" onclick="switchAdminTab('panelBranding')"><i class="fa-solid fa-paint-roller"></i> Logo Setup</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSocials')"><i class="fa-solid fa-share-nodes"></i> Social Icons</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSecurity')"><i class="fa-solid fa-lock"></i> Security</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab('panelBackup')"><i class="fa-solid fa-database"></i> Backup</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelBackup')"><i class="fa-solid fa-database"></i> Backup & SEO Sitemap</button>
         </div>
 
-        <!-- TAB 1: UPLOAD MOVIES & SERIES (WITH 1-CLICK MULTI-KEY IMDB FETCHER) -->
+        <!-- TAB 1: UPLOAD MOVIES & SERIES -->
         <div class="admin-tab-panel active" id="panelMovies">
             <div class="admin-card">
                 <div class="admin-card-title">
@@ -601,7 +653,7 @@
                         </div>
                     </div>
 
-                    <!-- CAST & CHARACTERS BUILDER WITH ACTOR PHOTO -->
+                    <!-- CAST & CHARACTERS BUILDER -->
                     <div class="cast-admin-card" style="margin-bottom:14px;">
                         <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
                             <i class="fa-solid fa-users"></i> Cast & Characters (Actor Photo, Real Name, Role & Social)
@@ -855,10 +907,29 @@
             </div>
         </div>
 
-        <!-- TAB 8: BACKUP -->
+        <!-- TAB 8: BACKUP & GOOGLE SEARCH CONSOLE SITEMAP.XML GENERATOR -->
         <div class="admin-tab-panel" id="panelBackup">
+            <!-- XML Sitemap Tool for Google -->
             <div class="admin-card">
-                <div class="admin-card-title">Site Backup & Restore</div>
+                <div class="admin-card-title" style="color:var(--cyan-accent);">
+                    <i class="fa-solid fa-sitemap"></i> Google Search Console XML Sitemap Generator
+                </div>
+                <p style="font-size:12px; color:#8c94ac; margin-bottom:12px;">
+                    Google mein website ko index karne ke liye yeh code generate karein aur apni GitHub repository root mein <strong>sitemap.xml</strong> bana kar paste kar dein:
+                </p>
+                <div class="form-group">
+                    <label>Your Live Site URL (GitHub Pages / Domain)</label>
+                    <input type="url" id="inSiteLiveUrl" placeholder="https://yourusername.github.io/reponame/">
+                </div>
+                <button class="btn-cyan" style="margin-bottom:10px;" onclick="generateXmlSitemap()">
+                    <i class="fa-solid fa-file-code"></i> Generate sitemap.xml Code
+                </button>
+                <textarea id="xmlSitemapArea" rows="6" placeholder="Your sitemap.xml code will generate here..." style="width:100%; background:#05070a; color:#00e5ff; font-family:monospace; padding:10px; border-radius:6px; border:1px solid #1f2333;"></textarea>
+            </div>
+
+            <!-- Site JSON Data Backup -->
+            <div class="admin-card">
+                <div class="admin-card-title">Site Data JSON Backup & Restore</div>
                 <textarea id="backupTextarea" rows="6" style="width:100%; background:#05070a; color:#00e5ff; font-family:monospace; padding:10px; border-radius:6px; border:1px solid #1f2333;"></textarea>
                 <div style="display:flex; gap:10px; margin-top:10px;">
                     <button class="btn-cyan" onclick="exportDataBackup()">Generate Backup</button>
@@ -1071,6 +1142,7 @@
         function goHome() {
             closeModal('movieModal');
             closeModal('comingSoonModal');
+            closeModal('sitemapModal');
             closeModal('legalPageModal');
             closeModal('contactModal');
             closeModal('editSeasonModal');
@@ -1094,7 +1166,7 @@
             });
         }
 
-        // 4. RENDER MOVIES (HOME ORDER: COMING SOON -> TOP 10 TRENDING -> RECENTLY ADDED -> CATEGORIES)
+        // 4. RENDER MOVIES (HOME: COMING SOON -> TOP 10 TRENDING -> RECENTLY ADDED -> CATEGORIES)
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1104,7 +1176,7 @@
                 return;
             }
 
-            // A. COMING SOON SECTION (ONLY ON HOME PAGE)
+            // A. COMING SOON SECTION
             if (isHomePage && comingSoon.length > 0) {
                 const csSection = document.createElement('section');
                 csSection.className = 'category-section';
@@ -1138,7 +1210,7 @@
                 });
             }
 
-            // B. TOP 10 TRENDING SECTION (BETWEEN COMING SOON & RECENTLY)
+            // B. TOP 10 TRENDING SECTION
             if (isHomePage && trending.length > 0) {
                 const trendingSection = document.createElement('section');
                 trendingSection.className = 'category-section';
@@ -1180,7 +1252,7 @@
                 });
             }
 
-            // C. RECENTLY ADDED SECTION (ONLY ON HOME PAGE)
+            // C. RECENTLY ADDED SECTION
             if (isHomePage && list.length > 0) {
                 const recentSection = document.createElement('section');
                 recentSection.className = 'category-section';
@@ -1316,7 +1388,84 @@
 
         window.onclick = () => { notifDropdown.style.display = 'none'; };
 
-        // 7. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
+        // 7. HTML SITEMAP MODAL RENDERING
+        function openSitemapModal() {
+            closeSidebar();
+            
+            // Populate Categories in Sitemap
+            const catContainer = document.getElementById('sitemapCategoriesList');
+            catContainer.innerHTML = '';
+            categories.forEach(cat => {
+                cat.subcategories.forEach(sub => {
+                    const a = document.createElement('a');
+                    a.className = 'sitemap-link-item';
+                    a.innerHTML = `<i class="fa-solid fa-folder"></i> ${cat.name} / ${sub}`;
+                    a.onclick = () => {
+                        closeModal('sitemapModal');
+                        filterBySubCategory(sub);
+                    };
+                    catContainer.appendChild(a);
+                });
+            });
+
+            // Populate Movies & Series in Sitemap
+            const moviesContainer = document.getElementById('sitemapMoviesList');
+            const totalCountBadge = document.getElementById('sitemapTotalCount');
+            moviesContainer.innerHTML = '';
+            totalCountBadge.innerText = movies.length;
+
+            movies.forEach(m => {
+                const a = document.createElement('a');
+                a.className = 'sitemap-link-item';
+                a.innerHTML = `<i class="fa-solid fa-film"></i> ${m.title} (${m.year || '2024'})`;
+                a.onclick = () => {
+                    closeModal('sitemapModal');
+                    openMoviePost(m.id);
+                };
+                moviesContainer.appendChild(a);
+            });
+
+            document.getElementById('sitemapModal').style.display = 'flex';
+        }
+
+        // 8. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
+        function generateXmlSitemap() {
+            let baseUrl = document.getElementById('inSiteLiveUrl').value.trim();
+            if (!baseUrl) {
+                baseUrl = window.location.origin + window.location.pathname;
+            }
+            if (!baseUrl.endsWith('/')) {
+                baseUrl += '/';
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+            xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+            // Home Page URL
+            xml += `  <url>\n    <loc>${baseUrl}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
+
+            // Categories URLs
+            categories.forEach(cat => {
+                cat.subcategories.forEach(sub => {
+                    const cleanSub = encodeURIComponent(sub.toLowerCase());
+                    xml += `  <url>\n    <loc>${baseUrl}?category=${cleanSub}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+                });
+            });
+
+            // Movies & Series URLs
+            movies.forEach(m => {
+                xml += `  <url>\n    <loc>${baseUrl}?watch=${m.id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+            });
+
+            xml += `</urlset>`;
+
+            document.getElementById('xmlSitemapArea').value = xml;
+            showToast("Google Search Console sitemap.xml generated!");
+        }
+
+        // 9. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
         const legalTexts = {
             about: {
                 title: "About MoviesFlix Streaming Company",
@@ -1425,7 +1574,7 @@
             showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received. Our team will email you within 24 hours.`);
         }
 
-        // 8. OPEN COMING SOON PREVIEW MODAL
+        // 10. OPEN COMING SOON PREVIEW MODAL
         function openComingSoonModal(id) {
             const item = comingSoon.find(cs => cs.id === id);
             if (!item) return;
@@ -1450,7 +1599,7 @@
             document.getElementById('comingSoonModal').style.display = 'flex';
         }
 
-        // 9. FULL POST VIEW ENGINE
+        // 11. FULL POST VIEW ENGINE
         let currentMovieServers = [];
 
         function openMoviePost(id) {
@@ -1708,7 +1857,7 @@
             }
         }
 
-        // 10. ADMIN AUTHENTICATION
+        // 12. ADMIN AUTHENTICATION
         document.getElementById('secretAdminTrigger').onclick = () => {
             document.getElementById('adminAuthModal').style.display = 'flex';
         };
@@ -1760,7 +1909,7 @@
             document.getElementById(panelId).classList.add('active');
         }
 
-        // 11. 100% REAL & AUTOMATIC IMDB FETCHER ENGINE WITH MULTI-KEY ROTATING POOL
+        // 13. REAL & AUTOMATIC IMDB FETCHER ENGINE
         async function autoFetchImdbData() {
             const title = document.getElementById('inMovieTitle').value.trim();
             const year = document.getElementById('inMovieYear').value.trim();
@@ -1771,7 +1920,6 @@
 
             showToast(`Connecting to IMDb for "${title}"...`);
 
-            // SMART MULTI-KEY ROTATING POOL (Never runs out of limits!)
             const apiKeysPool = [
                 "e2960f27",
                 "4f458a6f",
@@ -1789,7 +1937,6 @@
                 const currentKey = apiKeysPool[i];
                 let queryUrl = "";
 
-                // Supports both Title and IMDb ID (e.g. tt0111161)
                 if (title.toLowerCase().startsWith("tt") && !title.includes(" ")) {
                     queryUrl = `https://www.omdbapi.com/?i=${encodeURIComponent(title)}&apikey=${currentKey}`;
                 } else {
@@ -1803,10 +1950,9 @@
 
                     if (data.Response === "True") {
                         foundData = data;
-                        break; // Successful fetch, break loop!
+                        break;
                     } else {
                         lastError = data.Error || "Not found";
-                        // If it's a request limit on this key, instantly try the next key!
                         if (data.Error && data.Error.toLowerCase().includes("limit")) {
                             continue;
                         }
@@ -1845,7 +1991,7 @@
             }
         }
 
-        // 12. TOP 10 TRENDING / MOST WATCHED MANAGER LOGIC
+        // 14. TOP 10 TRENDING LOGIC
         function handleSaveTrending(e) {
             e.preventDefault();
             const movieId = parseInt(document.getElementById('inTrendingMovieSelect').value);
@@ -1900,7 +2046,7 @@
             showToast("Movie removed from Top Trending!");
         }
 
-        // 13. COMING SOON / UPCOMING MANAGER LOGIC
+        // 15. COMING SOON LOGIC
         function handleSaveComingSoon(e) {
             e.preventDefault();
 
@@ -2003,7 +2149,7 @@
             showToast("Upcoming post removed!");
         }
 
-        // 14. ADMIN DASHBOARD OPERATIONS (MULTI-SERVERS & SERIES)
+        // 16. ADMIN OPERATIONS (MULTI-SERVERS & SERIES)
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -2763,19 +2909,22 @@
             }
         }
 
-        // 15. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY & TAGS)
+        // 17. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY, ACTORS & TAGS)
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {
                 renderMoviesGrid(movies, true);
             } else {
-                const filtered = movies.filter(m => 
-                    m.title.toLowerCase().includes(query) || 
-                    (m.year && m.year.toLowerCase().includes(query)) ||
-                    m.subCategory.toLowerCase().includes(query) ||
-                    m.mainCategory.toLowerCase().includes(query) ||
-                    (m.tags && m.tags.toLowerCase().includes(query))
-                );
+                const filtered = movies.filter(m => {
+                    const matchTitle = m.title.toLowerCase().includes(query);
+                    const matchYear = m.year && m.year.toLowerCase().includes(query);
+                    const matchSub = m.subCategory.toLowerCase().includes(query);
+                    const matchMain = m.mainCategory.toLowerCase().includes(query);
+                    const matchTags = m.tags && m.tags.toLowerCase().includes(query);
+                    const matchCast = m.cast && m.cast.some(c => c.name.toLowerCase().includes(query) || c.role.toLowerCase().includes(query));
+
+                    return matchTitle || matchYear || matchSub || matchMain || matchTags || matchCast;
+                });
                 renderMoviesGrid(filtered, false);
             }
         });

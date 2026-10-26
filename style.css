@@ -644,7 +644,7 @@ body {
 }
 
 /* ========================================================
-   6. POST MODAL & REAL IMDB DETAILS BOX (RIDOMOVIES REPLICA)
+   6. POST MODAL & REAL IMDB DETAILS BOX
    ======================================================== */
 .modal-overlay {
     position: fixed;
@@ -766,9 +766,7 @@ body {
     gap: 5px;
 }
 
-/* ========================================================
-   IMDB METADATA BOX (EXACT SCREENSHOT REPLICA)
-   ======================================================== */
+/* IMDB METADATA BOX */
 .imdb-details-panel {
     background: #090a12;
     border: 1px solid rgba(245, 197, 24, 0.3);
@@ -857,9 +855,7 @@ body {
     box-shadow: 0 0 8px var(--cyan-glow);
 }
 
-/* ========================================================
-   CAST & CHARACTERS (SCREENSHOT 2 REPLICA)
-   ======================================================== */
+/* CAST & CHARACTERS */
 .post-cast-container {
     background: transparent;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -1177,7 +1173,69 @@ body {
 }
 
 /* ========================================================
-   7. FULL ADMIN DASHBOARD & BUILDER CARDS
+   7. SITEMAP PAGE DIRECTORY (FOR GOOGLE & USERS)
+   ======================================================== */
+.sitemap-directory-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.sitemap-section-card {
+    background: #090a12;
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.sitemap-section-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--cyan-accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 6px;
+}
+
+.sitemap-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.sitemap-link-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #cad0e2;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 8px;
+    background: #111422;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: 0.2s all;
+}
+
+.sitemap-link-item:hover {
+    color: var(--cyan-accent);
+    border-color: var(--cyan-accent);
+    background: #161a2c;
+    transform: translateX(2px);
+}
+
+.sitemap-link-item i {
+    color: var(--cyan-accent);
+    font-size: 10px;
+}
+
+/* ========================================================
+   8. FULL ADMIN DASHBOARD & BUILDER CARDS
    ======================================================== */
 .admin-dashboard-overlay {
     position: fixed;
@@ -1483,7 +1541,6 @@ body {
     box-shadow: 0 0 10px rgba(236, 72, 153, 0.4);
 }
 
-/* AUTO FETCH BUTTON STYLING */
 .btn-imdb-autofetch {
     background: linear-gradient(135deg, #f5c518 0%, #d97706 100%);
     color: #000;
@@ -1545,7 +1602,7 @@ body {
 }
 
 /* ========================================================
-   8. CYBER TOAST NOTIFICATION SYSTEM
+   9. CYBER TOAST NOTIFICATION SYSTEM
    ======================================================== */
 .cyber-toast-container {
     position: fixed;
@@ -1599,7 +1656,7 @@ body {
 }
 
 /* ========================================================
-   9. FOOTER WITH PERMANENT CYAN BORDER
+   10. FOOTER WITH PERMANENT CYAN BORDER
    ======================================================== */
 footer {
     background: #080a12;
