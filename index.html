@@ -13,7 +13,7 @@
     <!-- FontAwesome 6 Pro CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- FIREBASE COMPAT SDK VIA CDN (WORKS DIRECTLY WITHOUT WEBPACK/ROLLUP) -->
+    <!-- FIREBASE COMPAT SDK VIA CDN -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -299,8 +299,8 @@
                         <a class="sitemap-link-item" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-solid fa-chevron-right"></i> Copyright</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('privacy')"><i class="fa-solid fa-user-lock"></i> Privacy Policy</a>
-                        <a class="sitemap-link-item" onclick="openLegalPage('terms')"><i class="fa-solid fa-chevron-right"></i> Terms of Service</a>
-                        <a class="sitemap-link-item" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-chevron-right"></i> 18+ Disclaimer</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('terms')"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-triangle-exclamation"></i> 18+ Disclaimer</a>
                         <a class="sitemap-link-item" onclick="openContactFormModal()"><i class="fa-solid fa-chevron-right"></i> Contact Us</a>
                     </div>
                 </div>
@@ -1078,7 +1078,6 @@
             appId: "1:967760651024:web:6518a2b1712a361a90fb95"
         };
 
-        // Initialize Firebase & Cloud Firestore
         let db = null;
         try {
             firebase.initializeApp(firebaseConfig);
@@ -1111,86 +1110,6 @@
             { id: 3, name: "moviesflix.live", url: "https://moviesflix.live", status: "backup" }
         ];
 
-        const defaultMovies = [
-            {
-                id: 101,
-                type: "movie",
-                title: "Animal",
-                year: "2023",
-                mainCategory: "Movies",
-                subCategory: "Bollywood",
-                quality: "4k",
-                tags: "Action, Crime, Drama, Ranbir Kapoor, Bollywood 2023",
-                poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
-                desc: "A gritty story of father and son's intense relation.",
-                dateTime: "25 Oct 2026, 01:08 PM",
-                imdbRating: "6.2",
-                genre: "Action, Crime, Drama",
-                duration: "3h 24m",
-                country: "India",
-                director: "Sandeep Reddy Vanga",
-                servers: [
-                    { id: 1, name: "Server 1 (Streamtape Fast)", url: "https://streamtape.com/e/demo1" },
-                    { id: 2, name: "Server 2 (HD Cloud Mirror)", url: "https://streamtape.com/e/demo1" }
-                ],
-                downloads: [
-                    { id: 1, quality: "4K Ultra HD", name: "Mega.nz", size: "4.8 GB", url: "https://mega.nz" },
-                    { id: 2, quality: "1080p Full HD", name: "Google Drive", size: "2.4 GB", url: "https://drive.google.com" },
-                    { id: 3, quality: "720p HD", name: "Fast Cloud", size: "1.2 GB", url: "https://mega.nz" }
-                ],
-                episodes: [],
-                cast: [
-                    { id: 1, name: "Sima", role: "Ruhi", photo: "https://image.tmdb.org/t/p/w200/nUq8gN2hZf9Z8r5z0mQ6k3eF9Xy.jpg", socialUrl: "https://instagram.com" }
-                ]
-            },
-            {
-                id: 102,
-                type: "series",
-                title: "Kurulus Osman",
-                year: "2024",
-                mainCategory: "Web Series",
-                subCategory: "Turkish Drama",
-                quality: "720p HD",
-                tags: "Historical, Action, Adventure, Turkish Drama, Osman Bey",
-                poster: "https://image.tmdb.org/t/p/w500/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg",
-                desc: "The life of Osman Bey, son of Ertugrul Gazi and founder of the Ottoman Empire, fighting against Byzantine forces and Mongol threats.",
-                dateTime: "24 Oct 2026, 02:45 PM",
-                imdbRating: "7.7",
-                genre: "Action, Adventure, Drama",
-                duration: "2h 10m / ep",
-                country: "Turkey",
-                director: "Metin Günay, Ahmet Yılmaz",
-                servers: [],
-                downloads: [],
-                episodes: [
-                    { id: 1, season: "Season 1", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_ep1", downloadUrl: "https://mega.nz/file/ep1" },
-                    { id: 2, season: "Season 1", title: "Episode 02", streamUrl: "https://streamtape.com/e/demo_ep2", downloadUrl: "https://mega.nz/file/ep2" },
-                    { id: 3, season: "Season 2", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_s2ep1", downloadUrl: "https://mega.nz/file/s2ep1" }
-                ],
-                cast: [
-                    { id: 1, name: "Burak Özçivit", role: "Osman Bey", photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", socialUrl: "https://instagram.com" },
-                    { id: 2, name: "Özge Törer", role: "Bala Hatun", photo: "https://image.tmdb.org/t/p/w200/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg", socialUrl: "https://instagram.com" }
-                ]
-            }
-        ];
-
-        const defaultTrending = [
-            { id: 1, movieId: 101, rank: 1 },
-            { id: 2, movieId: 102, rank: 2 }
-        ];
-
-        const defaultComingSoon = [
-            {
-                id: 201,
-                title: "Pushpa 2: The Rule",
-                category: "Indian / Action",
-                releaseDate: "Releasing this Friday / 30 Oct",
-                poster: "https://image.tmdb.org/t/p/w500/b0Onv3t8k5pYf9R4VbB8x0K9v8u.jpg",
-                trailerUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                desc: "Pushpa Raj continues his dominance in the red sandalwood smuggling syndicate, clashing fiercely with SP Bhanwar Singh Shekhawat."
-            }
-        ];
-
         const defaultSocials = [
             { id: 1, platform: "telegram", icon: "fa-brands fa-telegram", url: "https://t.me" },
             { id: 2, platform: "facebook", icon: "fa-brands fa-facebook-f", url: "https://facebook.com" },
@@ -1198,12 +1117,15 @@
         ];
 
         // State Cache
+        const hasSyncedBefore = localStorage.getItem('mf_cloud_synced') === 'true';
         let sectionHeadings = JSON.parse(localStorage.getItem('mf_section_headings')) || defaultSectionHeadings;
         let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
         let officialDomains = JSON.parse(localStorage.getItem('mf_official_domains')) || defaultOfficialDomains;
-        let movies = JSON.parse(localStorage.getItem('mf_movies')) || defaultMovies;
-        let trending = JSON.parse(localStorage.getItem('mf_trending')) || defaultTrending;
-        let comingSoon = JSON.parse(localStorage.getItem('mf_coming_soon')) || defaultComingSoon;
+        
+        // IMPORTANT: If cloud synced before, use exact cached array (even if empty!). Only seed if fresh project
+        let movies = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_movies')) || []) : (JSON.parse(localStorage.getItem('mf_movies')) || []);
+        let trending = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_trending')) || []) : (JSON.parse(localStorage.getItem('mf_trending')) || []);
+        let comingSoon = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_coming_soon')) || []) : (JSON.parse(localStorage.getItem('mf_coming_soon')) || []);
         let socials = JSON.parse(localStorage.getItem('mf_socials')) || defaultSocials;
         let auth = JSON.parse(localStorage.getItem('mf_auth')) || { username: "admin", password: "admin123", pin: "7860" };
         let branding = JSON.parse(localStorage.getItem('mf_branding')) || {
@@ -1225,7 +1147,7 @@
         // 3. PERSISTENCE ENGINE (LOCAL STORAGE + FIREBASE CLOUD)
         // ----------------------------------------------------
         function persistAll() {
-            // 1. Save locally for instant offline performance
+            localStorage.setItem('mf_cloud_synced', 'true');
             localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
             localStorage.setItem('mf_categories', JSON.stringify(categories));
             localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
@@ -1237,7 +1159,6 @@
             localStorage.setItem('mf_branding', JSON.stringify(branding));
             localStorage.setItem('mf_notifs', JSON.stringify(notifications));
 
-            // 2. Sync to Realtime Google Cloud Firestore
             if (db) {
                 db.collection('moviesflix_cloud').doc('portal_data').set({
                     sectionHeadings: sectionHeadings,
@@ -1260,7 +1181,7 @@
             }
         }
 
-        // Realtime Listener from Google Cloud Database
+        // Realtime Listener from Google Cloud Database (FIXED ZERO-LENGTH BUG!)
         function setupFirebaseRealtimeSync() {
             if (!db) return;
 
@@ -1268,26 +1189,41 @@
                 .onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
-                        if (data.movies && data.movies.length > 0) {
+
+                        // ACCEPT EMPTY ARRAYS AS VALID DELETED STATES!
+                        if (Array.isArray(data.movies)) {
                             movies = data.movies;
                         }
-                        if (data.categories && data.categories.length > 0) {
+                        if (Array.isArray(data.categories)) {
                             categories = data.categories;
                         }
-                        if (data.sectionHeadings && data.sectionHeadings.length > 0) {
+                        if (Array.isArray(data.sectionHeadings)) {
                             sectionHeadings = data.sectionHeadings;
                         }
-                        if (data.officialDomains && data.officialDomains.length > 0) {
+                        if (Array.isArray(data.officialDomains)) {
                             officialDomains = data.officialDomains;
                         }
-                        if (data.trending) trending = data.trending;
-                        if (data.comingSoon) comingSoon = data.comingSoon;
-                        if (data.socials) socials = data.socials;
-                        if (data.branding) branding = data.branding;
-                        if (data.auth) auth = data.auth;
-                        if (data.notifications) notifications = data.notifications;
+                        if (Array.isArray(data.trending)) {
+                            trending = data.trending;
+                        }
+                        if (Array.isArray(data.comingSoon)) {
+                            comingSoon = data.comingSoon;
+                        }
+                        if (Array.isArray(data.socials)) {
+                            socials = data.socials;
+                        }
+                        if (data.branding) {
+                            branding = data.branding;
+                        }
+                        if (data.auth) {
+                            auth = data.auth;
+                        }
+                        if (Array.isArray(data.notifications)) {
+                            notifications = data.notifications;
+                        }
 
                         // Save updated cloud data to local cache
+                        localStorage.setItem('mf_cloud_synced', 'true');
                         localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
                         localStorage.setItem('mf_categories', JSON.stringify(categories));
                         localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
@@ -1296,9 +1232,9 @@
                         localStorage.setItem('mf_coming_soon', JSON.stringify(comingSoon));
                         localStorage.setItem('mf_socials', JSON.stringify(socials));
                         localStorage.setItem('mf_branding', JSON.stringify(branding));
-                        localStorage.setItem('mf_notifications', JSON.stringify(notifications));
+                        localStorage.setItem('mf_notifs', JSON.stringify(notifications));
 
-                        // Refresh active UI live
+                        // Refresh active UI live on EVERY device
                         renderBranding();
                         renderMoviesGrid(movies, true);
                         renderSidebarMenu();
@@ -1307,11 +1243,11 @@
                         const badge = document.getElementById('cloudSyncStatusBadge');
                         if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Google Cloud Live`;
                     } else {
-                        // First run: Seed initial catalog to Google Cloud!
+                        // First run on brand new Firebase project
                         persistAll();
                     }
                 }, (error) => {
-                    console.warn("Firestore live listener:", error);
+                    console.warn("Firestore live listener error:", error);
                 });
         }
 
@@ -1389,13 +1325,17 @@
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
 
-            if (list.length === 0 && (!isHomePage || (comingSoon.length === 0 && trending.length === 0))) {
-                container.innerHTML = '<p style="text-align:center; padding: 50px 0; color:#5d657d; font-size:14px;">No content found.</p>';
+            const hasComingSoon = isHomePage && comingSoon && comingSoon.length > 0;
+            const hasTrending = isHomePage && trending && trending.length > 0;
+            const hasMovies = list && list.length > 0;
+
+            if (!hasComingSoon && !hasTrending && !hasMovies) {
+                container.innerHTML = '<p style="text-align:center; padding: 60px 0; color:#5d657d; font-size:15px; font-weight:600;"><i class="fa-solid fa-film" style="color:var(--cyan-accent); font-size:24px; display:block; margin-bottom:8px;"></i> No content found.</p>';
                 return;
             }
 
             // COMING SOON SECTION
-            if (isHomePage && comingSoon.length > 0) {
+            if (hasComingSoon) {
                 const csSection = document.createElement('section');
                 csSection.className = 'category-section';
                 csSection.innerHTML = `
@@ -1429,7 +1369,7 @@
             }
 
             // TOP 10 TRENDING SECTION
-            if (isHomePage && trending.length > 0) {
+            if (hasTrending) {
                 const trendingSection = document.createElement('section');
                 trendingSection.className = 'category-section';
                 trendingSection.innerHTML = `
@@ -1471,7 +1411,7 @@
             }
 
             // RECENTLY ADDED SECTION
-            if (isHomePage && list.length > 0) {
+            if (isHomePage && hasMovies) {
                 const recentSection = document.createElement('section');
                 recentSection.className = 'category-section';
                 recentSection.innerHTML = `
@@ -1491,27 +1431,29 @@
             }
 
             // REGULAR SECTIONS (FORMAT: [MAIN HEADING] SUB-CATEGORY)
-            const subCats = [...new Set(list.map(m => m.subCategory))];
-            subCats.forEach(sub => {
-                const subMovies = list.filter(m => m.subCategory === sub);
-                const parentMainCat = subMovies[0] ? subMovies[0].mainCategory : 'Browse';
+            if (hasMovies) {
+                const subCats = [...new Set(list.map(m => m.subCategory))];
+                subCats.forEach(sub => {
+                    const subMovies = list.filter(m => m.subCategory === sub);
+                    const parentMainCat = subMovies[0] ? subMovies[0].mainCategory : 'Browse';
 
-                const section = document.createElement('section');
-                section.className = 'category-section';
-                section.innerHTML = `
-                    <div class="category-heading">
-                        <div class="cat-line"></div>
-                        <h2><span class="section-tag-badge">${parentMainCat}</span> ${sub}</h2>
-                    </div>
-                    <div class="movie-grid" id="grid-${sub.replace(/\s+/g, '-')}"></div>
-                `;
-                container.appendChild(section);
+                    const section = document.createElement('section');
+                    section.className = 'category-section';
+                    section.innerHTML = `
+                        <div class="category-heading">
+                            <div class="cat-line"></div>
+                            <h2><span class="section-tag-badge">${parentMainCat}</span> ${sub}</h2>
+                        </div>
+                        <div class="movie-grid" id="grid-${sub.replace(/\s+/g, '-')}"></div>
+                    `;
+                    container.appendChild(section);
 
-                const grid = document.getElementById(`grid-${sub.replace(/\s+/g, '-')}`);
-                subMovies.forEach(movie => {
-                    grid.appendChild(createMovieCardElement(movie));
+                    const grid = document.getElementById(`grid-${sub.replace(/\s+/g, '-')}`);
+                    subMovies.forEach(movie => {
+                        grid.appendChild(createMovieCardElement(movie));
+                    });
                 });
-            });
+            }
         }
 
         function createMovieCardElement(movie) {
