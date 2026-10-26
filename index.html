@@ -61,7 +61,7 @@
     </div>
 
     <!-- ========================================================
-         SIDEBAR (CYAN ICONS, SITEMAP, ABOUT, CONTACT & FOOTER LINE)
+         SIDEBAR (DYNAMIC SECTION HEADINGS, CATEGORIES & PAGES)
          ======================================================== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="sidebar" id="sidebar">
@@ -72,11 +72,13 @@
             </button>
         </div>
 
-        <ul class="sidebar-menu" id="sidebarDynamicMenu"></ul>
+        <!-- DYNAMIC SECTION HEADINGS & CATEGORIES CONTAINER -->
+        <div id="sidebarDynamicSectionsContainer"></div>
 
         <div class="sidebar-divider"></div>
         <div class="pages-title">Legal & Information</div>
 
+        <a class="page-item-link" onclick="openDomainsModal()"><i class="fa-solid fa-network-wired"></i> Official Domains & Proxies</a>
         <a class="page-item-link" onclick="openLegalPage('about')"><i class="fa-solid fa-circle-info"></i> About Us</a>
         <a class="page-item-link" onclick="openSitemapModal()"><i class="fa-solid fa-sitemap"></i> HTML Sitemap Directory</a>
         <a class="page-item-link" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
@@ -102,6 +104,7 @@
     <footer>
         <div class="footer-nav">
             <a onclick="goHome()">Home</a>
+            <a onclick="openDomainsModal()">Official Domains</a>
             <a onclick="openLegalPage('about')">About Us</a>
             <a onclick="openSitemapModal()">Sitemap</a>
             <a onclick="openLegalPage('dmca')">DMCA</a>
@@ -120,7 +123,7 @@
     </footer>
 
     <!-- ========================================================
-         MODAL 1: REGULAR POST VIEW (WITH IMDB METADATA BOX)
+         MODAL 1: REGULAR POST VIEW (WITH RESOLUTION DOWNLOAD CARDS)
          ======================================================== -->
     <div class="modal-overlay" id="movieModal">
         <div class="modal-box">
@@ -182,18 +185,21 @@
                 <div class="cast-scroll-container" id="modalCastGrid"></div>
             </div>
 
+            <!-- SERIES EPISODES -->
             <div class="series-episodes-panel" id="seriesEpisodePanel" style="display:none;">
                 <div class="now-playing-label" id="nowPlayingText">Select an Episode to Watch & Download:</div>
                 <div class="season-tabs-row" id="seasonTabsContainer"></div>
                 <div class="episodes-grid" id="episodesGridContainer"></div>
             </div>
 
+            <!-- WATCH BUTTON -->
             <div class="action-buttons-group" id="movieActionButtons">
                 <button class="btn-watch-online" id="btnTriggerPlayer" onclick="toggleOnlinePlayer()">
                     <i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)
                 </button>
             </div>
 
+            <!-- STREAM PLAYER WITH SERVERS -->
             <div class="player-container-box" id="playerWrapper">
                 <div class="streaming-servers-box" id="serversSwitchContainer" style="display:none;">
                     <div class="servers-title-badge">
@@ -205,16 +211,24 @@
                 <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen></iframe>
             </div>
 
-            <div id="movieDownloadsWrapper" style="margin-top:14px;">
-                <div class="servers-title-badge" id="downloadHeading" style="margin-bottom:8px;">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Available Download Mirrors:
+            <!-- ENHANCED DOWNLOAD MIRRORS (WITH RESOLUTION HEADINGS & FILE SIZES) -->
+            <div id="movieDownloadsWrapper" style="margin-top:16px;">
+                <div class="servers-title-badge" id="downloadHeading" style="margin-bottom:10px;">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Available Download Mirrors & Resolutions:
                 </div>
                 <div class="multi-downloads-container" id="modalDownloadsList"></div>
             </div>
 
             <div id="seriesDownloadGroup" style="display:none; margin-top:14px;">
-                <a id="seriesEpisodeDownloadBtn" href="#" target="_blank" class="btn-download-server-pill">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Download Selected Episode (Mega / GDrive)
+                <a id="seriesEpisodeDownloadBtn" href="#" target="_blank" class="download-mirror-card" style="border-color:var(--green-accent);">
+                    <div class="dl-card-left">
+                        <span class="dl-resolution-badge res-1080p">HD Stream</span>
+                        <div class="dl-card-info">
+                            <div class="dl-server-name" id="seriesEpDlTitle">Download Selected Episode</div>
+                            <div class="dl-file-size"><i class="fa-solid fa-bolt"></i> Fast Direct Cloud Mirror</div>
+                        </div>
+                    </div>
+                    <span class="dl-action-pill"><i class="fa-solid fa-cloud-arrow-down"></i> Download</span>
                 </a>
             </div>
         </div>
@@ -256,7 +270,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 3: HTML SITEMAP DIRECTORY (SEO FOR GOOGLE & USERS)
+         MODAL 3: HTML SITEMAP DIRECTORY
          ======================================================== -->
     <div class="modal-overlay" id="sitemapModal">
         <div class="modal-box">
@@ -269,13 +283,13 @@
             </p>
 
             <div class="sitemap-directory-wrapper">
-                <!-- Section 1: Main Pages -->
                 <div class="sitemap-section-card">
                     <div class="sitemap-section-title">
                         <i class="fa-solid fa-globe"></i> Main Pages & Legal Information
                     </div>
                     <div class="sitemap-links-grid">
                         <a class="sitemap-link-item" onclick="goHome()"><i class="fa-solid fa-chevron-right"></i> Home Page</a>
+                        <a class="sitemap-link-item" onclick="openDomainsModal()"><i class="fa-solid fa-chevron-right"></i> Official Domains</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('about')"><i class="fa-solid fa-chevron-right"></i> About Us</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('dmca')"><i class="fa-solid fa-chevron-right"></i> DMCA Policy</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-solid fa-chevron-right"></i> Copyright</a>
@@ -286,7 +300,6 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Categories Directory -->
                 <div class="sitemap-section-card">
                     <div class="sitemap-section-title">
                         <i class="fa-solid fa-folder-tree"></i> Categories & Genres Directory
@@ -294,7 +307,6 @@
                     <div class="sitemap-links-grid" id="sitemapCategoriesList"></div>
                 </div>
 
-                <!-- Section 3: Published Movies & Series Index -->
                 <div class="sitemap-section-card">
                     <div class="sitemap-section-title">
                         <i class="fa-solid fa-film"></i> Movies & Web Series Index (<span id="sitemapTotalCount">0</span>)
@@ -306,7 +318,24 @@
     </div>
 
     <!-- ========================================================
-         MODAL 4: 7 FULL DETAILED LEGAL & ABOUT PAGES
+         MODAL 4: OFFICIAL DOMAINS & PROXIES DIRECTORY
+         ======================================================== -->
+    <div class="modal-overlay" id="domainsModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeModal('domainsModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="color: var(--cyan-accent); margin-bottom: 6px; font-size: 19px;">
+                <i class="fa-solid fa-network-wired"></i> Official Domains & Proxy Mirrors
+            </h2>
+            <p style="color: #8c94ac; font-size: 12px; margin-bottom: 14px; line-height: 1.6;">
+                Save these official mirror domains in your bookmarks. If MoviesFlix gets blocked in your country or by your ISP, access the site instantly through any active mirror below:
+            </p>
+
+            <div class="domains-directory-wrapper" id="userDomainsListContainer"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL 5: 7 FULL DETAILED LEGAL & ABOUT PAGES
          ======================================================== -->
     <div class="modal-overlay" id="legalPageModal">
         <div class="modal-box">
@@ -317,7 +346,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 5: INTERACTIVE CONTACT & SUPPORT FORM
+         MODAL 6: INTERACTIVE CONTACT & SUPPORT FORM
          ======================================================== -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal-box" style="max-width: 480px;">
@@ -359,7 +388,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 6: ADMIN LOGIN
+         MODAL 7: ADMIN LOGIN
          ======================================================== -->
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-box" style="max-width: 400px; text-align: center;">
@@ -385,7 +414,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 7: FORGOT PASSWORD
+         MODAL 8: FORGOT PASSWORD
          ======================================================== -->
     <div class="modal-overlay" id="forgotPassModal">
         <div class="modal-box" style="max-width: 400px;">
@@ -400,7 +429,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 8: CYBER POPUP FOR EDITING SEASON NAME
+         MODAL 9: EDIT SEASON POPUP
          ======================================================== -->
     <div class="modal-overlay" id="editSeasonModal">
         <div class="modal-box" style="max-width: 380px;">
@@ -420,16 +449,16 @@
     </div>
 
     <!-- ========================================================
-         MODAL 9: CYBER POPUP FOR EDITING CATEGORY / SUBCATEGORY
+         MODAL 10: EDIT HEADING / CATEGORY / SUBCATEGORY POPUP
          ======================================================== -->
     <div class="modal-overlay" id="editCategoryModal">
         <div class="modal-box" style="max-width: 380px;">
             <button class="close-modal-btn" onclick="closeModal('editCategoryModal')"><i class="fa-solid fa-xmark"></i></button>
             <h3 style="color: var(--cyan-accent); margin-bottom: 14px; font-size: 16px;">
-                <i class="fa-solid fa-pen-to-square"></i> <span id="editCatModalTitle">Edit Category</span>
+                <i class="fa-solid fa-pen-to-square"></i> <span id="editCatModalTitle">Edit Item</span>
             </h3>
             <div class="form-group">
-                <label id="editCatInputLabel">Category Name</label>
+                <label id="editCatInputLabel">Item Name</label>
                 <input type="text" id="editCategoryInputName" placeholder="Enter name">
             </div>
             <input type="hidden" id="editCatType" value="">
@@ -456,14 +485,15 @@
             <button class="admin-tab-btn active" onclick="switchAdminTab('panelMovies')"><i class="fa-solid fa-film"></i> Upload Post</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelTopTrending')"><i class="fa-solid fa-fire-flame-curved"></i> Top 10 Trending</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelComingSoon')"><i class="fa-solid fa-hourglass-half"></i> Coming Soon</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab('panelCategories')"><i class="fa-solid fa-layer-group"></i> Categories</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelDomains')"><i class="fa-solid fa-network-wired"></i> Official Domains</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelCategories')"><i class="fa-solid fa-layer-group"></i> Headings & Categories</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelBranding')"><i class="fa-solid fa-paint-roller"></i> Logo Setup</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSocials')"><i class="fa-solid fa-share-nodes"></i> Social Icons</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSecurity')"><i class="fa-solid fa-lock"></i> Security</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelBackup')"><i class="fa-solid fa-database"></i> Backup & SEO Sitemap</button>
         </div>
 
-        <!-- TAB 1: UPLOAD MOVIES & SERIES -->
+        <!-- TAB 1: UPLOAD POST -->
         <div class="admin-tab-panel active" id="panelMovies">
             <div class="admin-card">
                 <div class="admin-card-title">
@@ -500,7 +530,6 @@
                         </div>
                     </div>
 
-                    <!-- REAL IMDB & METADATA BUILDER -->
                     <div class="link-builder-card" style="border-color: rgba(245, 197, 24, 0.4);">
                         <div style="font-size:14px; font-weight:700; color:var(--imdb-yellow); margin-bottom:10px;">
                             <i class="fa-brands fa-imdb" style="font-size:18px;"></i> Real IMDb Rating & Metadata Details (Auto-Filled)
@@ -535,11 +564,11 @@
 
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;">
-                            <label>Main Category</label>
+                            <label>Main Category (e.g. Movies, Web Series)</label>
                             <select id="inMainCat" onchange="syncSubCatSelector()" required></select>
                         </div>
                         <div class="form-group" style="flex:1;">
-                            <label>Sub Category</label>
+                            <label>Sub Category / Genre</label>
                             <select id="inSubCat" required></select>
                         </div>
                     </div>
@@ -581,22 +610,34 @@
                             <div class="added-episodes-table" id="adminServersListContainer"></div>
                         </div>
 
+                        <!-- ENHANCED MULTIPLE DOWNLOAD MIRRORS WITH RESOLUTION/QUALITY & SIZE -->
                         <div class="link-builder-card">
-                            <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> Multiple Download Mirrors
+                            <div style="font-size:14px; font-weight:700; color:var(--green-accent); margin-bottom:10px;">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> Multiple Download Mirrors (With Resolution Heading & File Size)
                             </div>
-                            <div style="display:flex; gap:8px;">
+                            
+                            <div style="display:flex; gap:8px; margin-bottom:4px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label>Resolution / Heading (e.g. 1080p FHD)</label>
+                                    <input type="text" id="dlQualityInput" placeholder="e.g. 1080p Full HD, 4K UHD, 720p HD" value="1080p Full HD">
+                                </div>
                                 <div class="form-group" style="flex:1;">
                                     <label>Source / Server Name</label>
-                                    <input type="text" id="dlNameInput" placeholder="e.g. Mega.nz (1080p HD)">
+                                    <input type="text" id="dlNameInput" placeholder="e.g. Mega.nz, Google Drive">
                                 </div>
-                                <div class="form-group" style="flex:2;">
-                                    <label>Download URL</label>
-                                    <input type="url" id="dlUrlInput" placeholder="https://mega.nz/... or Drive link">
+                                <div class="form-group" style="flex:1;">
+                                    <label>File Size (Optional)</label>
+                                    <input type="text" id="dlSizeInput" placeholder="e.g. 2.4 GB, 950 MB">
                                 </div>
                             </div>
-                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addDownloadServer()">
-                                <i class="fa-solid fa-plus"></i> + Add Download Mirror
+
+                            <div class="form-group">
+                                <label>Download Link URL</label>
+                                <input type="url" id="dlUrlInput" placeholder="https://mega.nz/... or Drive link">
+                            </div>
+
+                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--green-accent); border:1px solid var(--green-accent);" onclick="addDownloadServer()">
+                                <i class="fa-solid fa-plus"></i> + Add Resolution Download Mirror
                             </button>
                             <div class="added-episodes-table" id="adminDownloadsListContainer"></div>
                         </div>
@@ -709,7 +750,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: TOP 10 TRENDING / MOST WATCHED MANAGER -->
+        <!-- TAB 2: TOP 10 TRENDING -->
         <div class="admin-tab-panel" id="panelTopTrending">
             <div class="admin-card">
                 <div class="admin-card-title" style="color:var(--pink-accent);">
@@ -743,7 +784,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: COMING SOON / UPCOMING MANAGER -->
+        <!-- TAB 3: COMING SOON -->
         <div class="admin-tab-panel" id="panelComingSoon">
             <div class="admin-card">
                 <div class="admin-card-title" style="color:var(--gold-accent);">
@@ -804,35 +845,108 @@
             </div>
         </div>
 
-        <!-- TAB 4: CATEGORIES -->
+        <!-- TAB 4: OFFICIAL DOMAINS & PROXIES MANAGER -->
+        <div class="admin-tab-panel" id="panelDomains">
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-network-wired"></i> <span id="domainFormTitle">Add Official Mirror Domain / Proxy</span>
+                </div>
+
+                <form id="adminDomainForm" onsubmit="handleSaveDomain(event)">
+                    <input type="hidden" id="editDomainId" value="">
+
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:2;">
+                            <label>Domain Name</label>
+                            <input type="text" id="inDomainName" placeholder="e.g. moviesflix.top" required>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Domain Status</label>
+                            <select id="inDomainStatus">
+                                <option value="primary">Primary / Main Active</option>
+                                <option value="mirror">Active Mirror</option>
+                                <option value="backup">Upcoming Backup</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Domain URL (Include https://)</label>
+                        <input type="url" id="inDomainUrl" placeholder="https://moviesflix.top" required>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button type="submit" class="btn-cyan" id="btnSubmitDomain">
+                            <i class="fa-solid fa-plus"></i> Save Domain
+                        </button>
+                        <button type="button" class="btn-delete-item" id="btnCancelDomainEdit" style="display:none; padding:12px 18px; font-size:13px;" onclick="cancelDomainEdit()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-list-check"></i> Managed Official Domains (<span id="totalDomainsBadge">0</span>)
+                </div>
+                <div id="adminDomainsListContainer"></div>
+            </div>
+        </div>
+
+        <!-- TAB 5: COMPLETE 3-LEVEL HIERARCHY -->
         <div class="admin-tab-panel" id="panelCategories">
             <div class="admin-card">
-                <div class="admin-card-title">1. Create Main Category</div>
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. Categories & Channels, Entertainment Zone)
+                </div>
+                <div class="season-control-row">
+                    <input type="text" id="newHeadingNameInput" placeholder="Section Heading Title (e.g. Anime Corner, Channels)">
+                    <button type="button" class="btn-add-season" onclick="addNewSectionHeading()">
+                        <i class="fa-solid fa-plus"></i> Add Heading
+                    </button>
+                </div>
+                <div style="font-size:11px; color:#8c94ac; margin-bottom:6px;">Current Section Headings in Sidebar:</div>
+                <div class="seasons-badge-list" id="adminHeadingsChipsContainer"></div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-folder-plus"></i> 2. Create Main Category under Section Heading
+                </div>
                 <div class="form-group">
-                    <input type="text" id="inNewMainCat" placeholder="e.g. Anime, South Movies">
+                    <label>Select Parent Section Heading</label>
+                    <select id="parentSectionHeadingSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>Main Category Name</label>
+                    <input type="text" id="inNewMainCat" placeholder="e.g. Movies, TV Shows, Web Series">
                 </div>
                 <button class="btn-cyan" onclick="createMainCategory()">Add Main Category</button>
             </div>
 
             <div class="admin-card">
-                <div class="admin-card-title">2. Add Subcategory under Parent</div>
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-diagram-project"></i> 3. Add Subcategory under Main Category
+                </div>
                 <div class="form-group">
-                    <label>Select Parent Category</label>
+                    <label>Select Parent Main Category</label>
                     <select id="parentCatSelect"></select>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="inNewSubCat" placeholder="e.g. Hindi Dubbed, Punjabi">
+                    <label>Subcategory Name</label>
+                    <input type="text" id="inNewSubCat" placeholder="e.g. Bollywood, Hollywood, Turkish Drama">
                 </div>
                 <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
             </div>
 
             <div class="admin-card">
-                <div class="admin-card-title">Categories Tree (Edit & Delete Available)</div>
+                <div class="admin-card-title"><i class="fa-solid fa-sitemap"></i> Complete Headings & Categories Tree</div>
                 <div id="categoryTree"></div>
             </div>
         </div>
 
-        <!-- TAB 5: BRANDING -->
+        <!-- TAB 6: BRANDING -->
         <div class="admin-tab-panel" id="panelBranding">
             <div class="admin-card">
                 <div class="admin-card-title"><i class="fa-solid fa-signature"></i> Website Logo Setup</div>
@@ -858,7 +972,7 @@
             </div>
         </div>
 
-        <!-- TAB 6: SOCIAL ICONS MANAGER -->
+        <!-- TAB 7: SOCIAL ICONS MANAGER -->
         <div class="admin-tab-panel" id="panelSocials">
             <div class="admin-card">
                 <div class="admin-card-title"><i class="fa-solid fa-plus-circle"></i> Add New Social Icon</div>
@@ -887,7 +1001,7 @@
             </div>
         </div>
 
-        <!-- TAB 7: SECURITY -->
+        <!-- TAB 8: SECURITY -->
         <div class="admin-tab-panel" id="panelSecurity">
             <div class="admin-card">
                 <div class="admin-card-title"><i class="fa-solid fa-key"></i> Change Admin Credentials</div>
@@ -907,9 +1021,8 @@
             </div>
         </div>
 
-        <!-- TAB 8: BACKUP & GOOGLE SEARCH CONSOLE SITEMAP.XML GENERATOR -->
+        <!-- TAB 9: BACKUP & SITEMAP.XML GENERATOR -->
         <div class="admin-tab-panel" id="panelBackup">
-            <!-- XML Sitemap Tool for Google -->
             <div class="admin-card">
                 <div class="admin-card-title" style="color:var(--cyan-accent);">
                     <i class="fa-solid fa-sitemap"></i> Google Search Console XML Sitemap Generator
@@ -927,7 +1040,6 @@
                 <textarea id="xmlSitemapArea" rows="6" placeholder="Your sitemap.xml code will generate here..." style="width:100%; background:#05070a; color:#00e5ff; font-family:monospace; padding:10px; border-radius:6px; border:1px solid #1f2333;"></textarea>
             </div>
 
-            <!-- Site JSON Data Backup -->
             <div class="admin-card">
                 <div class="admin-card-title">Site Data JSON Backup & Restore</div>
                 <textarea id="backupTextarea" rows="6" style="width:100%; background:#05070a; color:#00e5ff; font-family:monospace; padding:10px; border-radius:6px; border:1px solid #1f2333;"></textarea>
@@ -944,9 +1056,25 @@
          ======================================================== -->
     <script>
         // 1. DATA INITIALIZATION
+        const defaultSectionHeadings = ["Categories & Channels"];
+
         const defaultCats = [
-            { name: "Movies", subcategories: ["Bollywood", "Hollywood", "Indian Hindi Dubbed", "Pakistani", "Punjabi"] },
-            { name: "Web Series", subcategories: ["Turkish Drama", "Hindi Series", "Korean Drama"] }
+            { 
+                name: "Movies", 
+                heading: "Categories & Channels", 
+                subcategories: ["Bollywood", "Hollywood", "Indian Hindi Dubbed", "Pakistani", "Punjabi"] 
+            },
+            { 
+                name: "Web Series", 
+                heading: "Categories & Channels", 
+                subcategories: ["Turkish Drama", "Hindi Series", "Korean Drama"] 
+            }
+        ];
+
+        const defaultOfficialDomains = [
+            { id: 1, name: "moviesflix.top", url: "https://moviesflix.top", status: "primary" },
+            { id: 2, name: "moviesflix.net", url: "https://moviesflix.net", status: "mirror" },
+            { id: 3, name: "moviesflix.live", url: "https://moviesflix.live", status: "backup" }
         ];
 
         const defaultMovies = [
@@ -957,11 +1085,11 @@
                 year: "2023",
                 mainCategory: "Movies",
                 subCategory: "Bollywood",
-                quality: "1080p HD",
+                quality: "4k",
                 tags: "Action, Crime, Drama, Ranbir Kapoor, Bollywood 2023",
                 poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
-                desc: "A son's obsessive love for his father leads to an intense path of revenge and violent conflicts against dangerous underworld gangs.",
-                dateTime: "24 Oct 2026, 02:40 PM",
+                desc: "A gritty story of father and son's intense relation.",
+                dateTime: "25 Oct 2026, 01:08 PM",
                 imdbRating: "6.2",
                 genre: "Action, Crime, Drama",
                 duration: "3h 24m",
@@ -972,32 +1100,13 @@
                     { id: 2, name: "Server 2 (HD Cloud Mirror)", url: "https://streamtape.com/e/demo1" }
                 ],
                 downloads: [
-                    { id: 1, name: "Mega.nz (1080p Web-DL)", url: "https://mega.nz" },
-                    { id: 2, name: "Google Drive (Fast Direct)", url: "https://drive.google.com" }
+                    { id: 1, quality: "4K Ultra HD", name: "Mega.nz", size: "4.8 GB", url: "https://mega.nz" },
+                    { id: 2, quality: "1080p Full HD", name: "Google Drive", size: "2.4 GB", url: "https://drive.google.com" },
+                    { id: 3, quality: "720p HD", name: "Fast Cloud", size: "1.2 GB", url: "https://mega.nz" }
                 ],
                 episodes: [],
                 cast: [
-                    { 
-                        id: 1, 
-                        name: "Ranbir Kapoor", 
-                        role: "Ranvijay Singh", 
-                        photo: "https://image.tmdb.org/t/p/w200/nUq8gN2hZf9Z8r5z0mQ6k3eF9Xy.jpg", 
-                        socialUrl: "https://instagram.com" 
-                    },
-                    { 
-                        id: 2, 
-                        name: "Anil Kapoor", 
-                        role: "Balbir Singh", 
-                        photo: "https://image.tmdb.org/t/p/w200/5k7rUoG98k3Y6l2bF1e8K9Vb8u.jpg", 
-                        socialUrl: "https://twitter.com" 
-                    },
-                    { 
-                        id: 3, 
-                        name: "Rashmika Mandanna", 
-                        role: "Geetanjali", 
-                        photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", 
-                        socialUrl: "https://instagram.com" 
-                    }
+                    { id: 1, name: "Sima", role: "Ruhi", photo: "https://image.tmdb.org/t/p/w200/nUq8gN2hZf9Z8r5z0mQ6k3eF9Xy.jpg", socialUrl: "https://instagram.com" }
                 ]
             },
             {
@@ -1025,20 +1134,8 @@
                     { id: 3, season: "Season 2", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_s2ep1", downloadUrl: "https://mega.nz/file/s2ep1" }
                 ],
                 cast: [
-                    { 
-                        id: 1, 
-                        name: "Burak Özçivit", 
-                        role: "Osman Bey", 
-                        photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", 
-                        socialUrl: "https://instagram.com" 
-                    },
-                    { 
-                        id: 2, 
-                        name: "Özge Törer", 
-                        role: "Bala Hatun", 
-                        photo: "https://image.tmdb.org/t/p/w200/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg", 
-                        socialUrl: "https://instagram.com" 
-                    }
+                    { id: 1, name: "Burak Özçivit", role: "Osman Bey", photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", socialUrl: "https://instagram.com" },
+                    { id: 2, name: "Özge Törer", role: "Bala Hatun", photo: "https://image.tmdb.org/t/p/w200/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg", socialUrl: "https://instagram.com" }
                 ]
             }
         ];
@@ -1066,7 +1163,9 @@
             { id: 3, platform: "instagram", icon: "fa-brands fa-instagram", url: "https://instagram.com" }
         ];
 
+        let sectionHeadings = JSON.parse(localStorage.getItem('mf_section_headings')) || defaultSectionHeadings;
         let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
+        let officialDomains = JSON.parse(localStorage.getItem('mf_official_domains')) || defaultOfficialDomains;
         let movies = JSON.parse(localStorage.getItem('mf_movies')) || defaultMovies;
         let trending = JSON.parse(localStorage.getItem('mf_trending')) || defaultTrending;
         let comingSoon = JSON.parse(localStorage.getItem('mf_coming_soon')) || defaultComingSoon;
@@ -1081,6 +1180,10 @@
             { id: 1, text: "Welcome to MoviesFlix! Fast Streaming & Direct Downloads." }
         ];
 
+        categories.forEach(c => {
+            if (!c.heading) c.heading = sectionHeadings[0] || "Categories & Channels";
+        });
+
         let tempEpisodesList = [];
         let tempCastList = [];
         let tempServersList = [];
@@ -1088,7 +1191,9 @@
         let currentFormSeasons = ["Season 1"];
 
         function persistAll() {
+            localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
             localStorage.setItem('mf_categories', JSON.stringify(categories));
+            localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
             localStorage.setItem('mf_movies', JSON.stringify(movies));
             localStorage.setItem('mf_trending', JSON.stringify(trending));
             localStorage.setItem('mf_coming_soon', JSON.stringify(comingSoon));
@@ -1143,6 +1248,7 @@
             closeModal('movieModal');
             closeModal('comingSoonModal');
             closeModal('sitemapModal');
+            closeModal('domainsModal');
             closeModal('legalPageModal');
             closeModal('contactModal');
             closeModal('editSeasonModal');
@@ -1166,7 +1272,7 @@
             });
         }
 
-        // 4. RENDER MOVIES (HOME: COMING SOON -> TOP 10 TRENDING -> RECENTLY ADDED -> CATEGORIES)
+        // 4. RENDER MOVIES (FORMAT: [MAIN HEADING] SUB-CATEGORY)
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1176,7 +1282,7 @@
                 return;
             }
 
-            // A. COMING SOON SECTION
+            // COMING SOON SECTION
             if (isHomePage && comingSoon.length > 0) {
                 const csSection = document.createElement('section');
                 csSection.className = 'category-section';
@@ -1210,7 +1316,7 @@
                 });
             }
 
-            // B. TOP 10 TRENDING SECTION
+            // TOP 10 TRENDING SECTION
             if (isHomePage && trending.length > 0) {
                 const trendingSection = document.createElement('section');
                 trendingSection.className = 'category-section';
@@ -1252,7 +1358,7 @@
                 });
             }
 
-            // C. RECENTLY ADDED SECTION
+            // RECENTLY ADDED SECTION
             if (isHomePage && list.length > 0) {
                 const recentSection = document.createElement('section');
                 recentSection.className = 'category-section';
@@ -1272,22 +1378,24 @@
                 });
             }
 
-            // D. REGULAR CATEGORY SECTIONS
+            // REGULAR SECTIONS (FORMAT: [MAIN HEADING] SUB-CATEGORY)
             const subCats = [...new Set(list.map(m => m.subCategory))];
             subCats.forEach(sub => {
+                const subMovies = list.filter(m => m.subCategory === sub);
+                const parentMainCat = subMovies[0] ? subMovies[0].mainCategory : 'Browse';
+
                 const section = document.createElement('section');
                 section.className = 'category-section';
                 section.innerHTML = `
                     <div class="category-heading">
                         <div class="cat-line"></div>
-                        <h2>Category - ${sub}</h2>
+                        <h2><span class="section-tag-badge">${parentMainCat}</span> ${sub}</h2>
                     </div>
                     <div class="movie-grid" id="grid-${sub.replace(/\s+/g, '-')}"></div>
                 `;
                 container.appendChild(section);
 
                 const grid = document.getElementById(`grid-${sub.replace(/\s+/g, '-')}`);
-                const subMovies = list.filter(m => m.subCategory === sub);
                 subMovies.forEach(movie => {
                     grid.appendChild(createMovieCardElement(movie));
                 });
@@ -1319,23 +1427,37 @@
 
         // 5. SIDEBAR RENDERING
         function renderSidebarMenu() {
-            const menu = document.getElementById('sidebarDynamicMenu');
-            menu.innerHTML = '';
+            const container = document.getElementById('sidebarDynamicSectionsContainer');
+            container.innerHTML = '';
 
-            categories.forEach((cat, idx) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <button class="menu-cat-btn" onclick="toggleSubmenu('sub-${idx}')">
-                        <span><i class="fa-solid fa-folder-closed" style="color:var(--cyan-accent); margin-right:8px;"></i> ${cat.name}</span>
-                        <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
-                    </button>
-                    <ul class="submenu" id="sub-${idx}">
-                        ${cat.subcategories.map(s => `
-                            <li><a href="#" onclick="filterBySubCategory('${s}')">${s}</a></li>
-                        `).join('')}
-                    </ul>
-                `;
-                menu.appendChild(li);
+            sectionHeadings.forEach((headingTitle, hIdx) => {
+                const headingDiv = document.createElement('div');
+                headingDiv.className = 'sidebar-section-heading';
+                headingDiv.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${headingTitle}`;
+                container.appendChild(headingDiv);
+
+                const ul = document.createElement('ul');
+                ul.className = 'sidebar-menu';
+
+                const matchedCats = categories.filter(c => (c.heading || sectionHeadings[0]) === headingTitle);
+
+                matchedCats.forEach((cat, cIdx) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <button class="menu-cat-btn" onclick="toggleSubmenu('sub-h${hIdx}-c${cIdx}')">
+                            <span><i class="fa-solid fa-folder-closed" style="color:var(--cyan-accent); margin-right:8px;"></i> ${cat.name}</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
+                        </button>
+                        <ul class="submenu" id="sub-h${hIdx}-c${cIdx}">
+                            ${cat.subcategories.map(s => `
+                                <li><a href="#" onclick="filterBySubCategory('${s}')">${s}</a></li>
+                            `).join('')}
+                        </ul>
+                    `;
+                    ul.appendChild(li);
+                });
+
+                container.appendChild(ul);
             });
         }
 
@@ -1388,11 +1510,10 @@
 
         window.onclick = () => { notifDropdown.style.display = 'none'; };
 
-        // 7. HTML SITEMAP MODAL RENDERING
+        // 7. HTML SITEMAP MODAL
         function openSitemapModal() {
             closeSidebar();
             
-            // Populate Categories in Sitemap
             const catContainer = document.getElementById('sitemapCategoriesList');
             catContainer.innerHTML = '';
             categories.forEach(cat => {
@@ -1408,7 +1529,6 @@
                 });
             });
 
-            // Populate Movies & Series in Sitemap
             const moviesContainer = document.getElementById('sitemapMoviesList');
             const totalCountBadge = document.getElementById('sitemapTotalCount');
             moviesContainer.innerHTML = '';
@@ -1428,7 +1548,67 @@
             document.getElementById('sitemapModal').style.display = 'flex';
         }
 
-        // 8. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
+        // 8. OFFICIAL DOMAINS & PROXIES MODAL
+        function openDomainsModal() {
+            closeSidebar();
+            renderUserDomainsList();
+            document.getElementById('domainsModal').style.display = 'flex';
+        }
+
+        function renderUserDomainsList() {
+            const container = document.getElementById('userDomainsListContainer');
+            container.innerHTML = '';
+
+            officialDomains.forEach(d => {
+                const card = document.createElement('div');
+                card.className = 'official-domain-card';
+
+                let badgeHtml = '';
+                if (d.status === 'primary') {
+                    badgeHtml = `<span class="domain-status-badge primary"><i class="fa-solid fa-circle-check"></i> PRIMARY / ACTIVE</span>`;
+                } else if (d.status === 'mirror') {
+                    badgeHtml = `<span class="domain-status-badge mirror"><i class="fa-solid fa-bolt"></i> ACTIVE MIRROR</span>`;
+                } else {
+                    badgeHtml = `<span class="domain-status-badge backup"><i class="fa-solid fa-shield"></i> BACKUP DOMAIN</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="domain-info-col">
+                        <div class="domain-name-text">
+                            <i class="fa-solid fa-globe" style="color:var(--cyan-accent);"></i> ${d.name}
+                        </div>
+                        <div>${badgeHtml}</div>
+                    </div>
+                    <div class="domain-actions-col">
+                        <a href="${d.url}" target="_blank" class="btn-domain-visit">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit
+                        </a>
+                        <button type="button" class="btn-domain-copy" onclick="copyDomainLink('${d.url}')">
+                            <i class="fa-solid fa-copy"></i> Copy
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function copyDomainLink(url) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast(`Copied ${url} to clipboard!`);
+                });
+            } else {
+                const t = document.createElement('textarea');
+                t.value = url;
+                document.body.appendChild(t);
+                t.select();
+                document.execCommand('copy');
+                document.body.removeChild(t);
+                showToast(`Copied ${url} to clipboard!`);
+            }
+        }
+
+        // 9. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
         function generateXmlSitemap() {
             let baseUrl = document.getElementById('inSiteLiveUrl').value.trim();
             if (!baseUrl) {
@@ -1443,10 +1623,8 @@
             let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
             xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
-            // Home Page URL
             xml += `  <url>\n    <loc>${baseUrl}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
 
-            // Categories URLs
             categories.forEach(cat => {
                 cat.subcategories.forEach(sub => {
                     const cleanSub = encodeURIComponent(sub.toLowerCase());
@@ -1454,7 +1632,6 @@
                 });
             });
 
-            // Movies & Series URLs
             movies.forEach(m => {
                 xml += `  <url>\n    <loc>${baseUrl}?watch=${m.id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
             });
@@ -1465,7 +1642,7 @@
             showToast("Google Search Console sitemap.xml generated!");
         }
 
-        // 9. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
+        // 10. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
         const legalTexts = {
             about: {
                 title: "About MoviesFlix Streaming Company",
@@ -1552,7 +1729,6 @@
             document.getElementById('legalPageModal').style.display = 'flex';
         }
 
-        // INTERACTIVE CONTACT FORM MODAL
         function openContactFormModal() {
             closeSidebar();
             document.getElementById('contactModal').style.display = 'flex';
@@ -1571,10 +1747,10 @@
 
             document.getElementById('userContactForm').reset();
             closeModal('contactModal');
-            showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received. Our team will email you within 24 hours.`);
+            showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received.`);
         }
 
-        // 10. OPEN COMING SOON PREVIEW MODAL
+        // 11. COMING SOON MODAL
         function openComingSoonModal(id) {
             const item = comingSoon.find(cs => cs.id === id);
             if (!item) return;
@@ -1599,7 +1775,18 @@
             document.getElementById('comingSoonModal').style.display = 'flex';
         }
 
-        // 11. FULL POST VIEW ENGINE
+        // HELPER FOR RESOLUTION BADGE CLASS
+        function getResBadgeClass(q) {
+            if (!q) return 'res-1080p';
+            const lower = q.toLowerCase();
+            if (lower.includes('4k') || lower.includes('2160') || lower.includes('uhd')) return 'res-4k';
+            if (lower.includes('1080') || lower.includes('fhd')) return 'res-1080p';
+            if (lower.includes('720')) return 'res-720p';
+            if (lower.includes('480')) return 'res-480p';
+            return 'res-1080p';
+        }
+
+        // 12. FULL POST VIEW ENGINE
         let currentMovieServers = [];
 
         function openMoviePost(id) {
@@ -1618,7 +1805,6 @@
             const isSeries = movie.type === 'series';
             document.getElementById('badgeType').innerText = isSeries ? 'Series / Drama' : 'Single Movie';
 
-            // SHOW REAL IMDB METADATA BOX
             const imdbPanel = document.getElementById('modalImdbPanel');
             if (movie.imdbRating || movie.genre || movie.duration || movie.director) {
                 imdbPanel.style.display = 'block';
@@ -1655,7 +1841,6 @@
                 });
             }
 
-            // RENDERING CAST & CHARACTERS
             const castContainer = document.getElementById('modalCastContainer');
             const castGrid = document.getElementById('modalCastGrid');
             const castCount = document.getElementById('modalCastCount');
@@ -1714,6 +1899,7 @@
                 serversSwitchContainer.style.display = 'none';
             }
 
+            // RENDER ENHANCED DOWNLOAD CARDS (WITH RESOLUTION HEADINGS)
             const downloadsList = document.getElementById('modalDownloadsList');
             const movieDownloadsWrapper = document.getElementById('movieDownloadsWrapper');
             downloadsList.innerHTML = '';
@@ -1724,12 +1910,24 @@
                 movieDownloadsWrapper.style.display = 'block';
                 if (availableDownloads.length > 0) {
                     availableDownloads.forEach(dl => {
-                        const dlBtn = document.createElement('a');
-                        dlBtn.href = dl.url;
-                        dlBtn.target = "_blank";
-                        dlBtn.className = "btn-download-server-pill";
-                        dlBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Download via ${dl.name}`;
-                        downloadsList.appendChild(dlBtn);
+                        const card = document.createElement('a');
+                        card.href = dl.url;
+                        card.target = "_blank";
+                        card.className = "download-mirror-card";
+
+                        const qClass = getResBadgeClass(dl.quality);
+
+                        card.innerHTML = `
+                            <div class="dl-card-left">
+                                <span class="dl-resolution-badge ${qClass}">${dl.quality || '1080p HD'}</span>
+                                <div class="dl-card-info">
+                                    <div class="dl-server-name">Download via ${dl.name}</div>
+                                    ${dl.size ? `<div class="dl-file-size"><i class="fa-solid fa-hard-drive"></i> Size: ${dl.size}</div>` : ''}
+                                </div>
+                            </div>
+                            <span class="dl-action-pill"><i class="fa-solid fa-cloud-arrow-down"></i> Download</span>
+                        `;
+                        downloadsList.appendChild(card);
                     });
                 } else {
                     downloadsList.innerHTML = `<p style="color:#777; font-size:12px;">No direct download links added.</p>`;
@@ -1825,7 +2023,7 @@
 
             const dlBtn = document.getElementById('seriesEpisodeDownloadBtn');
             dlBtn.href = episode.downloadUrl || '#';
-            dlBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Download ${episode.title} (Mega / GDrive)`;
+            document.getElementById('seriesEpDlTitle').innerText = `Download ${episode.season} - ${episode.title}`;
         }
 
         function toggleOnlinePlayer() {
@@ -1857,7 +2055,7 @@
             }
         }
 
-        // 12. ADMIN AUTHENTICATION
+        // 13. ADMIN AUTHENTICATION
         document.getElementById('secretAdminTrigger').onclick = () => {
             document.getElementById('adminAuthModal').style.display = 'flex';
         };
@@ -1909,7 +2107,7 @@
             document.getElementById(panelId).classList.add('active');
         }
 
-        // 13. REAL & AUTOMATIC IMDB FETCHER ENGINE
+        // 14. REAL & AUTOMATIC IMDB FETCHER ENGINE
         async function autoFetchImdbData() {
             const title = document.getElementById('inMovieTitle').value.trim();
             const year = document.getElementById('inMovieYear').value.trim();
@@ -1921,13 +2119,7 @@
             showToast(`Connecting to IMDb for "${title}"...`);
 
             const apiKeysPool = [
-                "e2960f27",
-                "4f458a6f",
-                "7282b8a7",
-                "85a6a568",
-                "a39a9d8c",
-                "trilogy",
-                "b9a5e69d"
+                "e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c", "trilogy", "b9a5e69d"
             ];
 
             let foundData = null;
@@ -1991,7 +2183,7 @@
             }
         }
 
-        // 14. TOP 10 TRENDING LOGIC
+        // 15. TOP 10 TRENDING LOGIC
         function handleSaveTrending(e) {
             e.preventDefault();
             const movieId = parseInt(document.getElementById('inTrendingMovieSelect').value);
@@ -2046,7 +2238,7 @@
             showToast("Movie removed from Top Trending!");
         }
 
-        // 15. COMING SOON LOGIC
+        // 16. COMING SOON LOGIC
         function handleSaveComingSoon(e) {
             e.preventDefault();
 
@@ -2149,7 +2341,97 @@
             showToast("Upcoming post removed!");
         }
 
-        // 16. ADMIN OPERATIONS (MULTI-SERVERS & SERIES)
+        // 17. OFFICIAL DOMAINS MANAGEMENT LOGIC (CRUD)
+        function handleSaveDomain(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editDomainId').value;
+            const name = document.getElementById('inDomainName').value.trim();
+            const url = document.getElementById('inDomainUrl').value.trim();
+            const status = document.getElementById('inDomainStatus').value;
+
+            if (!name || !url) {
+                return showToast("Please enter domain name and full URL!", true);
+            }
+
+            if (editId) {
+                const idx = officialDomains.findIndex(d => d.id == editId);
+                if (idx !== -1) {
+                    officialDomains[idx].name = name;
+                    officialDomains[idx].url = url;
+                    officialDomains[idx].status = status;
+                    persistAll();
+                    cancelDomainEdit();
+                    renderAdminDomainsList();
+                    showToast(`Official Domain "${name}" updated!`);
+                }
+            } else {
+                officialDomains.push({ id: Date.now(), name, url, status });
+                persistAll();
+                cancelDomainEdit();
+                renderAdminDomainsList();
+                showToast(`Official Domain "${name}" added!`);
+            }
+        }
+
+        function renderAdminDomainsList() {
+            const list = document.getElementById('adminDomainsListContainer');
+            document.getElementById('totalDomainsBadge').innerText = officialDomains.length;
+            list.innerHTML = '';
+
+            officialDomains.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'manage-item-row';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:var(--cyan-accent);">${d.name}</strong>
+                        <span style="font-size:10px; color:#aaa; margin-left:6px;">[${d.status.toUpperCase()}]</span>
+                        <div style="font-size:11px; color:#777;">${d.url}</div>
+                    </div>
+                    <div class="btn-group-actions">
+                        <button class="btn-edit-item" onclick="editDomain(${d.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button class="btn-delete-item" onclick="deleteDomain(${d.id})"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function editDomain(id) {
+            const domain = officialDomains.find(d => d.id === id);
+            if (!domain) return;
+
+            document.getElementById('editDomainId').value = domain.id;
+            document.getElementById('inDomainName').value = domain.name;
+            document.getElementById('inDomainUrl').value = domain.url;
+            document.getElementById('inDomainStatus').value = domain.status;
+
+            document.getElementById('domainFormTitle').innerText = "Edit Official Mirror Domain";
+            document.getElementById('btnSubmitDomain').innerHTML = `<i class="fa-solid fa-check"></i> Save Changes`;
+            document.getElementById('btnCancelDomainEdit').style.display = "block";
+
+            document.getElementById('adminDashboard').scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Loaded Domain into Edit Form!");
+        }
+
+        function cancelDomainEdit() {
+            document.getElementById('editDomainId').value = "";
+            document.getElementById('adminDomainForm').reset();
+            document.getElementById('domainFormTitle').innerText = "Add Official Mirror Domain / Proxy";
+            document.getElementById('btnSubmitDomain').innerHTML = `<i class="fa-solid fa-plus"></i> Save Domain`;
+            document.getElementById('btnCancelDomainEdit').style.display = "none";
+        }
+
+        function deleteDomain(id) {
+            if (officialDomains.length <= 1) {
+                return showToast("At least 1 official domain must remain!", true);
+            }
+            officialDomains = officialDomains.filter(d => d.id !== id);
+            persistAll();
+            renderAdminDomainsList();
+            showToast("Official domain removed!");
+        }
+
+        // 18. ADMIN OPERATIONS (MULTI-SERVERS & SERIES & RESOLUTION DOWNLOADS)
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -2207,18 +2489,28 @@
             renderAdminServersPreview();
         }
 
+        // ADD DOWNLOAD SERVER WITH RESOLUTION HEADING & FILE SIZE
         function addDownloadServer() {
-            const name = document.getElementById('dlNameInput').value.trim();
+            const quality = document.getElementById('dlQualityInput').value.trim() || '1080p Full HD';
+            const name = document.getElementById('dlNameInput').value.trim() || 'Mega';
+            const size = document.getElementById('dlSizeInput').value.trim();
             const url = document.getElementById('dlUrlInput').value.trim();
 
-            if (!name) return showToast("Enter Source Name (e.g. Mega.nz 1080p)!", true);
             if (!url) return showToast("Enter Download URL link!", true);
 
-            tempDownloadsList.push({ id: Date.now(), name, url });
+            tempDownloadsList.push({ 
+                id: Date.now(), 
+                quality: quality,
+                name: name, 
+                size: size,
+                url: url 
+            });
+
             document.getElementById('dlNameInput').value = '';
+            document.getElementById('dlSizeInput').value = '';
             document.getElementById('dlUrlInput').value = '';
             renderAdminDownloadsPreview();
-            showToast(`${name} added!`);
+            showToast(`[${quality}] ${name} mirror added!`);
         }
 
         function renderAdminDownloadsPreview() {
@@ -2229,7 +2521,8 @@
                 row.className = 'manage-item-row';
                 row.innerHTML = `
                     <div>
-                        <strong style="color:#00e676;">${d.name}</strong>
+                        <strong style="color:#00e676;">[${d.quality || '1080p HD'}] ${d.name}</strong>
+                        ${d.size ? `<span style="font-size:11px; color:#aaa; margin-left:6px;">(${d.size})</span>` : ''}
                         <div style="font-size:10px; color:#777;">${d.url}</div>
                     </div>
                     <button type="button" class="btn-delete-item" onclick="removeTempDownload(${idx})">Remove</button>
@@ -2372,13 +2665,7 @@
 
             if (!name) return showToast("Enter Actor / Person Name!", true);
 
-            tempCastList.push({ 
-                id: Date.now(), 
-                name, 
-                role, 
-                photo, 
-                socialUrl: social 
-            });
+            tempCastList.push({ id: Date.now(), name, role, photo, socialUrl: social });
 
             document.getElementById('castNameInput').value = '';
             document.getElementById('castRoleInput').value = '';
@@ -2415,6 +2702,12 @@
         }
 
         function loadAdminDashboardData() {
+            const headingSelect = document.getElementById('parentSectionHeadingSelect');
+            headingSelect.innerHTML = '';
+            sectionHeadings.forEach(h => {
+                headingSelect.innerHTML += `<option value="${h}">${h}</option>`;
+            });
+
             const inMain = document.getElementById('inMainCat');
             const parentSelect = document.getElementById('parentCatSelect');
             inMain.innerHTML = '';
@@ -2435,7 +2728,9 @@
             renderAdminMoviesList();
             renderAdminTrendingList();
             renderAdminComingSoonList();
+            renderAdminDomainsList();
             renderAdminCategoryTree();
+            renderAdminHeadingsBadges();
             renderActiveSocialsInAdmin();
 
             document.getElementById('logoTypeSelect').value = branding.logoType;
@@ -2475,7 +2770,7 @@
             return `${dateStr}, ${timeStr}`;
         }
 
-        // SAVE / UPDATE POST WITH IMDB METADATA
+        // SAVE / UPDATE POST
         document.getElementById('adminAddMovieForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -2667,28 +2962,103 @@
             showToast("Post deleted!");
         }
 
-        // CATEGORY OPERATIONS
-        function createMainCategory() {
-            const val = document.getElementById('inNewMainCat').value.trim();
-            if (!val) return showToast("Category name empty!", true);
-            categories.push({ name: val, subcategories: [] });
+        // 19. 3-LEVEL HIERARCHY OPERATIONS (HEADINGS, CATEGORIES, SUBCATEGORIES)
+        function addNewSectionHeading() {
+            const input = document.getElementById('newHeadingNameInput');
+            const name = input.value.trim();
+            if (!name) return showToast("Enter Section Heading Title!", true);
+
+            if (!sectionHeadings.includes(name)) {
+                sectionHeadings.push(name);
+                input.value = '';
+                persistAll();
+                loadAdminDashboardData();
+                renderSidebarMenu();
+                showToast(`Section Heading "${name}" Added!`);
+            } else {
+                showToast("This Section Heading already exists!", true);
+            }
+        }
+
+        function editSectionHeading(idx) {
+            const oldName = sectionHeadings[idx];
+            document.getElementById('editCatModalTitle').innerText = "Edit Section Heading";
+            document.getElementById('editCatInputLabel').innerText = "Section Heading Name";
+            document.getElementById('editCategoryInputName').value = oldName;
+            document.getElementById('editCatType').value = 'heading';
+            document.getElementById('editCatMainIdx').value = idx;
+            document.getElementById('editCategoryModal').style.display = 'flex';
+        }
+
+        function deleteSectionHeading(idx) {
+            if (sectionHeadings.length <= 1) {
+                return showToast("At least 1 Section Heading is required!", true);
+            }
+            const headingToDelete = sectionHeadings[idx];
+            sectionHeadings.splice(idx, 1);
+
+            categories.forEach(c => {
+                if (c.heading === headingToDelete) {
+                    c.heading = sectionHeadings[0];
+                }
+            });
+
             persistAll();
-            document.getElementById('inNewMainCat').value = '';
             loadAdminDashboardData();
-            showToast("Main Category Added!");
+            renderSidebarMenu();
+            showToast(`Heading "${headingToDelete}" deleted! Categories reassigned to ${sectionHeadings[0]}.`);
+        }
+
+        function renderAdminHeadingsBadges() {
+            const container = document.getElementById('adminHeadingsChipsContainer');
+            container.innerHTML = '';
+
+            sectionHeadings.forEach((h, idx) => {
+                const chip = document.createElement('div');
+                chip.className = 'section-heading-chip';
+                chip.innerHTML = `
+                    <span class="heading-title-text"><i class="fa-solid fa-heading"></i> ${h}</span>
+                    <div class="season-chip-actions">
+                        <button type="button" class="btn-chip-edit" onclick="editSectionHeading(${idx})" title="Edit Heading"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" class="btn-chip-del" onclick="deleteSectionHeading(${idx})" title="Delete Heading"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
+        function createMainCategory() {
+            const heading = document.getElementById('parentSectionHeadingSelect').value;
+            const input = document.getElementById('inNewMainCat');
+            const val = input.value.trim();
+
+            if (!heading) return showToast("Create or select a Section Heading first!", true);
+            if (!val) return showToast("Main Category name empty!", true);
+
+            categories.push({ name: val, heading: heading, subcategories: [] });
+            persistAll();
+            input.value = '';
+            loadAdminDashboardData();
+            renderSidebarMenu();
+            showToast(`Main Category "${val}" added under "${heading}"!`);
         }
 
         function createSubCategory() {
             const parent = document.getElementById('parentCatSelect').value;
-            const subVal = document.getElementById('inNewSubCat').value.trim();
+            const input = document.getElementById('inNewSubCat');
+            const subVal = input.value.trim();
+
+            if (!parent) return showToast("Select Parent Main Category first!", true);
             if (!subVal) return showToast("Subcategory name empty!", true);
+
             const target = categories.find(c => c.name === parent);
             if (target) {
                 target.subcategories.push(subVal);
                 persistAll();
-                document.getElementById('inNewSubCat').value = '';
+                input.value = '';
                 loadAdminDashboardData();
-                showToast("Subcategory Added!");
+                renderSidebarMenu();
+                showToast(`Subcategory "${subVal}" added under "${parent}"!`);
             }
         }
 
@@ -2716,9 +3086,23 @@
         function saveEditedCategory() {
             const type = document.getElementById('editCatType').value;
             const newName = document.getElementById('editCategoryInputName').value.trim();
-            if (!newName) return showToast("Category name cannot be empty!", true);
+            if (!newName) return showToast("Name cannot be empty!", true);
 
-            if (type === 'main') {
+            if (type === 'heading') {
+                const idx = parseInt(document.getElementById('editCatMainIdx').value);
+                const oldHeading = sectionHeadings[idx];
+                sectionHeadings[idx] = newName;
+
+                categories.forEach(c => {
+                    if (c.heading === oldHeading) c.heading = newName;
+                });
+
+                persistAll();
+                loadAdminDashboardData();
+                renderSidebarMenu();
+                closeModal('editCategoryModal');
+                showToast(`Section Heading renamed to "${newName}"!`);
+            } else if (type === 'main') {
                 const idx = parseInt(document.getElementById('editCatMainIdx').value);
                 const oldName = categories[idx].name;
                 movies.forEach(m => {
@@ -2727,6 +3111,7 @@
                 categories[idx].name = newName;
                 persistAll();
                 loadAdminDashboardData();
+                renderSidebarMenu();
                 closeModal('editCategoryModal');
                 showToast(`Main Category renamed to "${newName}"!`);
             } else if (type === 'sub') {
@@ -2739,6 +3124,7 @@
                 categories[cIdx].subcategories[sIdx] = newName;
                 persistAll();
                 loadAdminDashboardData();
+                renderSidebarMenu();
                 closeModal('editCategoryModal');
                 showToast(`Subcategory renamed to "${newName}"!`);
             }
@@ -2748,35 +3134,63 @@
             const tree = document.getElementById('categoryTree');
             tree.innerHTML = '';
 
-            categories.forEach((cat, cIdx) => {
-                const box = document.createElement('div');
-                box.style.background = '#090a10';
-                box.style.padding = '12px';
-                box.style.marginBottom = '10px';
-                box.style.borderRadius = '6px';
-                box.style.border = '1px solid rgba(255,255,255,0.08)';
+            sectionHeadings.forEach((heading, hIdx) => {
+                const headingBox = document.createElement('div');
+                headingBox.style.background = '#090a10';
+                headingBox.style.padding = '14px';
+                headingBox.style.marginBottom = '14px';
+                headingBox.style.borderRadius = '8px';
+                headingBox.style.border = '1px solid var(--border-cyan)';
 
-                box.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong style="color:var(--cyan-accent); font-size:14px;"><i class="fa-solid fa-folder"></i> ${cat.name}</strong>
+                headingBox.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(0,229,255,0.2); padding-bottom:6px;">
+                        <strong style="color:var(--cyan-accent); font-size:14px; text-transform:uppercase;"><i class="fa-solid fa-layer-group"></i> Heading: ${heading}</strong>
                         <div class="btn-group-actions">
-                            <button class="btn-edit-item" onclick="editMainCategory(${cIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button class="btn-delete-item" onclick="deleteMainCategory(${cIdx})">Delete</button>
+                            <button class="btn-edit-item" onclick="editSectionHeading(${hIdx})"><i class="fa-solid fa-pen"></i> Edit Heading</button>
+                            <button class="btn-delete-item" onclick="deleteSectionHeading(${hIdx})">Delete Heading</button>
                         </div>
                     </div>
-                    <div style="margin-top:10px; padding-left:12px;">
-                        ${cat.subcategories.map((sub, sIdx) => `
-                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin:6px 0; color:#8c93a8;">
-                                <span>↳ ${sub}</span>
-                                <div style="display:flex; gap:8px;">
-                                    <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${cIdx}, ${sIdx})"><i class="fa-solid fa-pen"></i></span>
-                                    <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${cIdx}, ${sIdx})"><i class="fa-solid fa-xmark"></i></span>
+                `;
+
+                const matchedCats = categories.filter(c => (c.heading || sectionHeadings[0]) === heading);
+
+                if (matchedCats.length === 0) {
+                    headingBox.innerHTML += `<p style="color:#666; font-size:12px; font-style:italic;">No main categories added under this heading yet.</p>`;
+                } else {
+                    matchedCats.forEach(cat => {
+                        const originalCatIdx = categories.findIndex(c => c === cat);
+                        const catDiv = document.createElement('div');
+                        catDiv.style.background = '#111422';
+                        catDiv.style.padding = '10px 12px';
+                        catDiv.style.marginBottom = '8px';
+                        catDiv.style.borderRadius = '6px';
+                        catDiv.style.border = '1px solid rgba(255,255,255,0.06)';
+
+                        catDiv.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="color:#fff; font-size:13px;"><i class="fa-solid fa-folder"></i> ${cat.name}</strong>
+                                <div class="btn-group-actions">
+                                    <button class="btn-edit-item" onclick="editMainCategory(${originalCatIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
+                                    <button class="btn-delete-item" onclick="deleteMainCategory(${originalCatIdx})">Delete</button>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
-                `;
-                tree.appendChild(box);
+                            <div style="margin-top:8px; padding-left:12px;">
+                                ${cat.subcategories.length > 0 ? cat.subcategories.map((sub, sIdx) => `
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin:5px 0; color:#8c93a8;">
+                                        <span>↳ ${sub}</span>
+                                        <div style="display:flex; gap:8px;">
+                                            <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${originalCatIdx}, ${sIdx})"><i class="fa-solid fa-pen"></i></span>
+                                            <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${originalCatIdx}, ${sIdx})"><i class="fa-solid fa-xmark"></i></span>
+                                        </div>
+                                    </div>
+                                `).join('') : '<span style="font-size:11px; color:#555; font-style:italic;">No subcategories yet.</span>'}
+                            </div>
+                        `;
+                        headingBox.appendChild(catDiv);
+                    });
+                }
+
+                tree.appendChild(headingBox);
             });
         }
 
@@ -2784,6 +3198,7 @@
             categories.splice(idx, 1);
             persistAll();
             loadAdminDashboardData();
+            renderSidebarMenu();
             showToast("Main Category Deleted!");
         }
 
@@ -2791,6 +3206,7 @@
             categories[cIdx].subcategories.splice(sIdx, 1);
             persistAll();
             loadAdminDashboardData();
+            renderSidebarMenu();
             showToast("Subcategory Deleted!");
         }
 
@@ -2883,7 +3299,7 @@
 
         // BACKUP
         function exportDataBackup() {
-            const payload = { categories, movies, trending, comingSoon, socials, auth, branding, notifications };
+            const payload = { sectionHeadings, categories, officialDomains, movies, trending, comingSoon, socials, auth, branding, notifications };
             document.getElementById('backupTextarea').value = JSON.stringify(payload, null, 2);
             showToast("Backup generated in textarea!");
         }
@@ -2892,7 +3308,9 @@
             try {
                 const parsed = JSON.parse(document.getElementById('backupTextarea').value);
                 if (parsed.categories && parsed.movies) {
+                    sectionHeadings = parsed.sectionHeadings || sectionHeadings;
                     categories = parsed.categories;
+                    officialDomains = parsed.officialDomains || officialDomains;
                     movies = parsed.movies;
                     trending = parsed.trending || trending;
                     comingSoon = parsed.comingSoon || comingSoon;
@@ -2902,6 +3320,7 @@
                     notifications = parsed.notifications || notifications;
                     persistAll();
                     loadAdminDashboardData();
+                    renderSidebarMenu();
                     showToast("Backup restored successfully!");
                 }
             } catch(e) {
@@ -2909,7 +3328,7 @@
             }
         }
 
-        // 17. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY, ACTORS & TAGS)
+        // 20. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY, ACTORS & TAGS)
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {

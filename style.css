@@ -20,6 +20,9 @@
     --gold-glow: rgba(245, 158, 11, 0.4);
     --pink-accent: #ec4899;
     --pink-glow: rgba(236, 72, 153, 0.5);
+    --green-accent: #10b981;
+    --green-glow: rgba(16, 185, 129, 0.4);
+    --purple-accent: #a855f7;
     --imdb-yellow: #f5c518;
     --text-primary: #f0f3fa;
     --text-muted: #8c94ac;
@@ -250,7 +253,7 @@ body {
 }
 
 /* ========================================================
-   4. SIDEBAR DRAWER WITH FOOTER LINE
+   4. SIDEBAR DRAWER WITH DYNAMIC SECTION HEADINGS
    ======================================================== */
 .sidebar-overlay {
     position: fixed;
@@ -296,6 +299,23 @@ body {
     font-size: 18px;
     font-weight: 800;
     color: var(--cyan-accent);
+}
+
+.sidebar-section-heading {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--cyan-accent);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-top: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sidebar-section-heading:first-of-type {
+    margin-top: 0;
 }
 
 .sidebar-menu {
@@ -407,7 +427,7 @@ body {
 }
 
 /* ========================================================
-   5. MOVIES CONTAINER & SPECIAL CARDS (TOP 10 & COMING SOON)
+   5. MOVIES CONTAINER & CATEGORY HEADINGS
    ======================================================== */
 .main-content {
     padding: 20px 14px;
@@ -441,6 +461,20 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.section-tag-badge {
+    background: rgba(0, 229, 255, 0.12);
+    color: var(--cyan-accent);
+    border: 1px solid var(--border-cyan);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
 }
 
 .movie-grid {
@@ -820,7 +854,7 @@ body {
 }
 
 .post-description-box {
-    background: #090b12;
+    background: #090a10;
     padding: 14px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.06);
@@ -979,7 +1013,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* STREAMING SERVERS & DOWNLOADS */
+/* STREAMING SERVERS */
 .streaming-servers-box {
     margin-bottom: 14px;
 }
@@ -1028,34 +1062,109 @@ body {
     box-shadow: 0 0 12px var(--cyan-glow);
 }
 
+/* ========================================================
+   ENHANCED DOWNLOAD MIRROR CARDS (WITH RESOLUTION HEADINGS)
+   ======================================================== */
 .multi-downloads-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     margin-top: 10px;
 }
 
-.btn-download-server-pill {
+.download-mirror-card {
+    background: #0b0e18;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 8px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background: linear-gradient(90deg, #00c853 0%, #00e676 100%);
-    color: #000;
-    font-weight: 800;
-    font-size: 13px;
-    text-align: center;
-    padding: 12px;
-    border-radius: 8px;
+    justify-content: space-between;
     text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+    color: #fff;
     transition: 0.25s all ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-.btn-download-server-pill:hover {
+.download-mirror-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 200, 83, 0.5);
+    border-color: var(--green-accent);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    background: #101524;
+}
+
+.dl-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dl-resolution-badge {
+    font-size: 11px;
+    font-weight: 900;
+    padding: 4px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.dl-resolution-badge.res-4k {
+    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.dl-resolution-badge.res-1080p {
+    background: linear-gradient(135deg, #00e5ff 0%, #0088cc 100%);
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+}
+
+.dl-resolution-badge.res-720p {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #000;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+.dl-resolution-badge.res-480p {
+    background: #374151;
+    color: #e5e7eb;
+    border: 1px solid #4b5563;
+}
+
+.dl-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dl-server-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.dl-file-size {
+    font-size: 11px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dl-action-pill {
+    background: var(--green-accent);
+    color: #000;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    flex-shrink: 0;
 }
 
 .series-episodes-panel {
@@ -1173,7 +1282,7 @@ body {
 }
 
 /* ========================================================
-   7. SITEMAP PAGE DIRECTORY (FOR GOOGLE & USERS)
+   7. SITEMAP & OFFICIAL DOMAINS STYLING
    ======================================================== */
 .sitemap-directory-wrapper {
     display: flex;
@@ -1234,8 +1343,121 @@ body {
     font-size: 10px;
 }
 
+/* OFFICIAL DOMAINS / PROXIES PAGE STYLING */
+.domains-directory-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.official-domain-card {
+    background: #090a12;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: 0.25s all ease;
+}
+
+.official-domain-card:hover {
+    border-color: var(--cyan-accent);
+    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
+}
+
+.domain-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.domain-name-text {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.domain-status-badge {
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.domain-status-badge.primary {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--green-accent);
+    border: 1px solid var(--green-accent);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.domain-status-badge.mirror {
+    background: rgba(0, 229, 255, 0.15);
+    color: var(--cyan-accent);
+    border: 1px solid var(--cyan-accent);
+}
+
+.domain-status-badge.backup {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gold-accent);
+    border: 1px solid var(--gold-accent);
+}
+
+.domain-actions-col {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-domain-visit {
+    background: var(--cyan-accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s all;
+}
+
+.btn-domain-visit:hover {
+    box-shadow: 0 0 10px var(--cyan-glow);
+    transform: translateY(-2px);
+}
+
+.btn-domain-copy {
+    background: #171b2d;
+    color: var(--cyan-accent);
+    border: 1px solid var(--border-cyan);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-domain-copy:hover {
+    background: var(--cyan-accent);
+    color: #000;
+}
+
 /* ========================================================
-   8. FULL ADMIN DASHBOARD & BUILDER CARDS
+   8. FULL ADMIN DASHBOARD & HIERARCHY MANAGER
    ======================================================== */
 .admin-dashboard-overlay {
     position: fixed;
@@ -1374,6 +1596,24 @@ body {
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 14px;
+}
+
+.section-heading-chip {
+    background: #171b2d;
+    border: 1px solid var(--border-cyan);
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.section-heading-chip .heading-title-text {
+    color: var(--cyan-accent);
+    letter-spacing: 0.5px;
 }
 
 .season-control-row {
