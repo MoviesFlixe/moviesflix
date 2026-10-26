@@ -33,6 +33,24 @@
             <img src="" id="brandLogoImg" class="logo-img" style="display:none;" alt="Logo">
         </a>
 
+        <!-- INSTANT ZERO-FLICKER SCRIPT: PREVENTS TEXT LOGO FLASH ON REFRESH -->
+        <script>
+            (function() {
+                try {
+                    var b = JSON.parse(localStorage.getItem('mf_branding'));
+                    if (b && b.logoType === 'image' && b.logoImage) {
+                        var img = document.getElementById('brandLogoImg');
+                        var txt = document.getElementById('brandLogoText');
+                        if (img && txt) {
+                            img.src = b.logoImage;
+                            img.style.display = 'block';
+                            txt.style.display = 'none';
+                        }
+                    }
+                } catch(e) {}
+            })();
+        </script>
+
         <div class="social-icons-wrapper" id="socialIconsContainer"></div>
     </header>
 
@@ -77,7 +95,6 @@
             </button>
         </div>
 
-        <!-- DYNAMIC SECTION HEADINGS & CATEGORIES CONTAINER -->
         <div id="sidebarDynamicSectionsContainer"></div>
 
         <div class="sidebar-divider"></div>
@@ -297,7 +314,7 @@
                         <a class="sitemap-link-item" onclick="openDomainsModal()"><i class="fa-solid fa-chevron-right"></i> Official Domains</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('about')"><i class="fa-solid fa-chevron-right"></i> About Us</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
-                        <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-solid fa-chevron-right"></i> Copyright</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-chevron-right"></i> Copyright</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('privacy')"><i class="fa-solid fa-user-lock"></i> Privacy Policy</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('terms')"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-triangle-exclamation"></i> 18+ Disclaimer</a>
@@ -482,7 +499,6 @@
         <div class="admin-top-bar">
             <div style="display:flex; align-items:center; gap:12px;">
                 <h2 style="color:var(--cyan-accent);"><i class="fa-solid fa-terminal"></i> Admin Control Center</h2>
-                <!-- REALTIME GOOGLE CLOUD STATUS BADGE -->
                 <span class="cloud-status-badge" id="cloudSyncStatusBadge">
                     <i class="fa-solid fa-cloud"></i> Google Cloud Live
                 </span>
@@ -621,7 +637,6 @@
                             <div class="added-episodes-table" id="adminServersListContainer"></div>
                         </div>
 
-                        <!-- ENHANCED MULTIPLE DOWNLOAD MIRRORS WITH RESOLUTION/QUALITY & SIZE -->
                         <div class="link-builder-card">
                             <div style="font-size:14px; font-weight:700; color:var(--green-accent); margin-bottom:10px;">
                                 <i class="fa-solid fa-cloud-arrow-down"></i> Multiple Download Mirrors (With Resolution Heading & File Size)
@@ -909,7 +924,7 @@
         <div class="admin-tab-panel" id="panelCategories">
             <div class="admin-card">
                 <div class="admin-card-title">
-                    <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. Categories & Channels, Entertainment Zone)
+                    <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. Categories & Channels)
                 </div>
                 <div class="season-control-row">
                     <input type="text" id="newHeadingNameInput" placeholder="Section Heading Title (e.g. Anime Corner, Channels)">
@@ -1066,9 +1081,7 @@
          JAVASCRIPT LOGIC WITH REALTIME FIREBASE CLOUD DATABASE
          ======================================================== -->
     <script>
-        // ----------------------------------------------------
-        // 1. YOUR REAL FIREBASE GOOGLE CLOUD CONFIGURATION
-        // ----------------------------------------------------
+        // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyB-t4r9mdqwnZVr7QVaXo7_G2zVXcG2Or4",
             authDomain: "moviesflix-portal.firebaseapp.com",
@@ -1086,9 +1099,7 @@
             console.error("Firebase init fallback:", err);
         }
 
-        // ----------------------------------------------------
         // 2. DATA INITIALIZATION & FALLBACKS
-        // ----------------------------------------------------
         const defaultSectionHeadings = ["Categories & Channels"];
 
         const defaultCats = [
@@ -1116,13 +1127,10 @@
             { id: 3, platform: "instagram", icon: "fa-brands fa-instagram", url: "https://instagram.com" }
         ];
 
-        // State Cache
         const hasSyncedBefore = localStorage.getItem('mf_cloud_synced') === 'true';
         let sectionHeadings = JSON.parse(localStorage.getItem('mf_section_headings')) || defaultSectionHeadings;
         let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
         let officialDomains = JSON.parse(localStorage.getItem('mf_official_domains')) || defaultOfficialDomains;
-        
-        // IMPORTANT: If cloud synced before, use exact cached array (even if empty!). Only seed if fresh project
         let movies = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_movies')) || []) : (JSON.parse(localStorage.getItem('mf_movies')) || []);
         let trending = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_trending')) || []) : (JSON.parse(localStorage.getItem('mf_trending')) || []);
         let comingSoon = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_coming_soon')) || []) : (JSON.parse(localStorage.getItem('mf_coming_soon')) || []);
@@ -1143,9 +1151,7 @@
         let tempDownloadsList = [];
         let currentFormSeasons = ["Season 1"];
 
-        // ----------------------------------------------------
-        // 3. PERSISTENCE ENGINE (LOCAL STORAGE + FIREBASE CLOUD)
-        // ----------------------------------------------------
+        // 3. PERSISTENCE ENGINE
         function persistAll() {
             localStorage.setItem('mf_cloud_synced', 'true');
             localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
@@ -1181,7 +1187,7 @@
             }
         }
 
-        // Realtime Listener from Google Cloud Database (FIXED ZERO-LENGTH BUG!)
+        // Realtime Listener from Google Cloud Database
         function setupFirebaseRealtimeSync() {
             if (!db) return;
 
@@ -1190,7 +1196,6 @@
                     if (doc.exists) {
                         const data = doc.data();
 
-                        // ACCEPT EMPTY ARRAYS AS VALID DELETED STATES!
                         if (Array.isArray(data.movies)) {
                             movies = data.movies;
                         }
@@ -1222,7 +1227,6 @@
                             notifications = data.notifications;
                         }
 
-                        // Save updated cloud data to local cache
                         localStorage.setItem('mf_cloud_synced', 'true');
                         localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
                         localStorage.setItem('mf_categories', JSON.stringify(categories));
@@ -1234,7 +1238,6 @@
                         localStorage.setItem('mf_branding', JSON.stringify(branding));
                         localStorage.setItem('mf_notifs', JSON.stringify(notifications));
 
-                        // Refresh active UI live on EVERY device
                         renderBranding();
                         renderMoviesGrid(movies, true);
                         renderSidebarMenu();
@@ -1243,7 +1246,6 @@
                         const badge = document.getElementById('cloudSyncStatusBadge');
                         if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Google Cloud Live`;
                     } else {
-                        // First run on brand new Firebase project
                         persistAll();
                     }
                 }, (error) => {
@@ -1320,7 +1322,7 @@
             });
         }
 
-        // 6. RENDER MOVIES (FORMAT: [MAIN HEADING] SUB-CATEGORY)
+        // 6. RENDER MOVIES
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1334,7 +1336,7 @@
                 return;
             }
 
-            // COMING SOON SECTION
+            // COMING SOON
             if (hasComingSoon) {
                 const csSection = document.createElement('section');
                 csSection.className = 'category-section';
@@ -1368,7 +1370,7 @@
                 });
             }
 
-            // TOP 10 TRENDING SECTION
+            // TOP 10 TRENDING
             if (hasTrending) {
                 const trendingSection = document.createElement('section');
                 trendingSection.className = 'category-section';
@@ -1410,7 +1412,7 @@
                 });
             }
 
-            // RECENTLY ADDED SECTION
+            // RECENTLY ADDED
             if (isHomePage && hasMovies) {
                 const recentSection = document.createElement('section');
                 recentSection.className = 'category-section';
@@ -1430,7 +1432,7 @@
                 });
             }
 
-            // REGULAR SECTIONS (FORMAT: [MAIN HEADING] SUB-CATEGORY)
+            // REGULAR SECTIONS
             if (hasMovies) {
                 const subCats = [...new Set(list.map(m => m.subCategory))];
                 subCats.forEach(sub => {
@@ -1829,7 +1831,6 @@
             document.getElementById('comingSoonModal').style.display = 'flex';
         }
 
-        // HELPER FOR RESOLUTION BADGE CLASS
         function getResBadgeClass(q) {
             if (!q) return 'res-1080p';
             const lower = q.toLowerCase();
@@ -1953,7 +1954,6 @@
                 serversSwitchContainer.style.display = 'none';
             }
 
-            // RENDER ENHANCED DOWNLOAD CARDS (WITH RESOLUTION HEADINGS)
             const downloadsList = document.getElementById('modalDownloadsList');
             const movieDownloadsWrapper = document.getElementById('movieDownloadsWrapper');
             downloadsList.innerHTML = '';
@@ -2395,7 +2395,7 @@
             showToast("Upcoming post removed!");
         }
 
-        // 19. OFFICIAL DOMAINS MANAGEMENT LOGIC (CRUD)
+        // 19. OFFICIAL DOMAINS MANAGEMENT LOGIC
         function handleSaveDomain(e) {
             e.preventDefault();
             const editId = document.getElementById('editDomainId').value;
@@ -2485,7 +2485,7 @@
             showToast("Official domain removed!");
         }
 
-        // 20. ADMIN OPERATIONS (MULTI-SERVERS & SERIES & RESOLUTION DOWNLOADS)
+        // 20. ADMIN OPERATIONS
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -3015,7 +3015,7 @@
             showToast("Post deleted from Google Cloud!");
         }
 
-        // 21. 3-LEVEL HIERARCHY OPERATIONS (HEADINGS, CATEGORIES, SUBCATEGORIES)
+        // 21. 3-LEVEL HIERARCHY OPERATIONS
         function addNewSectionHeading() {
             const input = document.getElementById('newHeadingNameInput');
             const name = input.value.trim();
@@ -3381,7 +3381,7 @@
             }
         }
 
-        // 22. REAL-TIME SEARCH (MATCHES TITLE, YEAR, CATEGORY, ACTORS & TAGS)
+        // 22. REAL-TIME SEARCH
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {

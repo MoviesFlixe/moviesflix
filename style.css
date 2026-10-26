@@ -36,11 +36,12 @@ body {
 }
 
 /* ========================================================
-   2. HEADER & BRANDING
+   2. HEADER & FIXED UNIFORM LOGO SIZING
    ======================================================== */
 .top-header {
     background-color: #0d101a;
-    padding: 8px 18px;
+    padding: 12px 18px;
+    min-height: 62px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,13 +49,16 @@ body {
     box-shadow: 0 4px 20px rgba(0, 229, 255, 0.15);
 }
 
+/* FIXED LOGO CONTAINER (Equal on Brave, Chrome & Acode) */
 .logo-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
+    height: 40px;
+    max-height: 40px;
 }
 
 .logo-text {
@@ -63,6 +67,7 @@ body {
     letter-spacing: 1.5px;
     color: #ffffff;
     text-transform: uppercase;
+    line-height: 1;
 }
 
 .logo-text span {
@@ -70,10 +75,14 @@ body {
     text-shadow: 0 0 10px var(--cyan-glow);
 }
 
+/* FIXED LOGO IMAGE SCALE */
 .logo-img {
     height: 54px;
+    width: auto;
     max-width: 200px;
     object-fit: contain;
+    display: none;
+    vertical-align: middle;
 }
 
 .social-icons-wrapper {
@@ -1000,7 +1009,7 @@ body {
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2; /* FIXED: Standard property added to resolve vendor-prefix warning */
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1064,7 +1073,7 @@ body {
 }
 
 /* ========================================================
-   ENHANCED DOWNLOAD MIRROR CARDS (WITH RESOLUTION HEADINGS)
+   DOWNLOAD MIRROR CARDS WITH RESOLUTIONS
    ======================================================== */
 .multi-downloads-container {
     display: flex;
@@ -1344,7 +1353,6 @@ body {
     font-size: 10px;
 }
 
-/* OFFICIAL DOMAINS / PROXIES PAGE STYLING */
 .domains-directory-wrapper {
     display: flex;
     flex-direction: column;
