@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoviesFlix - Streaming Portal</title>
     
-    <!-- FAVICON CONNECTED WITH YOUR FILE: fevicon.png -->
+    <!-- FAVICON -->
     <link rel="icon" type="image/png" href="fevicon.png">
     <link rel="shortcut icon" type="image/png" href="fevicon.png">
     <link rel="apple-touch-icon" href="fevicon.png">
@@ -116,7 +116,7 @@
     </div>
 
     <!-- ========================================================
-         MAIN CONTENT CONTAINER (COMING SOON -> TOP 10 -> RECENTLY -> CATEGORIES)
+         MAIN CONTENT CONTAINER (HORIZONTAL FLIP ROWS)
          ======================================================== -->
     <main class="main-content" id="mainContent"></main>
 
@@ -159,8 +159,8 @@
                         <span class="meta-pill" id="badgeType">Movie</span>
                         <span class="meta-pill" id="badgeQuality">1080p HD</span>
                         <span class="meta-pill" id="badgeYear">2024</span>
-                        <span class="meta-pill" id="badgeMainCat">Movies</span>
-                        <span class="meta-pill" id="badgeSubCat">Bollywood</span>
+                        <span class="meta-pill meta-pill-clickable" id="badgeMainCat">Movies</span>
+                        <span class="meta-pill meta-pill-clickable" id="badgeSubCat" onclick="handleModalCategoryClick()">Bollywood</span>
                     </div>
                     <div class="real-time-stamp">
                         <i class="fa-regular fa-clock" style="color:var(--cyan-accent);"></i>
@@ -230,7 +230,7 @@
                     <div class="servers-btn-grid" id="modalServersGrid"></div>
                 </div>
                 
-                <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen></iframe>
+                <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
             </div>
 
             <!-- ENHANCED DOWNLOAD MIRRORS (WITH RESOLUTION HEADINGS & FILE SIZES) -->
@@ -286,7 +286,7 @@
                 <div class="servers-title-badge" style="color:#f59e0b;">
                     <i class="fa-solid fa-play"></i> Official Trailer / Teaser:
                 </div>
-                <iframe id="csTrailerFrame" class="player-frame" allowfullscreen></iframe>
+                <iframe id="csTrailerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen"></iframe>
             </div>
         </div>
     </div>
@@ -628,7 +628,7 @@
                                 </div>
                                 <div class="form-group" style="flex:2;">
                                     <label>Embed Player URL</label>
-                                    <input type="url" id="srvUrlInput" placeholder="https://streamtape.com/e/...">
+                                    <input type="text" id="srvUrlInput" placeholder="https://streamtape.com/e/... or LuluStream URL">
                                 </div>
                             </div>
                             <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addStreamServer()">
@@ -637,6 +637,7 @@
                             <div class="added-episodes-table" id="adminServersListContainer"></div>
                         </div>
 
+                        <!-- ENHANCED MULTIPLE DOWNLOAD MIRRORS -->
                         <div class="link-builder-card">
                             <div style="font-size:14px; font-weight:700; color:var(--green-accent); margin-bottom:10px;">
                                 <i class="fa-solid fa-cloud-arrow-down"></i> Multiple Download Mirrors (With Resolution Heading & File Size)
@@ -644,7 +645,7 @@
                             
                             <div style="display:flex; gap:8px; margin-bottom:4px;">
                                 <div class="form-group" style="flex:1;">
-                                    <label>Resolution / Heading (e.g. 1080p FHD)</label>
+                                    <label>Resolution / Heading</label>
                                     <input type="text" id="dlQualityInput" placeholder="e.g. 1080p Full HD, 4K UHD, 720p HD" value="1080p Full HD">
                                 </div>
                                 <div class="form-group" style="flex:1;">
@@ -703,8 +704,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Episode Streamtape Link</label>
-                                <input type="url" id="epStreamInput" placeholder="https://streamtape.com/e/...">
+                                <label>Episode Stream Player Link</label>
+                                <input type="text" id="epStreamInput" placeholder="https://streamtape.com/e/... or LuluStream URL">
                             </div>
 
                             <div class="form-group">
@@ -1078,9 +1079,43 @@
     </div>
 
     <!-- ========================================================
-         JAVASCRIPT LOGIC WITH REALTIME FIREBASE CLOUD DATABASE
+         JAVASCRIPT LOGIC WITH ANDROID BACK-BUTTON HISTORY ENGINE
          ======================================================== -->
     <script>
+        // ----------------------------------------------------
+        // SMART STREAM EMBED URL AUTO-CONVERTER
+        // Converts /v/ links or full <iframe> tags into direct /e/ Embed URLs
+        // ----------------------------------------------------
+        function sanitizeStreamUrl(rawUrl) {
+            if (!rawUrl) return "";
+            var url = rawUrl.trim();
+
+            if (url.includes("<iframe") && url.includes("src=")) {
+                var match = url.match(/src=["'](.*?)["']/);
+                if (match && match[1]) {
+                    url = match[1];
+                }
+            }
+
+            if (url.includes("streamtape.com/v/")) {
+                url = url.replace("streamtape.com/v/", "streamtape.com/e/");
+            }
+
+            if ((url.includes("lulustream.com") || url.includes("luluvdo.com")) && !url.includes("/e/")) {
+                var parts = url.split("/");
+                var fileCode = parts[parts.length - 1];
+                if (fileCode) {
+                    url = "https://luluvdo.com/e/" + fileCode.replace(".html", "");
+                }
+            }
+
+            if (url.includes("dood.") && url.includes("/d/")) {
+                url = url.replace("/d/", "/e/");
+            }
+
+            return url;
+        }
+
         // 1. FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyB-t4r9mdqwnZVr7QVaXo7_G2zVXcG2Or4",
@@ -1150,6 +1185,14 @@
         let tempServersList = [];
         let tempDownloadsList = [];
         let currentFormSeasons = ["Season 1"];
+
+        // TRACK NAVIGATION STATE FOR BACK BUTTON
+        let isCurrentlyOnHome = true;
+
+        // Establish initial browser history state
+        try {
+            history.replaceState({ page: 'home' }, '');
+        } catch(e) {}
 
         // 3. PERSISTENCE ENGINE
         function persistAll() {
@@ -1239,7 +1282,9 @@
                         localStorage.setItem('mf_notifs', JSON.stringify(notifications));
 
                         renderBranding();
-                        renderMoviesGrid(movies, true);
+                        if (isCurrentlyOnHome) {
+                            renderMoviesGrid(movies, true);
+                        }
                         renderSidebarMenu();
                         updateNotificationsUI();
 
@@ -1294,7 +1339,7 @@
             renderSocialIcons();
         }
 
-        function goHome() {
+        function goHome(pushToHistory = true) {
             closeModal('movieModal');
             closeModal('comingSoonModal');
             closeModal('sitemapModal');
@@ -1304,9 +1349,20 @@
             closeModal('editSeasonModal');
             closeModal('editCategoryModal');
             closeSidebar();
+
+            const adminDash = document.getElementById('adminDashboard');
+            if (adminDash) adminDash.style.display = 'none';
+
             document.getElementById('searchInput').value = '';
+            isCurrentlyOnHome = true;
             renderMoviesGrid(movies, true);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pushToHistory) {
+                try {
+                    history.pushState({ page: 'home' }, '');
+                } catch(e) {}
+            }
         }
 
         function renderSocialIcons() {
@@ -1322,7 +1378,19 @@
             });
         }
 
-        // 6. RENDER MOVIES
+        // CATEGORY CLICK HANDLER FOR CARDS AND MODAL
+        function handleCardCategoryClick(e, subCategory) {
+            if (e) e.stopPropagation();
+            filterBySubCategory(subCategory, true);
+        }
+
+        function handleModalCategoryClick() {
+            const subCat = document.getElementById('badgeSubCat').innerText;
+            closeModal('movieModal');
+            filterBySubCategory(subCat, true);
+        }
+
+        // 6. RENDER MOVIES (HORIZONTAL CAROUSEL SLIDERS)
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1336,7 +1404,7 @@
                 return;
             }
 
-            // COMING SOON
+            // COMING SOON (HORIZONTAL SLIDER)
             if (hasComingSoon) {
                 const csSection = document.createElement('section');
                 csSection.className = 'category-section';
@@ -1370,7 +1438,7 @@
                 });
             }
 
-            // TOP 10 TRENDING
+            // TOP 10 TRENDING (HORIZONTAL SLIDER)
             if (hasTrending) {
                 const trendingSection = document.createElement('section');
                 trendingSection.className = 'category-section';
@@ -1402,7 +1470,7 @@
                             <div class="movie-details">
                                 <div class="movie-name">${movie.title}</div>
                                 <div class="movie-meta-sub">
-                                    <span>${movie.subCategory}</span>
+                                    <span class="movie-cat-link" onclick="handleCardCategoryClick(event, '${movie.subCategory}')">${movie.subCategory}</span>
                                     <span><i class="fa-regular fa-calendar"></i> ${movie.year || '2024'}</span>
                                 </div>
                             </div>
@@ -1412,7 +1480,7 @@
                 });
             }
 
-            // RECENTLY ADDED
+            // RECENTLY ADDED (HORIZONTAL SLIDER)
             if (isHomePage && hasMovies) {
                 const recentSection = document.createElement('section');
                 recentSection.className = 'category-section';
@@ -1426,13 +1494,13 @@
                 container.appendChild(recentSection);
 
                 const recentGrid = document.getElementById('grid-recently-added');
-                const recentMovies = [...list].slice(0, 6);
+                const recentMovies = [...list].slice(0, 10);
                 recentMovies.forEach(movie => {
                     recentGrid.appendChild(createMovieCardElement(movie));
                 });
             }
 
-            // REGULAR SECTIONS
+            // REGULAR CATEGORY ROWS (HORIZONTAL SLIDERS WITH CLICKABLE HEADINGS)
             if (hasMovies) {
                 const subCats = [...new Set(list.map(m => m.subCategory))];
                 subCats.forEach(sub => {
@@ -1444,7 +1512,10 @@
                     section.innerHTML = `
                         <div class="category-heading">
                             <div class="cat-line"></div>
-                            <h2><span class="section-tag-badge">${parentMainCat}</span> ${sub}</h2>
+                            <h2>
+                                <span class="section-tag-badge" onclick="filterBySubCategory('${sub}')" title="Click to view all ${sub}">${parentMainCat}</span> 
+                                <span class="category-title-clickable" onclick="filterBySubCategory('${sub}')" title="Click to view all ${sub}">${sub}</span>
+                            </h2>
                         </div>
                         <div class="movie-grid" id="grid-${sub.replace(/\s+/g, '-')}"></div>
                     `;
@@ -1458,6 +1529,7 @@
             }
         }
 
+        // CREATE CARD WITH AUTO-FIT POSTER & CLICKABLE CATEGORY LINK
         function createMovieCardElement(movie) {
             const card = document.createElement('div');
             card.className = 'movie-card';
@@ -1473,7 +1545,7 @@
                 <div class="movie-details">
                     <div class="movie-name">${movie.title}</div>
                     <div class="movie-meta-sub">
-                        <span>${movie.subCategory}</span>
+                        <span class="movie-cat-link" onclick="handleCardCategoryClick(event, '${movie.subCategory}')" title="Filter by ${movie.subCategory}">${movie.subCategory}</span>
                         <span><i class="fa-regular fa-calendar"></i> ${movie.year || '2024'}</span>
                     </div>
                 </div>
@@ -1521,11 +1593,18 @@
             document.getElementById(id).classList.toggle('show');
         }
 
-        function filterBySubCategory(subName) {
+        function filterBySubCategory(subName, pushToHistory = true) {
             closeSidebar();
+            isCurrentlyOnHome = false;
             const filtered = movies.filter(m => m.subCategory.toLowerCase() === subName.toLowerCase());
             renderMoviesGrid(filtered, false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pushToHistory) {
+                try {
+                    history.pushState({ page: 'category', sub: subName }, '');
+                } catch(e) {}
+            }
         }
 
         // 8. NOTIFICATION LOGIC
@@ -1601,6 +1680,10 @@
                 moviesContainer.appendChild(a);
             });
 
+            try {
+                history.pushState({ modal: 'sitemapModal' }, '');
+            } catch(e) {}
+
             document.getElementById('sitemapModal').style.display = 'flex';
         }
 
@@ -1608,6 +1691,9 @@
         function openDomainsModal() {
             closeSidebar();
             renderUserDomainsList();
+            try {
+                history.pushState({ modal: 'domainsModal' }, '');
+            } catch(e) {}
             document.getElementById('domainsModal').style.display = 'flex';
         }
 
@@ -1782,11 +1868,17 @@
             if (!data) return;
             document.getElementById('legalModalTitle').innerText = data.title;
             document.getElementById('legalModalContent').innerHTML = data.content;
+            try {
+                history.pushState({ modal: 'legalPageModal' }, '');
+            } catch(e) {}
             document.getElementById('legalPageModal').style.display = 'flex';
         }
 
         function openContactFormModal() {
             closeSidebar();
+            try {
+                history.pushState({ modal: 'contactModal' }, '');
+            } catch(e) {}
             document.getElementById('contactModal').style.display = 'flex';
         }
 
@@ -1822,11 +1914,15 @@
 
             if (item.trailerUrl && item.trailerUrl.trim() !== '') {
                 trailerWrapper.style.display = 'block';
-                trailerFrame.src = item.trailerUrl;
+                trailerFrame.src = sanitizeStreamUrl(item.trailerUrl);
             } else {
                 trailerWrapper.style.display = 'none';
                 trailerFrame.src = '';
             }
+
+            try {
+                history.pushState({ modal: 'comingSoonModal' }, '');
+            } catch(e) {}
 
             document.getElementById('comingSoonModal').style.display = 'flex';
         }
@@ -2010,11 +2106,15 @@
                 document.getElementById('btnTriggerPlayer').innerHTML = `<i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)`;
             }
 
+            try {
+                history.pushState({ modal: 'movieModal' }, '');
+            } catch(e) {}
+
             document.getElementById('movieModal').style.display = 'flex';
         }
 
         function switchStreamServer(url) {
-            document.getElementById('modalPlayerFrame').src = url;
+            document.getElementById('modalPlayerFrame').src = sanitizeStreamUrl(url);
             showToast("Switched video server!");
         }
 
@@ -2073,7 +2173,7 @@
 
             const playerWrapper = document.getElementById('playerWrapper');
             playerWrapper.style.display = 'block';
-            document.getElementById('modalPlayerFrame').src = episode.streamUrl;
+            document.getElementById('modalPlayerFrame').src = sanitizeStreamUrl(episode.streamUrl);
 
             const dlBtn = document.getElementById('seriesEpisodeDownloadBtn');
             dlBtn.href = episode.downloadUrl || '#';
@@ -2092,7 +2192,7 @@
             } else {
                 playerWrapper.style.display = 'block';
                 if (currentMovieServers.length > 0) {
-                    frame.src = currentMovieServers[0].url;
+                    frame.src = sanitizeStreamUrl(currentMovieServers[0].url);
                 }
                 btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Stream Player`;
             }
@@ -2111,6 +2211,9 @@
 
         // 15. ADMIN AUTHENTICATION
         document.getElementById('secretAdminTrigger').onclick = () => {
+            try {
+                history.pushState({ modal: 'adminAuthModal' }, '');
+            } catch(e) {}
             document.getElementById('adminAuthModal').style.display = 'flex';
         };
 
@@ -2124,6 +2227,9 @@
                 loadAdminDashboardData();
                 document.getElementById('authUsername').value = '';
                 document.getElementById('authPassword').value = '';
+                try {
+                    history.pushState({ page: 'admin' }, '');
+                } catch(e) {}
                 showToast("Welcome Admin! Google Cloud Connected.");
             } else {
                 showToast("Invalid Credentials!", true);
@@ -2132,6 +2238,9 @@
 
         function openForgotPassModal() {
             closeModal('adminAuthModal');
+            try {
+                history.pushState({ modal: 'forgotPassModal' }, '');
+            } catch(e) {}
             document.getElementById('forgotPassModal').style.display = 'flex';
         }
 
@@ -2149,8 +2258,7 @@
         function exitAdminDashboard() {
             document.getElementById('adminDashboard').style.display = 'none';
             renderBranding();
-            renderMoviesGrid(movies, true);
-            renderSidebarMenu();
+            goHome();
         }
 
         function switchAdminTab(panelId) {
@@ -2301,7 +2409,7 @@
             const category = document.getElementById('inCsCategory').value.trim();
             const releaseDate = document.getElementById('inCsReleaseDate').value.trim();
             const poster = document.getElementById('inCsPoster').value.trim();
-            const trailerUrl = document.getElementById('inCsTrailer').value.trim();
+            const trailerUrl = sanitizeStreamUrl(document.getElementById('inCsTrailer').value.trim());
             const desc = document.getElementById('inCsDesc').value.trim();
 
             if (editId) {
@@ -2485,7 +2593,7 @@
             showToast("Official domain removed!");
         }
 
-        // 20. ADMIN OPERATIONS
+        // 20. ADMIN OPERATIONS WITH SMART URL FIXER
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -2509,16 +2617,18 @@
 
         function addStreamServer() {
             const name = document.getElementById('srvNameInput').value.trim();
-            const url = document.getElementById('srvUrlInput').value.trim();
+            const rawUrl = document.getElementById('srvUrlInput').value.trim();
 
             if (!name) return showToast("Enter Server Name (e.g. Server 1)!", true);
-            if (!url) return showToast("Enter Embed Player URL!", true);
+            if (!rawUrl) return showToast("Enter Player URL!", true);
 
-            tempServersList.push({ id: Date.now(), name, url });
+            const cleanUrl = sanitizeStreamUrl(rawUrl);
+
+            tempServersList.push({ id: Date.now(), name, url: cleanUrl });
             document.getElementById('srvNameInput').value = '';
             document.getElementById('srvUrlInput').value = '';
             renderAdminServersPreview();
-            showToast(`${name} added!`);
+            showToast(`${name} added! (Auto-converted to embed)`);
         }
 
         function renderAdminServersPreview() {
@@ -2608,6 +2718,9 @@
             const oldName = currentFormSeasons[idx];
             document.getElementById('editSeasonTargetIdx').value = idx;
             document.getElementById('editSeasonInputName').value = oldName;
+            try {
+                history.pushState({ modal: 'editSeasonModal' }, '');
+            } catch(e) {}
             document.getElementById('editSeasonModal').style.display = 'flex';
         }
 
@@ -2665,18 +2778,20 @@
         function addEpisodeToList() {
             const season = document.getElementById('epSeasonSelectDropdown').value;
             const title = document.getElementById('epNumberInput').value.trim();
-            const stream = document.getElementById('epStreamInput').value.trim();
+            const rawStream = document.getElementById('epStreamInput').value.trim();
             const download = document.getElementById('epDownloadInput').value.trim();
 
             if (!season) return showToast("Create/Select a Season first!", true);
             if (!title) return showToast("Enter Episode Title/Number!", true);
-            if (!stream) return showToast("Enter Episode Streamtape URL!", true);
+            if (!rawStream) return showToast("Enter Episode Player URL!", true);
+
+            const cleanStream = sanitizeStreamUrl(rawStream);
 
             tempEpisodesList.push({
                 id: Date.now(),
                 season: season,
                 title: title,
-                streamUrl: stream,
+                streamUrl: cleanStream,
                 downloadUrl: download
             });
 
@@ -2684,7 +2799,7 @@
             document.getElementById('epStreamInput').value = '';
             document.getElementById('epDownloadInput').value = '';
             renderAdminEpisodesPreview();
-            showToast(`${title} added to ${season}!`);
+            showToast(`${title} added to ${season}! (Auto-converted to embed)`);
         }
 
         function renderAdminEpisodesPreview() {
@@ -2697,7 +2812,7 @@
                 row.innerHTML = `
                     <div>
                         <strong style="color:var(--cyan-accent);">${ep.season} - ${ep.title}</strong>
-                        <div style="font-size:10px; color:#777;">Streamtape & Download Links Attached</div>
+                        <div style="font-size:10px; color:#777;">${ep.streamUrl}</div>
                     </div>
                     <button type="button" class="btn-delete-item" onclick="removeTempEpisode(${idx})">Remove</button>
                 `;
@@ -3040,6 +3155,9 @@
             document.getElementById('editCategoryInputName').value = oldName;
             document.getElementById('editCatType').value = 'heading';
             document.getElementById('editCatMainIdx').value = idx;
+            try {
+                history.pushState({ modal: 'editCategoryModal' }, '');
+            } catch(e) {}
             document.getElementById('editCategoryModal').style.display = 'flex';
         }
 
@@ -3122,6 +3240,9 @@
             document.getElementById('editCategoryInputName').value = currentName;
             document.getElementById('editCatType').value = 'main';
             document.getElementById('editCatMainIdx').value = idx;
+            try {
+                history.pushState({ modal: 'editCategoryModal' }, '');
+            } catch(e) {}
             document.getElementById('editCategoryModal').style.display = 'flex';
         }
 
@@ -3133,6 +3254,9 @@
             document.getElementById('editCatType').value = 'sub';
             document.getElementById('editCatMainIdx').value = cIdx;
             document.getElementById('editCatSubIdx').value = sIdx;
+            try {
+                history.pushState({ modal: 'editCategoryModal' }, '');
+            } catch(e) {}
             document.getElementById('editCategoryModal').style.display = 'flex';
         }
 
@@ -3385,8 +3509,10 @@
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {
+                isCurrentlyOnHome = true;
                 renderMoviesGrid(movies, true);
             } else {
+                isCurrentlyOnHome = false;
                 const filtered = movies.filter(m => {
                     const matchTitle = m.title.toLowerCase().includes(query);
                     const matchYear = m.year && m.year.toLowerCase().includes(query);
@@ -3401,12 +3527,57 @@
             }
         });
 
+        // 23. ANDROID HARDWARE / SWIPE BACK-BUTTON HISTORY ENGINE
+        window.addEventListener('popstate', (e) => {
+            // 1. If Admin Dashboard is currently open -> exit to site
+            const adminDash = document.getElementById('adminDashboard');
+            if (adminDash && adminDash.style.display === 'block') {
+                adminDash.style.display = 'none';
+                renderBranding();
+                goHome(false);
+                return;
+            }
+
+            // 2. If any modal overlay is currently open -> close it
+            const openModals = document.querySelectorAll('.modal-overlay');
+            let closedAnyModal = false;
+            openModals.forEach(m => {
+                if (m.style.display === 'flex' || m.style.display === 'block') {
+                    m.style.display = 'none';
+                    closedAnyModal = true;
+                }
+            });
+            if (closedAnyModal) {
+                const f1 = document.getElementById('modalPlayerFrame');
+                if (f1) f1.src = '';
+                const f2 = document.getElementById('csTrailerFrame');
+                if (f2) f2.src = '';
+                return;
+            }
+
+            // 3. If Sidebar drawer is open -> close it
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && sidebar.classList.contains('active')) {
+                closeSidebar();
+                return;
+            }
+
+            // 4. If viewing filtered Category or Search -> return to Home Page
+            if (!isCurrentlyOnHome) {
+                goHome(false);
+                return;
+            }
+        });
+
         // SIDEBAR ACTIONS
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         document.getElementById('menuToggleBtn').onclick = () => {
             sidebar.classList.add('active');
             overlay.style.display = 'block';
+            try {
+                history.pushState({ modal: 'sidebar' }, '');
+            } catch(e) {}
         };
         function closeSidebar() {
             sidebar.classList.remove('active');
