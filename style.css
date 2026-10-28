@@ -265,7 +265,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   4. SIDEBAR DRAWER WITH FULL BRANDING (54px x 200px)
+   4. SIDEBAR DRAWER WITH 4-LEVEL MULTI-ACCORDION
    ======================================================== */
 .sidebar-overlay {
     position: fixed;
@@ -282,7 +282,7 @@ body.modal-open {
     position: fixed;
     top: 0;
     left: -300px;
-    width: 285px;
+    width: 290px;
     height: 100%;
     background: #0d101a;
     border-right: 2px solid var(--border-cyan);
@@ -377,7 +377,7 @@ body.modal-open {
 
 .submenu {
     list-style: none;
-    padding-left: 14px;
+    padding-left: 12px;
     margin-bottom: 8px;
     display: none;
 }
@@ -386,18 +386,77 @@ body.modal-open {
     display: block;
 }
 
-.submenu li a {
+.submenu li {
+    margin-bottom: 2px;
+}
+
+.submenu li a.subcat-link {
     display: block;
     color: #9aa2ba;
     text-decoration: none;
     font-size: 13px;
-    padding: 8px 12px;
+    padding: 7px 10px;
     border-radius: 6px;
+    transition: 0.2s all;
 }
 
-.submenu li a:hover {
+.submenu li a.subcat-link:hover {
     color: var(--cyan-accent);
     background: rgba(0, 229, 255, 0.08);
+}
+
+/* 4TH LEVEL: Subcategory Toggle Button */
+.subcat-toggle-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #9aa2ba;
+    text-align: left;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    transition: 0.2s all;
+}
+
+.subcat-toggle-btn:hover {
+    color: var(--cyan-accent);
+    background: rgba(0, 229, 255, 0.08);
+}
+
+/* 4TH LEVEL: Nested Child Subcategory Menu */
+.nested-submenu {
+    list-style: none;
+    padding-left: 10px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+    display: none;
+    border-left: 2px solid rgba(0, 229, 255, 0.3);
+    margin-left: 10px;
+}
+
+.nested-submenu.show {
+    display: block;
+}
+
+.nested-submenu li a {
+    display: block;
+    color: #838da7;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: 0.2s all;
+}
+
+.nested-submenu li a:hover {
+    color: #ffffff;
+    background: rgba(0, 229, 255, 0.1);
+    transform: translateX(3px);
 }
 
 .sidebar-divider {

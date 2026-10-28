@@ -63,7 +63,7 @@
 
         <div class="search-wrapper">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" id="searchInput" placeholder="Search Movies, Series, Actors, Tags in MoviesFlix...">
+            <input type="text" id="searchInput" placeholder="Search Movies, Series, Shows, Actors in MoviesFlix...">
         </div>
 
         <div class="notification-box" id="notifBox">
@@ -83,7 +83,7 @@
     </div>
 
     <!-- ========================================================
-         SIDEBAR (WITH 54px x 200px BRAND LOGO & CLEAN NAV)
+         SIDEBAR (4-LEVEL ACCORDION + UNIFORM 54px LOGO)
          ======================================================== -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="sidebar" id="sidebar">
@@ -174,6 +174,7 @@
                         <span class="meta-pill" id="badgeYear">2024</span>
                         <span class="meta-pill meta-pill-clickable" id="badgeMainCat">Movies</span>
                         <span class="meta-pill meta-pill-clickable" id="badgeSubCat" onclick="handleModalCategoryClick()">Bollywood</span>
+                        <span class="meta-pill meta-pill-clickable" id="badgeChildCat" style="display:none;" onclick="handleModalChildCategoryClick()">Show</span>
                     </div>
                     <div class="real-time-stamp">
                         <i class="fa-regular fa-clock" style="color:var(--cyan-accent);"></i>
@@ -186,19 +187,19 @@
             <div class="imdb-details-panel" id="modalImdbPanel" style="display:none;">
                 <div class="imdb-rating-row">
                     <span class="imdb-badge">IMDb</span>
-                    <span class="imdb-score-text" id="modalImdbScore">7.6</span>
+                    <span class="imdb-score-text" id="modalImdbScore">7.3</span>
                 </div>
                 <div class="imdb-specs-list">
                     <div class="imdb-spec-item" id="modalGenreRow">
-                        <strong>Genre:</strong> <span id="modalGenreVal">Horror, Sci-Fi, Thriller</span>
+                        <strong>Genre:</strong> <span id="modalGenreVal">Mystery, Romance, Thriller</span>
                     </div>
                     <div class="imdb-spec-item" id="modalDurationRow">
-                        <strong>Duration:</strong> <span id="modalDurationVal">1h 49m</span>
+                        <strong>Duration:</strong> <span id="modalDurationVal">2h 5m</span>
                         &nbsp;&nbsp;•&nbsp;&nbsp;
-                        <strong>Country:</strong> <span id="modalCountryVal">USA</span>
+                        <strong>Country:</strong> <span id="modalCountryVal">India</span>
                     </div>
                     <div class="imdb-spec-item" id="modalDirectorRow">
-                        <strong>Director:</strong> <span id="modalDirectorVal">James Watkins</span>
+                        <strong>Director:</strong> <span id="modalDirectorVal">Karan Rawal</span>
                     </div>
                 </div>
             </div>
@@ -267,9 +268,7 @@
                 </a>
             </div>
 
-            <!-- ========================================================
-                 REAL CLOUD-SYNCED DISCUSSION & COMMENTS SECTION
-                 ======================================================== -->
+            <!-- DISCUSSION & COMMENTS SECTION -->
             <div class="movie-comments-section" id="movieCommentsContainer">
                 <div class="comments-header-row">
                     <div class="comments-header-title">
@@ -278,7 +277,6 @@
                     </div>
                 </div>
 
-                <!-- Add Comment Card -->
                 <div class="comment-input-card">
                     <form id="newCommentForm" onsubmit="handlePostComment(event)">
                         <div class="comment-author-row">
@@ -293,7 +291,6 @@
                     </form>
                 </div>
 
-                <!-- Comments Feed List -->
                 <div class="comments-feed-list" id="modalCommentsFeedList"></div>
             </div>
         </div>
@@ -585,7 +582,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 10: EDIT HEADING / CATEGORY / SUBCATEGORY POPUP
+         MODAL 10: EDIT HEADING / MAIN / SUB / CHILD CATEGORY POPUP
          ======================================================== -->
     <div class="modal-overlay" id="editCategoryModal">
         <div class="modal-box" style="max-width: 380px;">
@@ -609,6 +606,7 @@
             <input type="hidden" id="editCatType" value="">
             <input type="hidden" id="editCatMainIdx" value="">
             <input type="hidden" id="editCatSubIdx" value="">
+            <input type="hidden" id="editCatChildIdx" value="">
             <button type="button" class="btn-cyan" onclick="saveEditedCategory()">
                 <i class="fa-solid fa-check"></i> Save Changes
             </button>
@@ -683,7 +681,7 @@
             <button class="admin-tab-btn" onclick="switchAdminTab('panelTopTrending')"><i class="fa-solid fa-fire-flame-curved"></i> Top 10 Trending</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelComingSoon')"><i class="fa-solid fa-hourglass-half"></i> Coming Soon</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelDomains')"><i class="fa-solid fa-network-wired"></i> Official Domains</button>
-            <button class="admin-tab-btn" onclick="switchAdminTab('panelCategories')"><i class="fa-solid fa-layer-group"></i> Headings & Categories</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('panelCategories')"><i class="fa-solid fa-layer-group"></i> Headings & 4-Level Categories</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelBranding')"><i class="fa-solid fa-paint-roller"></i> Logo Setup</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSocials')"><i class="fa-solid fa-share-nodes"></i> Social Icons</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('panelSecurity')"><i class="fa-solid fa-lock"></i> Security</button>
@@ -759,14 +757,19 @@
                         </div>
                     </div>
 
+                    <!-- 4-LEVEL POST CATEGORY SELECTORS (MAIN -> SUB -> CHILD) -->
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;">
-                            <label>Main Category (e.g. Bollywood Movies, Web Series)</label>
+                            <label>Main Category</label>
                             <select id="inMainCat" onchange="syncSubCatSelector()" required></select>
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Sub Category / Genre</label>
-                            <select id="inSubCat" required></select>
+                            <select id="inSubCat" onchange="syncChildCatSelector()" required></select>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Child Category / Show (Optional)</label>
+                            <select id="inChildCat"></select>
                         </div>
                     </div>
 
@@ -1089,8 +1092,9 @@
             </div>
         </div>
 
-        <!-- TAB 5: COMPLETE 3-LEVEL HIERARCHY -->
+        <!-- TAB 5: COMPLETE 4-LEVEL HIERARCHY (HEADING -> MAIN -> SUB -> CHILD) -->
         <div class="admin-tab-panel" id="panelCategories">
+            <!-- 1. Heading -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. TV Shows & Reality)
@@ -1105,6 +1109,7 @@
                 <div class="seasons-badge-list" id="adminHeadingsChipsContainer"></div>
             </div>
 
+            <!-- 2. Main Category -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-folder-plus"></i> 2. Create Main Category under Section Heading
@@ -1120,6 +1125,7 @@
                 <button class="btn-cyan" onclick="createMainCategory()">Add Main Category</button>
             </div>
 
+            <!-- 3. Subcategory -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-diagram-project"></i> 3. Add Subcategory under Main Category
@@ -1135,8 +1141,30 @@
                 <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
             </div>
 
+            <!-- 4. NEW: Child Category under Subcategory -->
             <div class="admin-card">
-                <div class="admin-card-title"><i class="fa-solid fa-sitemap"></i> Complete Headings & Categories Tree</div>
+                <div class="admin-card-title" style="color:var(--cyan-accent);">
+                    <i class="fa-solid fa-code-branch"></i> 4. Add Child Category under Subcategory (e.g. Anupamaa, CID)
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Select Main Category</label>
+                        <select id="childParentMainCatSelect" onchange="syncChildSubCatSelect()"></select>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Select Subcategory</label>
+                        <select id="childParentSubCatSelect"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Child Category / Show Name</label>
+                    <input type="text" id="inNewChildCat" placeholder="e.g. Anupamaa, Yeh Rishta Kya Kehlata Hai, CID">
+                </div>
+                <button class="btn-cyan" onclick="createChildCategory()">Add Child Category</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-title"><i class="fa-solid fa-sitemap"></i> Complete 4-Level Categories Tree</div>
                 <div id="categoryTree"></div>
             </div>
         </div>
@@ -1285,17 +1313,14 @@
             if (!val) return "";
             var str = String(val).trim();
 
-            // If already in 2h 5m format
             if (str.includes("h") && str.includes("m")) {
                 return str;
             }
 
-            // If in ISO format (PT2H5M)
             if (str.startsWith("PT")) {
                 return parseIsoDuration(str);
             }
 
-            // Extract numeric digits
             var digitsMatch = str.match(/\d+/);
             if (!digitsMatch) return str;
             var num = parseInt(digitsMatch[0], 10);
@@ -1319,7 +1344,7 @@
         }
 
         // ========================================================
-        // 1. SUPABASE CLIENT CONFIGURATION (BAN-FREE & SAFE)
+        // 1. SUPABASE CLIENT CONFIGURATION
         // ========================================================
         const SUPABASE_URL = "https://zidvtzcxktkpzrmyzexw.supabase.co";
         const SUPABASE_KEY = "sb_publishable_1WP138hq3WcBSbfugahlqA_r_OD8dMc";
@@ -1333,31 +1358,74 @@
             console.error("Supabase client init fallback:", err);
         }
 
-        // 2. DATA INITIALIZATION & FALLBACKS
+        // 2. DATA INITIALIZATION & 4-LEVEL HIERARCHY NORMALIZATION
         const defaultSectionHeadings = ["Categories & Channels", "TV Shows & Reality"];
 
         const defaultCats = [
             { 
                 name: "Bollywood Movies", 
                 heading: "Categories & Channels", 
-                subcategories: ["Latest Bollywood", "Bollywood Action", "Romantic & Drama", "Comedy"] 
+                subcategories: [
+                    { name: "Latest Bollywood", childCategories: [] },
+                    { name: "Bollywood Action", childCategories: ["Spy Universe", "Cop Universe"] },
+                    { name: "Romantic & Drama", childCategories: [] },
+                    { name: "Comedy", childCategories: [] }
+                ] 
             },
             { 
                 name: "Hollywood Movies", 
                 heading: "Categories & Channels", 
-                subcategories: ["Hollywood Hindi Dubbed", "English Audio", "Sci-Fi & Action"] 
+                subcategories: [
+                    { name: "Hollywood Hindi Dubbed", childCategories: [] },
+                    { name: "English Audio", childCategories: [] },
+                    { name: "Sci-Fi & Action", childCategories: [] }
+                ] 
             },
             { 
                 name: "Indian TV Channels", 
                 heading: "TV Shows & Reality", 
-                subcategories: ["Star Plus", "Colors TV", "Sony TV", "Zee TV", "SAB TV"] 
+                subcategories: [
+                    { name: "Star Plus", childCategories: ["Anupamaa", "Yeh Rishta Kya Kehlata Hai"] },
+                    { name: "Colors TV", childCategories: ["Bigg Boss", "Naagin"] },
+                    { name: "Sony TV", childCategories: ["CID", "Crime Patrol"] },
+                    { name: "Zee TV", childCategories: ["Kumkum Bhagya"] },
+                    { name: "SAB TV", childCategories: ["Taarak Mehta Ka Ooltah Chashmah"] }
+                ] 
             },
             { 
                 name: "Reality Shows", 
                 heading: "TV Shows & Reality", 
-                subcategories: ["Bigg Boss", "Kapil Sharma Show", "Roadies", "Splitsvilla"] 
+                subcategories: [
+                    { name: "Bigg Boss", childCategories: ["Bigg Boss OTT", "Bigg Boss Main"] },
+                    { name: "Kapil Sharma Show", childCategories: [] },
+                    { name: "Roadies", childCategories: [] },
+                    { name: "Splitsvilla", childCategories: [] }
+                ] 
             }
         ];
+
+        // 100% Backward Compatibility Migration Helper
+        function normalizeCategories(rawList) {
+            if (!Array.isArray(rawList)) return defaultCats;
+            return rawList.map(cat => {
+                const subs = Array.isArray(cat.subcategories) ? cat.subcategories.map(sub => {
+                    if (typeof sub === 'string') {
+                        return { name: sub, childCategories: [] };
+                    } else if (typeof sub === 'object' && sub !== null) {
+                        return {
+                            name: sub.name || "General",
+                            childCategories: Array.isArray(sub.childCategories) ? sub.childCategories : []
+                        };
+                    }
+                    return { name: "General", childCategories: [] };
+                }) : [];
+                return {
+                    name: cat.name,
+                    heading: cat.heading || defaultSectionHeadings[0],
+                    subcategories: subs
+                };
+            });
+        }
 
         const defaultOfficialDomains = [
             { id: 1, name: "moviesflix.top", url: "https://moviesflix.top", status: "primary" },
@@ -1379,6 +1447,7 @@
                 year: "2023",
                 mainCategory: "Bollywood Movies",
                 subCategory: "Latest Bollywood",
+                childCategory: "",
                 quality: "1080p HD",
                 tags: "Action, Crime, Drama, Ranbir Kapoor",
                 poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
@@ -1397,7 +1466,7 @@
         ];
 
         let sectionHeadings = JSON.parse(localStorage.getItem('mf_section_headings')) || defaultSectionHeadings;
-        let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
+        let categories = normalizeCategories(JSON.parse(localStorage.getItem('mf_categories')) || defaultCats);
         let officialDomains = JSON.parse(localStorage.getItem('mf_official_domains')) || defaultOfficialDomains;
         let movies = JSON.parse(localStorage.getItem('mf_movies')) || defaultDemoMovies;
         if (!movies || movies.length === 0) movies = defaultDemoMovies;
@@ -1478,7 +1547,7 @@
             if (!data) return;
 
             if (Array.isArray(data.movies) && data.movies.length > 0) movies = data.movies;
-            if (Array.isArray(data.categories) && data.categories.length > 0) categories = data.categories;
+            if (Array.isArray(data.categories) && data.categories.length > 0) categories = normalizeCategories(data.categories);
             if (Array.isArray(data.sectionHeadings) && data.sectionHeadings.length > 0) sectionHeadings = data.sectionHeadings;
             if (Array.isArray(data.officialDomains) && data.officialDomains.length > 0) officialDomains = data.officialDomains;
             if (Array.isArray(data.trending)) trending = data.trending;
@@ -1646,6 +1715,7 @@
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
       
+
         // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
         // ========================================================
@@ -1763,6 +1833,11 @@
         function handleModalCategoryClick() {
             const subCat = document.getElementById('badgeSubCat').innerText;
             filterBySubCategory(subCat);
+        }
+
+        function handleModalChildCategoryClick() {
+            const childCat = document.getElementById('badgeChildCat').innerText;
+            window.location.hash = 'childcategory=' + encodeURIComponent(childCat);
         }
 
         // ========================================================
@@ -1926,7 +2001,7 @@
         }
 
         // ========================================================
-        // 10. SIDEBAR RENDERING
+        // 10. 4-LEVEL SIDEBAR ACCORDION RENDERING
         // ========================================================
         function renderSidebarMenu() {
             const container = document.getElementById('sidebarDynamicSectionsContainer');
@@ -1945,15 +2020,43 @@
 
                 matchedCats.forEach((cat, cIdx) => {
                     const li = document.createElement('li');
+                    
+                    let subcategoriesHtml = '';
+                    cat.subcategories.forEach((sub, sIdx) => {
+                        const subName = typeof sub === 'string' ? sub : sub.name;
+                        const childCats = (typeof sub === 'object' && Array.isArray(sub.childCategories)) ? sub.childCategories : [];
+
+                        if (childCats.length > 0) {
+                            subcategoriesHtml += `
+                                <li>
+                                    <button class="subcat-toggle-btn" onclick="toggleNestedSubmenu('nested-h${hIdx}-c${cIdx}-s${sIdx}')">
+                                        <span>↳ ${subName}</span>
+                                        <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+                                    </button>
+                                    <ul class="nested-submenu" id="nested-h${hIdx}-c${cIdx}-s${sIdx}">
+                                        <li><a href="javascript:void(0)" onclick="navigateFromSidebar('category=' + encodeURIComponent('${subName}'))">All ${subName}</a></li>
+                                        ${childCats.map(ch => `
+                                            <li><a href="javascript:void(0)" onclick="navigateFromSidebar('childcategory=' + encodeURIComponent('${ch}'))">${ch}</a></li>
+                                        `).join('')}
+                                    </ul>
+                                </li>
+                            `;
+                        } else {
+                            subcategoriesHtml += `
+                                <li>
+                                    <a href="javascript:void(0)" class="subcat-link" onclick="navigateFromSidebar('category=' + encodeURIComponent('${subName}'))">${subName}</a>
+                                </li>
+                            `;
+                        }
+                    });
+
                     li.innerHTML = `
                         <button class="menu-cat-btn" onclick="toggleSubmenu('sub-h${hIdx}-c${cIdx}')">
                             <span><i class="fa-solid fa-folder-closed" style="color:var(--cyan-accent); margin-right:8px;"></i> ${cat.name}</span>
                             <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
                         </button>
                         <ul class="submenu" id="sub-h${hIdx}-c${cIdx}">
-                            ${cat.subcategories.map(s => `
-                                <li><a href="javascript:void(0)" onclick="navigateFromSidebar('category=' + encodeURIComponent('${s}'))">${s}</a></li>
-                            `).join('')}
+                            ${subcategoriesHtml}
                         </ul>
                     `;
                     ul.appendChild(li);
@@ -1965,6 +2068,11 @@
 
         function toggleSubmenu(id) {
             document.getElementById(id).classList.toggle('show');
+        }
+
+        function toggleNestedSubmenu(id) {
+            const nested = document.getElementById(id);
+            if (nested) nested.classList.toggle('show');
         }
 
         function navigateFromSidebar(targetRoute) {
@@ -1986,6 +2094,19 @@
             closeSidebarInternal();
             isCurrentlyOnHome = false;
             const filtered = movies.filter(m => m.subCategory.toLowerCase() === subName.toLowerCase());
+            renderMoviesGrid(filtered, false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterByChildCategoryInternal(childName) {
+            closeAllModalsInternal();
+            closeSidebarInternal();
+            isCurrentlyOnHome = false;
+            const filtered = movies.filter(m => 
+                (m.childCategory && m.childCategory.toLowerCase() === childName.toLowerCase()) ||
+                (m.tags && m.tags.toLowerCase().includes(childName.toLowerCase())) ||
+                m.title.toLowerCase().includes(childName.toLowerCase())
+            );
             renderMoviesGrid(filtered, false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2065,11 +2186,12 @@
             catContainer.innerHTML = '';
             categories.forEach(cat => {
                 cat.subcategories.forEach(sub => {
+                    const subName = typeof sub === 'string' ? sub : sub.name;
                     const a = document.createElement('a');
                     a.className = 'sitemap-link-item';
-                    a.innerHTML = `<i class="fa-solid fa-folder"></i> ${cat.name} / ${sub}`;
+                    a.innerHTML = `<i class="fa-solid fa-folder"></i> ${cat.name} / ${subName}`;
                     a.onclick = () => {
-                        filterBySubCategory(sub);
+                        filterBySubCategory(subName);
                     };
                     catContainer.appendChild(a);
                 });
@@ -2177,7 +2299,8 @@
 
             categories.forEach(cat => {
                 cat.subcategories.forEach(sub => {
-                    const cleanSub = encodeURIComponent(sub.toLowerCase());
+                    const subName = typeof sub === 'string' ? sub : sub.name;
+                    const cleanSub = encodeURIComponent(subName.toLowerCase());
                     xml += `  <url>\n    <loc>${baseUrl}#category=${cleanSub}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
                 });
             });
@@ -2300,6 +2423,15 @@
             document.getElementById('badgeYear').innerText = movie.year || '2024';
             document.getElementById('badgeMainCat').innerText = movie.mainCategory;
             document.getElementById('badgeSubCat').innerText = movie.subCategory;
+
+            const childBadge = document.getElementById('badgeChildCat');
+            if (movie.childCategory && movie.childCategory.trim() !== '') {
+                childBadge.style.display = 'inline-block';
+                childBadge.innerText = movie.childCategory;
+            } else {
+                childBadge.style.display = 'none';
+            }
+
             document.getElementById('badgeDateTime').innerText = `Posted: ${movie.dateTime || 'Just Now'}`;
             document.getElementById('modalMovieDesc').innerText = movie.desc || "No plot summary provided.";
 
@@ -2974,7 +3106,6 @@
             let extractedImdbId = null;
             let cleanTitle = rawInput;
 
-            // 1. Detect direct tt ID or full IMDb URL
             const imdbIdMatch = rawInput.match(/tt\d{7,8}/i);
             if (imdbIdMatch) {
                 extractedImdbId = imdbIdMatch[0].toLowerCase();
@@ -3001,9 +3132,7 @@
             const tmdbKey = "e226f4a5f5bace766952aa0d17182959";
 
             try {
-                // STEP A: If tt ID is not directly given, locate it via IMDb Suggestion API & TMDB
                 if (!extractedImdbId) {
-                    // Try IMDb Official Suggestion Engine (CORS open)
                     try {
                         const cleanQuery = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '_');
                         const firstChar = cleanQuery.charAt(0);
@@ -3021,7 +3150,6 @@
                         }
                     } catch(e) {}
 
-                    // Fallback to TMDB Search to locate IMDb ID
                     if (!extractedImdbId) {
                         try {
                             const tmdbSearchRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`);
@@ -3038,7 +3166,6 @@
                         } catch(e) {}
                     }
 
-                    // Fallback to OMDb to extract IMDb ID
                     if (!extractedImdbId) {
                         const omdbKeys = ["e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c"];
                         for (let k of omdbKeys) {
@@ -3064,7 +3191,6 @@
                     }
                 }
 
-                // STEP B: Fetch exact live IMDb data from Cinemeta using extracted IMDb ID
                 if (extractedImdbId) {
                     try {
                         let cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/movie/${extractedImdbId}.json`);
@@ -3081,17 +3207,14 @@
                             if (meta.year) foundData.year = String(meta.year);
                             if (meta.description) foundData.plot = meta.description;
 
-                            // Live IMDb Rating Score (e.g. 7.3)
                             if (meta.imdbRating && meta.imdbRating !== "N/A") {
                                 foundData.imdbRating = String(meta.imdbRating);
                             }
 
-                            // Live Duration / Runtime (Formatted to 2h 5m)
                             if (meta.runtime) {
                                 foundData.duration = formatMinutesToHours(meta.runtime);
                             }
 
-                            // All Live IMDb Genres (Mystery, Romance, Thriller)
                             if (Array.isArray(meta.genres) && meta.genres.length > 0) {
                                 meta.genres.forEach(g => {
                                     if (g && !foundData.genresList.includes(g)) {
@@ -3100,7 +3223,6 @@
                                 });
                             }
 
-                            // Director
                             if (meta.director) {
                                 if (Array.isArray(meta.director)) {
                                     foundData.director = meta.director.join(', ');
@@ -3114,7 +3236,6 @@
                     }
                 }
 
-                // STEP C: Connect to TMDB API for Cast (Photos & Character Roles) + Missing Fields
                 try {
                     let tmdbSearchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(foundData.title || cleanTitle)}`;
                     const tmdbRes = await fetch(tmdbSearchUrl);
@@ -3133,18 +3254,15 @@
                         }
                         if (!foundData.plot && details.overview) foundData.plot = details.overview;
 
-                        // Rating fallback
                         if (!foundData.imdbRating && details.vote_average) {
                             foundData.imdbRating = String(details.vote_average.toFixed(1));
                         }
 
-                        // Duration fallback
                         if (!foundData.duration) {
                             const run = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : null);
                             if (run) foundData.duration = formatMinutesToHours(run);
                         }
 
-                        // Merge TMDB genres
                         if (details.genres && details.genres.length > 0) {
                             details.genres.forEach(g => {
                                 if (g.name && !foundData.genresList.includes(g.name)) {
@@ -3153,13 +3271,11 @@
                             });
                         }
 
-                        // Director fallback
                         if (!foundData.director && details.credits && details.credits.crew) {
                             const dir = details.credits.crew.find(c => c.job === 'Director');
                             if (dir) foundData.director = dir.name;
                         }
 
-                        // Cast & Characters with Photos & Roles
                         if (details.credits && details.credits.cast && details.credits.cast.length > 0) {
                             foundData.actors = [];
                             details.credits.cast.slice(0, 8).forEach(c => {
@@ -3176,9 +3292,6 @@
                     console.warn("TMDB details fetch error:", tmdbErr);
                 }
 
-                // ========================================================
-                // POPULATE ALL ADMIN FORM FIELDS WITH EXACT METADATA
-                // ========================================================
                 if (foundData.title && extractedImdbId) {
                     document.getElementById('inMovieTitle').value = foundData.title;
                 }
@@ -3186,18 +3299,15 @@
                     document.getElementById('inMovieYear').value = foundData.year;
                 }
 
-                // 1. Live IMDb Rating
                 if (foundData.imdbRating && foundData.imdbRating !== "N/A") {
                     document.getElementById('inImdbRating').value = foundData.imdbRating;
                 }
 
-                // 2. All Genres Combined (e.g. Mystery, Romance, Thriller)
                 const finalGenresString = [...new Set(foundData.genresList)].join(', ');
                 if (finalGenresString) {
                     document.getElementById('inGenre').value = finalGenresString;
                 }
 
-                // 3. Exact Duration (Hours & Minutes format e.g. 2h 5m)
                 if (foundData.duration) {
                     document.getElementById('inDuration').value = foundData.duration;
                 }
@@ -3212,12 +3322,10 @@
                     document.getElementById('inDesc').value = foundData.plot;
                 }
 
-                // Auto-fill tags with all genres and year
                 if (finalGenresString && !document.getElementById('inTags').value.trim()) {
                     document.getElementById('inTags').value = `${finalGenresString}, ${foundData.year || '2026'}`;
                 }
 
-                // Auto-populate Cast & Characters list
                 if (foundData.actors && foundData.actors.length > 0) {
                     tempCastList = foundData.actors.map((act, i) => ({
                         id: Date.now() + i,
@@ -3769,20 +3877,42 @@
 
         function loadAdminDashboardData() {
             const headingSelect = document.getElementById('parentSectionHeadingSelect');
+            const savedHeadingVal = headingSelect.value;
             headingSelect.innerHTML = '';
             sectionHeadings.forEach(h => {
                 headingSelect.innerHTML += `<option value="${h}">${h}</option>`;
             });
+            if (savedHeadingVal && sectionHeadings.includes(savedHeadingVal)) {
+                headingSelect.value = savedHeadingVal;
+            }
 
             const inMain = document.getElementById('inMainCat');
             const parentSelect = document.getElementById('parentCatSelect');
+            const childParentMainSelect = document.getElementById('childParentMainCatSelect');
+
+            const savedInMainVal = inMain.value;
+            const savedParentCatVal = parentSelect.value;
+            const savedChildMainVal = childParentMainSelect.value;
+
             inMain.innerHTML = '';
             parentSelect.innerHTML = '';
+            childParentMainSelect.innerHTML = '';
 
             categories.forEach(c => {
                 inMain.innerHTML += `<option value="${c.name}">${c.name}</option>`;
                 parentSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                childParentMainSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
+
+            if (savedInMainVal && categories.some(c => c.name === savedInMainVal)) {
+                inMain.value = savedInMainVal;
+            }
+            if (savedParentCatVal && categories.some(c => c.name === savedParentCatVal)) {
+                parentSelect.value = savedParentCatVal;
+            }
+            if (savedChildMainVal && categories.some(c => c.name === savedChildMainVal)) {
+                childParentMainSelect.value = savedChildMainVal;
+            }
 
             const trendingSelect = document.getElementById('inTrendingMovieSelect');
             trendingSelect.innerHTML = '';
@@ -3791,6 +3921,8 @@
             });
 
             syncSubCatSelector();
+            syncChildSubCatSelect();
+
             renderAdminMoviesList();
             renderAdminTrendingList();
             renderAdminComingSoonList();
@@ -3817,15 +3949,62 @@
         function syncSubCatSelector() {
             const mainVal = document.getElementById('inMainCat').value;
             const subDropdown = document.getElementById('inSubCat');
+            const savedSubVal = subDropdown.value;
             subDropdown.innerHTML = '';
 
             const matched = categories.find(c => c.name === mainVal);
             if (matched && matched.subcategories.length > 0) {
                 matched.subcategories.forEach(s => {
-                    subDropdown.innerHTML += `<option value="${s}">${s}</option>`;
+                    const sName = typeof s === 'string' ? s : s.name;
+                    subDropdown.innerHTML += `<option value="${sName}">${sName}</option>`;
                 });
+                if (savedSubVal && matched.subcategories.some(s => (typeof s === 'string' ? s : s.name) === savedSubVal)) {
+                    subDropdown.value = savedSubVal;
+                }
             } else {
                 subDropdown.innerHTML = `<option value="General">General</option>`;
+            }
+            syncChildCatSelector();
+        }
+
+        function syncChildCatSelector() {
+            const mainVal = document.getElementById('inMainCat').value;
+            const subVal = document.getElementById('inSubCat').value;
+            const childDropdown = document.getElementById('inChildCat');
+            const savedChildVal = childDropdown.value;
+            childDropdown.innerHTML = '<option value="">None / All</option>';
+
+            const matchedCat = categories.find(c => c.name === mainVal);
+            if (matchedCat) {
+                const matchedSub = matchedCat.subcategories.find(s => (typeof s === 'string' ? s : s.name) === subVal);
+                if (matchedSub && typeof matchedSub === 'object' && Array.isArray(matchedSub.childCategories)) {
+                    matchedSub.childCategories.forEach(ch => {
+                        childDropdown.innerHTML += `<option value="${ch}">${ch}</option>`;
+                    });
+                    if (savedChildVal && matchedSub.childCategories.includes(savedChildVal)) {
+                        childDropdown.value = savedChildVal;
+                    }
+                }
+            }
+        }
+
+        function syncChildSubCatSelect() {
+            const mainVal = document.getElementById('childParentMainCatSelect').value;
+            const subDropdown = document.getElementById('childParentSubCatSelect');
+            const savedSubVal = subDropdown.value;
+            subDropdown.innerHTML = '';
+
+            const matched = categories.find(c => c.name === mainVal);
+            if (matched && matched.subcategories.length > 0) {
+                matched.subcategories.forEach(s => {
+                    const sName = typeof s === 'string' ? s : s.name;
+                    subDropdown.innerHTML += `<option value="${sName}">${sName}</option>`;
+                });
+                if (savedSubVal && matched.subcategories.some(s => (typeof s === 'string' ? s : s.name) === savedSubVal)) {
+                    subDropdown.value = savedSubVal;
+                }
+            } else {
+                subDropdown.innerHTML = `<option value="">No subcategories</option>`;
             }
         }
 
@@ -3836,7 +4015,7 @@
             return `${dateStr}, ${timeStr}`;
         }
 
-        // SAVE / UPDATE POST (SUPABASE SYNCED)
+        // SAVE / UPDATE POST (SUPABASE SYNCED WITH CHILD CATEGORY)
         document.getElementById('adminAddMovieForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -3856,6 +4035,7 @@
             const duration = document.getElementById('inDuration').value.trim();
             const country = document.getElementById('inCountry').value.trim();
             const director = document.getElementById('inDirector').value.trim();
+            const childCategory = document.getElementById('inChildCat').value.trim();
 
             if (editId) {
                 const movieIndex = movies.findIndex(m => m.id == editId);
@@ -3865,6 +4045,7 @@
                     movies[movieIndex].year = document.getElementById('inMovieYear').value.trim();
                     movies[movieIndex].mainCategory = document.getElementById('inMainCat').value;
                     movies[movieIndex].subCategory = document.getElementById('inSubCat').value;
+                    movies[movieIndex].childCategory = childCategory;
                     movies[movieIndex].quality = document.getElementById('inQuality').value.trim();
                     movies[movieIndex].tags = document.getElementById('inTags').value.trim();
                     movies[movieIndex].poster = document.getElementById('inPoster').value.trim();
@@ -3896,6 +4077,7 @@
                     year: document.getElementById('inMovieYear').value.trim() || '2024',
                     mainCategory: document.getElementById('inMainCat').value,
                     subCategory: document.getElementById('inSubCat').value,
+                    childCategory: childCategory,
                     quality: document.getElementById('inQuality').value.trim(),
                     tags: document.getElementById('inTags').value.trim(),
                     poster: document.getElementById('inPoster').value.trim(),
@@ -3939,6 +4121,11 @@
             document.getElementById('inMainCat').value = movie.mainCategory;
             syncSubCatSelector();
             document.getElementById('inSubCat').value = movie.subCategory;
+            syncChildCatSelector();
+            if (movie.childCategory) {
+                document.getElementById('inChildCat').value = movie.childCategory;
+            }
+
             document.getElementById('inQuality').value = movie.quality;
             document.getElementById('inTags').value = movie.tags || '';
             document.getElementById('inPoster').value = movie.poster;
@@ -4007,7 +4194,7 @@
                         <strong style="color:#fff;">${m.title} (${m.year || '2024'})</strong>
                         <span style="font-size:10px; color:var(--cyan-accent); margin-left:5px;">[${m.type === 'series' ? 'Series' : 'Movie'}]</span>
                         <span style="font-size:10px; color:var(--imdb-yellow); margin-left:5px;">[IMDb ${m.imdbRating || 'N/A'}]</span>
-                        <div style="font-size:11px; color:#6b7280;">${m.subCategory} • ${m.quality} • ${m.dateTime || 'Recent'}</div>
+                        <div style="font-size:11px; color:#6b7280;">${m.subCategory} ${m.childCategory ? `> ${m.childCategory}` : ''} • ${m.quality} • ${m.dateTime || 'Recent'}</div>
                     </div>
                     <div class="btn-group-actions">
                         <button class="btn-edit-item" onclick="editMovie(${m.id})"><i class="fa-solid fa-pen"></i> Edit</button>
@@ -4029,7 +4216,7 @@
         }
 
         // ========================================================
-        // 21. 3-LEVEL HIERARCHY OPERATIONS
+        // 21. 4-LEVEL HIERARCHY OPERATIONS (WITH DROPDOWN MEMORY)
         // ========================================================
         function addNewSectionHeading() {
             const input = document.getElementById('newHeadingNameInput');
@@ -4040,7 +4227,11 @@
                 sectionHeadings.push(name);
                 input.value = '';
                 persistAll();
+
+                const savedHeading = name;
                 loadAdminDashboardData();
+                document.getElementById('parentSectionHeadingSelect').value = savedHeading;
+
                 renderSidebarMenu();
                 showToast(`Section Heading "${name}" Added!`);
             } else {
@@ -4106,7 +4297,15 @@
             categories.push({ name: val, heading: heading, subcategories: [] });
             persistAll();
             input.value = '';
+
+            // DROPDOWN MEMORY: Remember chosen heading
+            const savedHeading = heading;
             loadAdminDashboardData();
+            document.getElementById('parentSectionHeadingSelect').value = savedHeading;
+            document.getElementById('parentCatSelect').value = val;
+            document.getElementById('childParentMainCatSelect').value = val;
+            syncChildSubCatSelect();
+
             renderSidebarMenu();
             showToast(`Main Category "${val}" added under "${heading}"!`);
         }
@@ -4121,12 +4320,61 @@
 
             const target = categories.find(c => c.name === parent);
             if (target) {
-                target.subcategories.push(subVal);
+                target.subcategories.push({ name: subVal, childCategories: [] });
                 persistAll();
                 input.value = '';
+
+                // DROPDOWN MEMORY: DO NOT RESET THE PARENT DROPDOWN!
+                const savedParent = parent;
                 loadAdminDashboardData();
+                document.getElementById('parentCatSelect').value = savedParent;
+                document.getElementById('childParentMainCatSelect').value = savedParent;
+                syncChildSubCatSelect();
+                document.getElementById('childParentSubCatSelect').value = subVal;
+
                 renderSidebarMenu();
-                showToast(`Subcategory "${subVal}" added under "${parent}"!`);
+                showToast(`Subcategory "${subVal}" added under "${parent}"! (Parent kept selected)`);
+            }
+        }
+
+        // STEP 4: CREATE CHILD CATEGORY (WITH DROPDOWN MEMORY)
+        function createChildCategory() {
+            const mainVal = document.getElementById('childParentMainCatSelect').value;
+            const subVal = document.getElementById('childParentSubCatSelect').value;
+            const input = document.getElementById('inNewChildCat');
+            const childVal = input.value.trim();
+
+            if (!mainVal) return showToast("Select Main Category first!", true);
+            if (!subVal) return showToast("Select Subcategory first!", true);
+            if (!childVal) return showToast("Child category name empty!", true);
+
+            const targetCat = categories.find(c => c.name === mainVal);
+            if (targetCat) {
+                let targetSub = targetCat.subcategories.find(s => (typeof s === 'string' ? s : s.name) === subVal);
+                if (typeof targetSub === 'string') {
+                    const idx = targetCat.subcategories.indexOf(targetSub);
+                    targetCat.subcategories[idx] = { name: targetSub, childCategories: [] };
+                    targetSub = targetCat.subcategories[idx];
+                }
+
+                if (targetSub && targetSub.childCategories) {
+                    targetSub.childCategories.push(childVal);
+                    persistAll();
+                    input.value = '';
+
+                    // DROPDOWN MEMORY: Remember both chosen Main and Subcategory!
+                    const savedMain = mainVal;
+                    const savedSub = subVal;
+
+                    loadAdminDashboardData();
+
+                    document.getElementById('childParentMainCatSelect').value = savedMain;
+                    syncChildSubCatSelect();
+                    document.getElementById('childParentSubCatSelect').value = savedSub;
+
+                    renderSidebarMenu();
+                    showToast(`Child Category "${childVal}" added under "${subVal}"!`);
+                }
             }
         }
 
@@ -4141,13 +4389,27 @@
         }
 
         function editSubCategory(cIdx, sIdx) {
-            const currentSub = categories[cIdx].subcategories[sIdx];
+            const sub = categories[cIdx].subcategories[sIdx];
+            const currentSub = typeof sub === 'string' ? sub : sub.name;
             document.getElementById('editCatModalTitle').innerText = `Edit Subcategory (${categories[cIdx].name})`;
             document.getElementById('editCatInputLabel').innerText = "Subcategory Name";
             document.getElementById('editCategoryInputName').value = currentSub;
             document.getElementById('editCatType').value = 'sub';
             document.getElementById('editCatMainIdx').value = cIdx;
             document.getElementById('editCatSubIdx').value = sIdx;
+            document.getElementById('editCategoryModal').style.display = 'flex';
+        }
+
+        function editChildCategory(cIdx, sIdx, chIdx) {
+            const sub = categories[cIdx].subcategories[sIdx];
+            const currentChild = sub.childCategories[chIdx];
+            document.getElementById('editCatModalTitle').innerText = `Edit Child Category (${sub.name})`;
+            document.getElementById('editCatInputLabel').innerText = "Child Category / Show Name";
+            document.getElementById('editCategoryInputName').value = currentChild;
+            document.getElementById('editCatType').value = 'child';
+            document.getElementById('editCatMainIdx').value = cIdx;
+            document.getElementById('editCatSubIdx').value = sIdx;
+            document.getElementById('editCatChildIdx').value = chIdx;
             document.getElementById('editCategoryModal').style.display = 'flex';
         }
 
@@ -4185,19 +4447,45 @@
             } else if (type === 'sub') {
                 const cIdx = parseInt(document.getElementById('editCatMainIdx').value);
                 const sIdx = parseInt(document.getElementById('editCatSubIdx').value);
-                const oldSub = categories[cIdx].subcategories[sIdx];
+                const sub = categories[cIdx].subcategories[sIdx];
+                const oldSub = typeof sub === 'string' ? sub : sub.name;
+                
                 movies.forEach(m => {
                     if (m.subCategory === oldSub) m.subCategory = newName;
                 });
-                categories[cIdx].subcategories[sIdx] = newName;
+                
+                if (typeof sub === 'string') {
+                    categories[cIdx].subcategories[sIdx] = { name: newName, childCategories: [] };
+                } else {
+                    sub.name = newName;
+                }
+
                 persistAll();
                 loadAdminDashboardData();
                 renderSidebarMenu();
                 document.getElementById('editCategoryModal').style.display = 'none';
                 showToast(`Subcategory renamed to "${newName}"!`);
+            } else if (type === 'child') {
+                const cIdx = parseInt(document.getElementById('editCatMainIdx').value);
+                const sIdx = parseInt(document.getElementById('editCatSubIdx').value);
+                const chIdx = parseInt(document.getElementById('editCatChildIdx').value);
+                const sub = categories[cIdx].subcategories[sIdx];
+                const oldChild = sub.childCategories[chIdx];
+
+                movies.forEach(m => {
+                    if (m.childCategory === oldChild) m.childCategory = newName;
+                });
+
+                sub.childCategories[chIdx] = newName;
+                persistAll();
+                loadAdminDashboardData();
+                renderSidebarMenu();
+                document.getElementById('editCategoryModal').style.display = 'none';
+                showToast(`Child Category renamed to "${newName}"!`);
             }
         }
 
+        // 4-LEVEL CATEGORY TREE RENDERING
         function renderAdminCategoryTree() {
             const tree = document.getElementById('categoryTree');
             tree.innerHTML = '';
@@ -4214,8 +4502,8 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(0,229,255,0.2); padding-bottom:6px;">
                         <strong style="color:var(--cyan-accent); font-size:14px; text-transform:uppercase;"><i class="fa-solid fa-layer-group"></i> Heading: ${heading}</strong>
                         <div class="btn-group-actions">
-                            <button class="btn-edit-item" onclick="editSectionHeading(${hIdx})"><i class="fa-solid fa-pen"></i> Edit Heading</button>
-                            <button class="btn-delete-item" onclick="deleteSectionHeading(${hIdx})">Delete Heading</button>
+                            <button class="btn-edit-item" onclick="editSectionHeading(${hIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button class="btn-delete-item" onclick="deleteSectionHeading(${hIdx})">Delete</button>
                         </div>
                     </div>
                 `;
@@ -4242,18 +4530,55 @@
                                     <button class="btn-delete-item" onclick="deleteMainCategory(${originalCatIdx})">Delete</button>
                                 </div>
                             </div>
-                            <div style="margin-top:8px; padding-left:12px;">
-                                ${cat.subcategories.length > 0 ? cat.subcategories.map((sub, sIdx) => `
-                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin:5px 0; color:#8c93a8;">
-                                        <span>↳ ${sub}</span>
+                        `;
+
+                        const subsWrapper = document.createElement('div');
+                        subsWrapper.style.marginTop = '8px';
+                        subsWrapper.style.paddingLeft = '12px';
+
+                        if (cat.subcategories.length > 0) {
+                            cat.subcategories.forEach((sub, sIdx) => {
+                                const subName = typeof sub === 'string' ? sub : sub.name;
+                                const childList = (typeof sub === 'object' && Array.isArray(sub.childCategories)) ? sub.childCategories : [];
+
+                                const subRow = document.createElement('div');
+                                subRow.style.margin = '6px 0';
+                                subRow.innerHTML = `
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#c4cadc; background:#0d0e17; padding:4px 8px; border-radius:4px;">
+                                        <span>↳ <strong>${subName}</strong></span>
                                         <div style="display:flex; gap:8px;">
-                                            <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${originalCatIdx}, ${sIdx})"><i class="fa-solid fa-pen"></i></span>
-                                            <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${originalCatIdx}, ${sIdx})"><i class="fa-solid fa-xmark"></i></span>
+                                            <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${originalCatIdx}, ${sIdx})" title="Edit Subcategory"><i class="fa-solid fa-pen"></i></span>
+                                            <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${originalCatIdx}, ${sIdx})" title="Delete Subcategory"><i class="fa-solid fa-xmark"></i></span>
                                         </div>
                                     </div>
-                                `).join('') : '<span style="font-size:11px; color:#555; font-style:italic;">No subcategories yet.</span>'}
-                            </div>
-                        `;
+                                `;
+
+                                if (childList.length > 0) {
+                                    const childWrapper = document.createElement('div');
+                                    childWrapper.style.paddingLeft = '16px';
+                                    childWrapper.style.marginTop = '4px';
+
+                                    childList.forEach((ch, chIdx) => {
+                                        childWrapper.innerHTML += `
+                                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin:3px 0; color:#8c94ac;">
+                                                <span>↳↳ ${ch}</span>
+                                                <div style="display:flex; gap:6px;">
+                                                    <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Edit Child Category"><i class="fa-solid fa-pen"></i></span>
+                                                    <span style="color:#ff0055; cursor:pointer;" onclick="deleteChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Delete Child Category"><i class="fa-solid fa-xmark"></i></span>
+                                                </div>
+                                            </div>
+                                        `;
+                                    });
+                                    subRow.appendChild(childWrapper);
+                                }
+
+                                subsWrapper.appendChild(subRow);
+                            });
+                        } else {
+                            subsWrapper.innerHTML = `<span style="font-size:11px; color:#555; font-style:italic;">No subcategories yet.</span>`;
+                        }
+
+                        catDiv.appendChild(subsWrapper);
                         headingBox.appendChild(catDiv);
                     });
                 }
@@ -4276,6 +4601,14 @@
             loadAdminDashboardData();
             renderSidebarMenu();
             showToast("Subcategory Deleted!");
+        }
+
+        function deleteChildCategory(cIdx, sIdx, chIdx) {
+            categories[cIdx].subcategories[sIdx].childCategories.splice(chIdx, 1);
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+            showToast("Child Category Deleted!");
         }
 
         // ========================================================
@@ -4382,7 +4715,7 @@
                 const parsed = JSON.parse(document.getElementById('backupTextarea').value);
                 if (parsed.categories && parsed.movies) {
                     sectionHeadings = parsed.sectionHeadings || sectionHeadings;
-                    categories = parsed.categories;
+                    categories = normalizeCategories(parsed.categories);
                     officialDomains = parsed.officialDomains || officialDomains;
                     movies = parsed.movies;
                     trending = parsed.trending || trending;
@@ -4417,11 +4750,12 @@
                     const matchTitle = m.title.toLowerCase().includes(query);
                     const matchYear = m.year && m.year.toLowerCase().includes(query);
                     const matchSub = m.subCategory.toLowerCase().includes(query);
+                    const matchChild = m.childCategory && m.childCategory.toLowerCase().includes(query);
                     const matchMain = m.mainCategory.toLowerCase().includes(query);
                     const matchTags = m.tags && m.tags.toLowerCase().includes(query);
                     const matchCast = m.cast && m.cast.some(c => c.name.toLowerCase().includes(query) || c.role.toLowerCase().includes(query));
 
-                    return matchTitle || matchYear || matchSub || matchMain || matchTags || matchCast;
+                    return matchTitle || matchYear || matchSub || matchChild || matchMain || matchTags || matchCast;
                 });
                 renderMoviesGrid(filtered, false);
             }
@@ -4449,6 +4783,9 @@
             } else if (hash.startsWith('#category=')) {
                 const sub = decodeURIComponent(hash.replace('#category=', ''));
                 filterBySubCategoryInternal(sub);
+            } else if (hash.startsWith('#childcategory=')) {
+                const child = decodeURIComponent(hash.replace('#childcategory=', ''));
+                filterByChildCategoryInternal(child);
             } else if (hash.startsWith('#upcoming=')) {
                 const id = hash.replace('#upcoming=', '');
                 openComingSoonModalInternal(id);
