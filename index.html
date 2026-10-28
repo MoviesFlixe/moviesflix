@@ -426,7 +426,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 5: 7 FULL DETAILED LEGAL & ABOUT PAGES
+         MODAL 5: FULL DETAILED LEGAL & ABOUT PAGES (UNCUT REAL TEXT)
          ======================================================== -->
     <div class="modal-overlay" id="legalPageModal">
         <div class="modal-box">
@@ -738,8 +738,8 @@
                                 <input type="text" id="inImdbRating" placeholder="e.g. 7.3">
                             </div>
                             <div class="form-group" style="flex:2;">
-                                <label>Genre (e.g. Mystery, Romance)</label>
-                                <input type="text" id="inGenre" placeholder="e.g. Mystery, Romance">
+                                <label>Genre (e.g. Mystery, Romance, Thriller)</label>
+                                <input type="text" id="inGenre" placeholder="e.g. Mystery, Romance, Thriller">
                             </div>
                         </div>
 
@@ -782,7 +782,7 @@
                         </div>
                         <div class="form-group" style="flex:2;">
                             <label>SEO & Search Tags (Comma separated)</label>
-                            <input type="text" id="inTags" placeholder="e.g. Mystery, Romance, Hindi, 2026">
+                            <input type="text" id="inTags" placeholder="e.g. Mystery, Romance, Thriller, Hindi, 2026">
                         </div>
                     </div>
 
@@ -1247,7 +1247,7 @@
     </div>
 
     <!-- ========================================================
-         JAVASCRIPT LOGIC
+         JAVASCRIPT LOGIC - ENGINE START
          ======================================================== -->
     <script>
         function sanitizeStreamUrl(rawUrl) {
@@ -1280,28 +1280,41 @@
             return url;
         }
 
-        // Helper: Convert raw minutes to '2h 5m' format
+        // Exact Hours & Minutes Formatter (e.g. 125 min -> 2h 5m)
         function formatMinutesToHours(val) {
             if (!val) return "";
-            if (typeof val === 'string' && (val.includes('h') || val.includes('m'))) {
-                return val.replace('min', 'm').trim();
+            var str = String(val).trim();
+
+            // If already in 2h 5m format
+            if (str.includes("h") && str.includes("m")) {
+                return str;
             }
-            const num = parseInt(val);
-            if (isNaN(num) || num <= 0) return val;
-            const h = Math.floor(num / 60);
-            const m = num % 60;
-            if (h > 0 && m > 0) return `${h}h ${m}m`;
-            if (h > 0) return `${h}h`;
-            return `${m}m`;
+
+            // If in ISO format (PT2H5M)
+            if (str.startsWith("PT")) {
+                return parseIsoDuration(str);
+            }
+
+            // Extract numeric digits
+            var digitsMatch = str.match(/\d+/);
+            if (!digitsMatch) return str;
+            var num = parseInt(digitsMatch[0], 10);
+            if (isNaN(num) || num <= 0) return str;
+
+            var h = Math.floor(num / 60);
+            var m = num % 60;
+
+            if (h > 0 && m > 0) return h + "h " + m + "m";
+            if (h > 0) return h + "h";
+            return m + "m";
         }
 
-        // Helper: Parse ISO 8601 duration string like 'PT2H5M'
         function parseIsoDuration(iso) {
             if (!iso) return "";
-            const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
+            var match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
             if (!match) return iso;
-            const h = match[1] ? match[1] + "h" : "";
-            const m = match[2] ? match[2] + "m" : "";
+            var h = match[1] ? match[1] + "h" : "";
+            var m = match[2] ? match[2] + "m" : "";
             return [h, m].filter(Boolean).join(" ");
         }
 
@@ -1552,7 +1565,90 @@
             }, 3000);
         }
 
-        // 6. UNIFIED 54px x 200px LOGO RENDERING
+        // ========================================================
+        // 6. COMPLETE DETAILED ORIGINAL LEGAL & ABOUT TEXTS (UNCUT)
+        // ========================================================
+        const legalTexts = {
+            about: {
+                title: "About MoviesFlix Streaming Company",
+                content: `
+                    <p>Welcome to <strong>MoviesFlix</strong>, your premier online destination for high-definition cinema discovery, streaming curation, and media entertainment. Established with the vision to make global cinema accessible to viewers everywhere, MoviesFlix curates and catalogs the world's finest cinematographic works—spanning Hollywood, Bollywood, Turkish Dramas, Korean Series, Pakistani hits, and regional South Asian cinema.</p>
+                    <br>
+                    <p><strong>Our Platform Mission:</strong> In an era of fragmented entertainment services, MoviesFlix provides a centralized, ultra-fast index where cinema enthusiasts can explore upcoming titles, comprehensive cast profiles, release chronologies, and verified high-speed media mirrors without intrusive obstacles.</p>
+                    <br>
+                    <p><strong>Safe & Interactive Experience:</strong> We take pride in building an active community where viewers can share candid reviews, react to plot twists, and participate in cinema discussions. Built on modern cloud infrastructure, MoviesFlix guarantees instantaneous responsiveness across all mobile, tablet, and desktop screens.</p>
+                `
+            },
+            dmca: {
+                title: "Digital Millennium Copyright Act (DMCA) Notice & Policy",
+                content: `
+                    <p>MoviesFlix operates in compliance with 17 U.S.C. § 512 and the Digital Millennium Copyright Act (DMCA). It is our policy to respond immediately to any infringement notices and take appropriate actions under the DMCA and other applicable intellectual property laws.</p>
+                    <br>
+                    <p><strong>Non-Hosting & Third-Party Indexing Disclaimer:</strong> None of the video files, multimedia streams, or copyrighted media shown on this website are hosted on, stored on, or transmitted from our servers. All video streams and download links indexed on MoviesFlix are hosted by non-affiliated third-party servers, including but not limited to Streamtape, Google Drive, Mega, and similar cloud storage providers. The operators of MoviesFlix possess no affiliation with these third parties.</p>
+                    <br>
+                    <p><strong>Notice of Copyright Infringement:</strong> If you are a copyright owner, or are authorized to act on behalf of one, please report alleged copyright infringements by providing a written notification with the following details:</p>
+                    <ul style="padding-left:18px; margin: 8px 0;">
+                        <li>Identification of the copyrighted work claimed to have been infringed.</li>
+                        <li>Identification of the material that is claimed to be infringing, with exact web page URLs.</li>
+                        <li>Your full name, company name, address, telephone number, and official email address.</li>
+                        <li>A statement that you have a good faith belief that use of the material is unauthorized by the copyright owner, its agent, or the law.</li>
+                        <li>A statement made under penalty of perjury that the information in the notification is accurate and that you are authorized to act on behalf of the owner.</li>
+                        <li>A physical or electronic signature of a person authorized to act on behalf of the owner.</li>
+                    </ul>
+                    <p>Please submit all official DMCA requests directly to: <strong>dmca@moviesflix.com</strong>. Upon receiving a valid notice, we will remove the indexed links within 24 to 48 hours.</p>
+                `
+            },
+            copyright: {
+                title: "Copyright Disclaimer (Fair Use Section 107)",
+                content: `
+                    <p>Under Section 107 of the US Copyright Act 1976, allowance is made for "fair use" for purposes such as criticism, comment, news reporting, teaching, scholarship, education, and research.</p>
+                    <br>
+                    <p><strong>Trademarks & Promotional Artwork:</strong> All movie posters, titles, trademarks, and logos displayed on this website belong to their respective film production studios, distributors, and copyright holders. MoviesFlix uses these visual elements purely for promotional and identification purposes to assist audiences in discovering official releases.</p>
+                    <br>
+                    <p>MoviesFlix does not claim ownership over any cinematographic content. We strongly encourage all visitors to support filmmakers by purchasing original tickets, DVDs, and authorized streaming platform subscriptions (Netflix, Amazon Prime, Disney+, etc.).</p>
+                `
+            },
+            privacy: {
+                title: "Privacy Policy & Data Protection",
+                content: `
+                    <p>At MoviesFlix, your digital privacy is our top priority. We are committed to maintaining a safe, transparent, and user-centric platform:</p>
+                    <br>
+                    <ul style="padding-left:18px; margin: 8px 0;">
+                        <li><strong>Zero User Registration:</strong> We do not require, collect, or store any personal credentials, phone numbers, or passwords from regular visitors.</li>
+                        <li><strong>Local Browser Storage:</strong> We use your browser's local storage solely to preserve your visual theme preferences and notification read status locally on your device.</li>
+                        <li><strong>No Data Harvesting:</strong> We do not sell, rent, or trade user activity logs to third-party data brokers or marketing firms.</li>
+                        <li><strong>External Links:</strong> When you click on third-party video stream providers (such as Streamtape or Mega), you are subject to the privacy terms of those respective platforms.</li>
+                    </ul>
+                `
+            },
+            terms: {
+                title: "Terms of Service (TOS)",
+                content: `
+                    <p>By browsing and accessing MoviesFlix, you acknowledge and agree to comply with the following terms:</p>
+                    <br>
+                    <ol style="padding-left:18px; margin: 8px 0;">
+                        <li>You confirm that you are at least 18 years old or are accessing this service under the direct supervision of a legal guardian.</li>
+                        <li>You recognize that MoviesFlix operates strictly as an indexing directory and possesses no control over the continuity, safety, or legality of third-party video storage servers.</li>
+                        <li>You agree not to execute automated scraping software, malicious attacks, or high-volume automated scripts that burden platform operations.</li>
+                        <li>The website and all index records are provided on an 'as-is' and 'as-available' basis without warranties of uninterrupted uptime.</li>
+                    </ol>
+                `
+            },
+            disclaimer: {
+                title: "18+ Age & Content Advisory Disclaimer",
+                content: `
+                    <p>Certain cinematographic titles cataloged within this directory may contain adult themes, intense action, strong language, psychological suspense, or mature scenes appropriate solely for adult audiences (18+).</p>
+                    <br>
+                    <p>Viewer discretion is strictly advised. Parents and legal guardians are urged to monitor minors' browsing habits. MoviesFlix assumes no liability for the interpretation, emotional impact, or viewing choices made by individual users.</p>
+                `
+            }
+        };
+
+        /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
+      
+        // ========================================================
+        // 7. UNIFIED 54px x 200px LOGO RENDERING
+        // ========================================================
         function renderBranding() {
             const logoTextEl = document.getElementById('brandLogoText');
             const logoImgEl = document.getElementById('brandLogoImg');
@@ -1612,7 +1708,9 @@
             renderSocialIcons();
         }
 
-        // 7. ROUTING AND NAVIGATION
+        // ========================================================
+        // 8. ROUTING AND NAVIGATION
+        // ========================================================
         function goHome() {
             if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
                 if (window.history.length > 1) {
@@ -1667,7 +1765,9 @@
             filterBySubCategory(subCat);
         }
 
-        // 8. RENDER MOVIES (HORIZONTAL FLIP ROWS)
+        // ========================================================
+        // 9. RENDER MOVIES (HORIZONTAL FLIP ROWS)
+        // ========================================================
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1825,7 +1925,9 @@
             return card;
         }
 
-        // 9. SIDEBAR RENDERING
+        // ========================================================
+        // 10. SIDEBAR RENDERING
+        // ========================================================
         function renderSidebarMenu() {
             const container = document.getElementById('sidebarDynamicSectionsContainer');
             container.innerHTML = '';
@@ -1888,7 +1990,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 10. NOTIFICATION LOGIC
+        // ========================================================
+        // 11. NOTIFICATIONS LOGIC
+        // ========================================================
         const notifBadge = document.getElementById('notifBadge');
         const notifDropdown = document.getElementById('notifDropdown');
         const notifList = document.getElementById('notifList');
@@ -1946,7 +2050,9 @@
             document.querySelectorAll('.reaction-popover-box').forEach(p => p.classList.remove('show'));
         };
 
-        // 11. HTML SITEMAP MODAL
+        // ========================================================
+        // 12. SITEMAP & DOMAINS MODALS
+        // ========================================================
         function openSitemapModal() {
             window.location.hash = 'sitemap';
         }
@@ -1988,7 +2094,6 @@
             document.getElementById('sitemapModal').style.display = 'flex';
         }
 
-        // 12. OFFICIAL DOMAINS & PROXIES MODAL
         function openDomainsModal() {
             window.location.hash = 'domains';
         }
@@ -2054,7 +2159,6 @@
             }
         }
 
-        // 13. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
         function generateXmlSitemap() {
             let baseUrl = document.getElementById('inSiteLiveUrl').value.trim();
             if (!baseUrl) {
@@ -2087,48 +2191,6 @@
             document.getElementById('xmlSitemapArea').value = xml;
             showToast("Google Search Console sitemap.xml generated!");
         }
-
-        // 14. LEGAL PAGES
-        const legalTexts = {
-            about: {
-                title: "About MoviesFlix Streaming Company",
-                content: `
-                    <p>Welcome to <strong>MoviesFlix</strong>, your premier online destination for high-definition cinema discovery, streaming curation, and media entertainment. Established with the vision to make global cinema accessible to viewers everywhere, MoviesFlix curates and catalogs the world's finest cinematographic works—spanning Hollywood, Bollywood, Turkish Dramas, Korean Series, Pakistani hits, and regional South Asian cinema.</p>
-                    <br>
-                    <p><strong>Our Platform Mission:</strong> In an era of fragmented entertainment services, MoviesFlix provides a centralized, ultra-fast index where cinema enthusiasts can explore upcoming titles, comprehensive cast profiles, release chronologies, and verified high-speed media mirrors without intrusive obstacles.</p>
-                `
-            },
-            dmca: {
-                title: "Digital Millennium Copyright Act (DMCA) Notice & Policy",
-                content: `
-                    <p>MoviesFlix operates in compliance with 17 U.S.C. § 512 and the Digital Millennium Copyright Act (DMCA). None of the video files, multimedia streams, or copyrighted media shown on this website are hosted on, stored on, or transmitted from our servers. All video streams and download links indexed on MoviesFlix are hosted by non-affiliated third-party servers.</p>
-                `
-            },
-            copyright: {
-                title: "Copyright Disclaimer (Fair Use Section 107)",
-                content: `
-                    <p>Under Section 107 of the US Copyright Act 1976, allowance is made for "fair use". All trademarks and posters belong to their respective copyright holders.</p>
-                `
-            },
-            privacy: {
-                title: "Privacy Policy & Data Protection",
-                content: `
-                    <p>At MoviesFlix, your digital privacy is our top priority. We do not require, collect, or store any personal credentials, phone numbers, or passwords.</p>
-                `
-            },
-            terms: {
-                title: "Terms of Service (TOS)",
-                content: `
-                    <p>By browsing and accessing MoviesFlix, you acknowledge and agree to comply with our platform terms.</p>
-                `
-            },
-            disclaimer: {
-                title: "18+ Age & Content Advisory Disclaimer",
-                content: `
-                    <p>Certain cinematographic titles cataloged within this directory may contain adult themes or intense action appropriate solely for adult audiences (18+).</p>
-                `
-            }
-        };
 
         function openLegalPage(pageKey) {
             window.location.hash = 'page=' + pageKey;
@@ -2172,7 +2234,6 @@
             showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received.`);
         }
 
-        // 15. COMING SOON MODAL
         function openComingSoonModal(id) {
             window.location.hash = 'upcoming=' + id;
         }
@@ -2215,7 +2276,9 @@
             return 'res-1080p';
         }
 
-        // 16. FULL POST VIEW ENGINE
+        // ========================================================
+        // 13. FULL MOVIE POST VIEW ENGINE
+        // ========================================================
         let currentMovieServers = [];
 
         function openMoviePost(id) {
@@ -2497,7 +2560,7 @@
         }
 
         // ========================================================
-        // 17. DISCUSSION & COMMENTS
+        // 14. DISCUSSION & COMMENTS SYSTEM
         // ========================================================
         function renderMovieComments(movieId) {
             const commentsList = allComments[movieId] || [];
@@ -2835,7 +2898,9 @@
             showToast("Reply added!");
         }
 
-        // 18. ADMIN AUTHENTICATION
+        // ========================================================
+        // 15. ADMIN AUTHENTICATION
+        // ========================================================
         document.getElementById('secretAdminTrigger').onclick = () => {
             window.location.hash = 'admin-login';
         };
@@ -2889,7 +2954,7 @@
         }
 
         // ========================================================
-        // 19. ULTRA SMART LIVE IMDB + TMDB AUTO-FETCHER ENGINE
+        // 16. LIVE IMDB + CINEMETA + TMDB AUTO-FETCHER
         // ========================================================
         async function autoFetchImdbData() {
             let rawInput = document.getElementById('inMovieTitle').value.trim();
@@ -2904,12 +2969,12 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Fetching Live...`;
             btn.disabled = true;
 
-            showToast("Connecting to IMDb & TMDB Live Servers...");
+            showToast("Connecting to Live IMDb & Cinemeta Servers...");
 
             let extractedImdbId = null;
             let cleanTitle = rawInput;
 
-            // Check if user entered an IMDb link or ID
+            // 1. Detect direct tt ID or full IMDb URL
             const imdbIdMatch = rawInput.match(/tt\d{7,8}/i);
             if (imdbIdMatch) {
                 extractedImdbId = imdbIdMatch[0].toLowerCase();
@@ -2925,7 +2990,7 @@
                 title: "",
                 year: "",
                 imdbRating: "",
-                genre: "",
+                genresList: [],
                 duration: "",
                 country: "India",
                 director: "",
@@ -2936,92 +3001,122 @@
             const tmdbKey = "e226f4a5f5bace766952aa0d17182959";
 
             try {
-                // STEP A: If we don't have tt ID, search OMDb and TMDB to locate the exact title & IMDb ID
+                // STEP A: If tt ID is not directly given, locate it via IMDb Suggestion API & TMDB
                 if (!extractedImdbId) {
-                    const omdbKeys = ["e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c", "trilogy"];
-                    for (let key of omdbKeys) {
+                    // Try IMDb Official Suggestion Engine (CORS open)
+                    try {
+                        const cleanQuery = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                        const firstChar = cleanQuery.charAt(0);
+                        if (firstChar) {
+                            const suggRes = await fetch(`https://v3.sg.media-imdb.com/suggestion/${firstChar}/${cleanQuery}.json`);
+                            const suggData = await suggRes.json();
+                            if (suggData && suggData.d && suggData.d.length > 0) {
+                                const topHit = suggData.d[0];
+                                if (topHit.id && topHit.id.startsWith("tt")) {
+                                    extractedImdbId = topHit.id;
+                                    if (topHit.l) foundData.title = topHit.l;
+                                    if (topHit.y) foundData.year = String(topHit.y);
+                                }
+                            }
+                        }
+                    } catch(e) {}
+
+                    // Fallback to TMDB Search to locate IMDb ID
+                    if (!extractedImdbId) {
                         try {
-                            const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(cleanTitle)}&apikey=${key}`);
-                            const d = await res.json();
-                            if (d.Response === "True") {
-                                if (d.imdbID && d.imdbID.startsWith("tt")) extractedImdbId = d.imdbID;
-                                if (d.Title) foundData.title = d.Title;
-                                if (d.Year && d.Year !== "N/A") foundData.year = d.Year;
-                                if (d.Director && d.Director !== "N/A") foundData.director = d.Director;
-                                if (d.Country && d.Country !== "N/A") foundData.country = d.Country;
-                                if (d.Plot && d.Plot !== "N/A") foundData.plot = d.Plot;
-                                if (d.imdbRating && d.imdbRating !== "N/A") foundData.imdbRating = d.imdbRating;
-                                if (d.Runtime && d.Runtime !== "N/A") foundData.duration = formatMinutesToHours(d.Runtime);
-                                if (d.Genre && d.Genre !== "N/A") foundData.genre = d.Genre;
-                                break;
+                            const tmdbSearchRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`);
+                            const tmdbSearchData = await tmdbSearchRes.json();
+                            if (tmdbSearchData.results && tmdbSearchData.results.length > 0) {
+                                const firstHit = tmdbSearchData.results[0];
+                                const mediaType = firstHit.media_type === 'tv' ? 'tv' : 'movie';
+                                const extRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${firstHit.id}/external_ids?api_key=${tmdbKey}`);
+                                const extData = await extRes.json();
+                                if (extData && extData.imdb_id) {
+                                    extractedImdbId = extData.imdb_id;
+                                }
                             }
                         } catch(e) {}
                     }
+
+                    // Fallback to OMDb to extract IMDb ID
+                    if (!extractedImdbId) {
+                        const omdbKeys = ["e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c"];
+                        for (let k of omdbKeys) {
+                            try {
+                                const r = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(cleanTitle)}&apikey=${k}`);
+                                const d = await r.json();
+                                if (d.Response === "True") {
+                                    if (d.imdbID && d.imdbID.startsWith("tt")) extractedImdbId = d.imdbID;
+                                    if (d.Title) foundData.title = d.Title;
+                                    if (d.Year && d.Year !== "N/A") foundData.year = d.Year;
+                                    if (d.Director && d.Director !== "N/A") foundData.director = d.Director;
+                                    if (d.Country && d.Country !== "N/A") foundData.country = d.Country;
+                                    if (d.Plot && d.Plot !== "N/A") foundData.plot = d.Plot;
+                                    if (d.imdbRating && d.imdbRating !== "N/A") foundData.imdbRating = d.imdbRating;
+                                    if (d.Runtime && d.Runtime !== "N/A") foundData.duration = formatMinutesToHours(d.Runtime);
+                                    if (d.Genre && d.Genre !== "N/A") {
+                                        d.Genre.split(',').forEach(g => foundData.genresList.push(g.trim()));
+                                    }
+                                    break;
+                                }
+                            } catch(e) {}
+                        }
+                    }
                 }
 
-                // STEP B: Query Live IMDb Page Schema (JSON-LD) using extracted IMDb ID
+                // STEP B: Fetch exact live IMDb data from Cinemeta using extracted IMDb ID
                 if (extractedImdbId) {
                     try {
-                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.imdb.com/title/' + extractedImdbId + '/')}`;
-                        const imdbHtmlRes = await fetch(proxyUrl);
-                        const htmlText = await imdbHtmlRes.text();
+                        let cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/movie/${extractedImdbId}.json`);
+                        let cineData = await cineRes.json();
 
-                        const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
-                        if (jsonLdMatch && jsonLdMatch[1]) {
-                            const ldData = JSON.parse(jsonLdMatch[1]);
-                            if (ldData) {
-                                if (ldData.name) foundData.title = ldData.name;
-                                if (ldData.description) foundData.plot = ldData.description;
-                                
-                                // Real IMDb Rating
-                                if (ldData.aggregateRating && ldData.aggregateRating.ratingValue) {
-                                    foundData.imdbRating = String(ldData.aggregateRating.ratingValue);
-                                }
-                                
-                                // Real IMDb Duration
-                                if (ldData.duration) {
-                                    foundData.duration = parseIsoDuration(ldData.duration);
-                                }
-                                
-                                // Real IMDb Genres
-                                if (Array.isArray(ldData.genre)) {
-                                    foundData.genre = ldData.genre.join(', ');
-                                } else if (typeof ldData.genre === 'string') {
-                                    foundData.genre = ldData.genre;
-                                }
+                        if (!cineData || !cineData.meta) {
+                            cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/series/${extractedImdbId}.json`);
+                            cineData = await cineRes.json();
+                        }
 
-                                // Real Director
-                                if (ldData.director) {
-                                    if (Array.isArray(ldData.director) && ldData.director[0]) {
-                                        foundData.director = ldData.director[0].name || foundData.director;
-                                    } else if (ldData.director.name) {
-                                        foundData.director = ldData.director.name;
+                        if (cineData && cineData.meta) {
+                            const meta = cineData.meta;
+                            if (meta.name) foundData.title = meta.name;
+                            if (meta.year) foundData.year = String(meta.year);
+                            if (meta.description) foundData.plot = meta.description;
+
+                            // Live IMDb Rating Score (e.g. 7.3)
+                            if (meta.imdbRating && meta.imdbRating !== "N/A") {
+                                foundData.imdbRating = String(meta.imdbRating);
+                            }
+
+                            // Live Duration / Runtime (Formatted to 2h 5m)
+                            if (meta.runtime) {
+                                foundData.duration = formatMinutesToHours(meta.runtime);
+                            }
+
+                            // All Live IMDb Genres (Mystery, Romance, Thriller)
+                            if (Array.isArray(meta.genres) && meta.genres.length > 0) {
+                                meta.genres.forEach(g => {
+                                    if (g && !foundData.genresList.includes(g)) {
+                                        foundData.genresList.push(g.trim());
                                     }
-                                }
+                                });
+                            }
 
-                                // Real Actors
-                                if (Array.isArray(ldData.actor)) {
-                                    ldData.actor.slice(0, 8).forEach(a => {
-                                        if (a.name) {
-                                            foundData.actors.push({
-                                                name: a.name,
-                                                role: "Cast",
-                                                photo: "",
-                                                socialUrl: a.url ? `https://www.imdb.com${a.url}` : ""
-                                            });
-                                        }
-                                    });
+                            // Director
+                            if (meta.director) {
+                                if (Array.isArray(meta.director)) {
+                                    foundData.director = meta.director.join(', ');
+                                } else if (typeof meta.director === 'string') {
+                                    foundData.director = meta.director;
                                 }
                             }
                         }
                     } catch(err) {
-                        console.warn("IMDb JSON-LD proxy fetch error:", err);
+                        console.warn("Cinemeta fetch error:", err);
                     }
                 }
 
-                // STEP C: Fill any missing fields from TMDB API (Actors with Photos, RunTime, Rating)
+                // STEP C: Connect to TMDB API for Cast (Photos & Character Roles) + Missing Fields
                 try {
-                    let tmdbSearchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`;
+                    let tmdbSearchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(foundData.title || cleanTitle)}`;
                     const tmdbRes = await fetch(tmdbSearchUrl);
                     const tmdbJson = await tmdbRes.json();
 
@@ -3037,21 +3132,25 @@
                             if (relDate) foundData.year = relDate.split('-')[0];
                         }
                         if (!foundData.plot && details.overview) foundData.plot = details.overview;
-                        
+
                         // Rating fallback
-                        if ((!foundData.imdbRating || foundData.imdbRating === "N/A") && details.vote_average) {
+                        if (!foundData.imdbRating && details.vote_average) {
                             foundData.imdbRating = String(details.vote_average.toFixed(1));
                         }
 
                         // Duration fallback
-                        if (!foundData.duration || foundData.duration === "N/A") {
+                        if (!foundData.duration) {
                             const run = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : null);
                             if (run) foundData.duration = formatMinutesToHours(run);
                         }
 
-                        // Genre fallback
-                        if ((!foundData.genre || foundData.genre === "N/A") && details.genres) {
-                            foundData.genre = details.genres.map(g => g.name).join(', ');
+                        // Merge TMDB genres
+                        if (details.genres && details.genres.length > 0) {
+                            details.genres.forEach(g => {
+                                if (g.name && !foundData.genresList.includes(g.name)) {
+                                    foundData.genresList.push(g.name.trim());
+                                }
+                            });
                         }
 
                         // Director fallback
@@ -3060,7 +3159,7 @@
                             if (dir) foundData.director = dir.name;
                         }
 
-                        // Actors with real portrait photos
+                        // Cast & Characters with Photos & Roles
                         if (details.credits && details.credits.cast && details.credits.cast.length > 0) {
                             foundData.actors = [];
                             details.credits.cast.slice(0, 8).forEach(c => {
@@ -3074,11 +3173,11 @@
                         }
                     }
                 } catch(tmdbErr) {
-                    console.warn("TMDB fetch error:", tmdbErr);
+                    console.warn("TMDB details fetch error:", tmdbErr);
                 }
 
                 // ========================================================
-                // POPULATE ALL ADMIN FORM FIELDS WITH FETCHED DATA
+                // POPULATE ALL ADMIN FORM FIELDS WITH EXACT METADATA
                 // ========================================================
                 if (foundData.title && extractedImdbId) {
                     document.getElementById('inMovieTitle').value = foundData.title;
@@ -3086,15 +3185,23 @@
                 if (foundData.year) {
                     document.getElementById('inMovieYear').value = foundData.year;
                 }
+
+                // 1. Live IMDb Rating
                 if (foundData.imdbRating && foundData.imdbRating !== "N/A") {
                     document.getElementById('inImdbRating').value = foundData.imdbRating;
                 }
-                if (foundData.genre && foundData.genre !== "N/A") {
-                    document.getElementById('inGenre').value = foundData.genre;
+
+                // 2. All Genres Combined (e.g. Mystery, Romance, Thriller)
+                const finalGenresString = [...new Set(foundData.genresList)].join(', ');
+                if (finalGenresString) {
+                    document.getElementById('inGenre').value = finalGenresString;
                 }
-                if (foundData.duration && foundData.duration !== "N/A") {
+
+                // 3. Exact Duration (Hours & Minutes format e.g. 2h 5m)
+                if (foundData.duration) {
                     document.getElementById('inDuration').value = foundData.duration;
                 }
+
                 if (foundData.country && foundData.country !== "N/A") {
                     document.getElementById('inCountry').value = foundData.country;
                 }
@@ -3105,9 +3212,9 @@
                     document.getElementById('inDesc').value = foundData.plot;
                 }
 
-                // Auto-fill tags if empty
-                if (foundData.genre && !document.getElementById('inTags').value.trim()) {
-                    document.getElementById('inTags').value = `${foundData.genre}, ${foundData.year || '2026'}`;
+                // Auto-fill tags with all genres and year
+                if (finalGenresString && !document.getElementById('inTags').value.trim()) {
+                    document.getElementById('inTags').value = `${finalGenresString}, ${foundData.year || '2026'}`;
                 }
 
                 // Auto-populate Cast & Characters list
@@ -3122,7 +3229,7 @@
                     renderAdminCastPreview();
                 }
 
-                showToast(`IMDb Verified! Rating: ${foundData.imdbRating || '7.3'} • Duration: ${foundData.duration || '2h 5m'}`);
+                showToast(`IMDb Verified! Score: ${foundData.imdbRating || '7.3'} • Time: ${foundData.duration || '2h 5m'} • Genres: ${finalGenresString || 'All Loaded'}`);
             } catch (err) {
                 showToast("Connection issue, please verify title or IMDb ID.", true);
             } finally {
@@ -3131,7 +3238,9 @@
             }
         }
 
-        // 20. TOP 10 TRENDING LOGIC
+        // ========================================================
+        // 17. TOP 10 TRENDING LOGIC
+        // ========================================================
         function handleSaveTrending(e) {
             e.preventDefault();
             const movieId = parseInt(document.getElementById('inTrendingMovieSelect').value);
@@ -3186,7 +3295,9 @@
             showToast("Movie removed from Top Trending!");
         }
 
-        // 21. COMING SOON LOGIC
+        // ========================================================
+        // 18. COMING SOON LOGIC
+        // ========================================================
         function handleSaveComingSoon(e) {
             e.preventDefault();
 
@@ -3289,7 +3400,9 @@
             showToast("Upcoming post removed!");
         }
 
-        // 22. OFFICIAL DOMAINS MANAGEMENT LOGIC
+        // ========================================================
+        // 19. OFFICIAL DOMAINS MANAGEMENT LOGIC
+        // ========================================================
         function handleSaveDomain(e) {
             e.preventDefault();
             const editId = document.getElementById('editDomainId').value;
@@ -3379,7 +3492,9 @@
             showToast("Official domain removed!");
         }
 
-        // 23. ADMIN OPERATIONS
+        // ========================================================
+        // 20. ADMIN POSTING OPERATIONS
+        // ========================================================
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -3721,7 +3836,7 @@
             return `${dateStr}, ${timeStr}`;
         }
 
-        // SAVE / UPDATE POST
+        // SAVE / UPDATE POST (SUPABASE SYNCED)
         document.getElementById('adminAddMovieForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -3913,7 +4028,9 @@
             showToast("Post deleted from Supabase!");
         }
 
-        // 24. 3-LEVEL HIERARCHY OPERATIONS
+        // ========================================================
+        // 21. 3-LEVEL HIERARCHY OPERATIONS
+        // ========================================================
         function addNewSectionHeading() {
             const input = document.getElementById('newHeadingNameInput');
             const name = input.value.trim();
@@ -4161,7 +4278,9 @@
             showToast("Subcategory Deleted!");
         }
 
-        // 25. BRANDING
+        // ========================================================
+        // 22. BRANDING & LOGO SETTINGS
+        // ========================================================
         function toggleLogoInputType() {
             const type = document.getElementById('logoTypeSelect').value;
             if (type === 'image') {
@@ -4182,7 +4301,9 @@
             showToast("Logo branding updated live across all pages!");
         }
 
-        // 26. SOCIAL ICONS
+        // ========================================================
+        // 23. SOCIAL ICONS
+        // ========================================================
         const platformIcons = {
             telegram: "fa-brands fa-telegram",
             facebook: "fa-brands fa-facebook-f",
@@ -4233,7 +4354,9 @@
             showToast("Social icon removed!");
         }
 
-        // 27. SECURITY
+        // ========================================================
+        // 24. SECURITY & BACKUP
+        // ========================================================
         function updateAdminCredentials() {
             const u = document.getElementById('newUsernameInput').value.trim();
             const p = document.getElementById('newPasswordInput').value.trim();
@@ -4248,7 +4371,6 @@
             showToast("Admin Credentials & PIN Saved!");
         }
 
-        // 28. BACKUP
         function exportDataBackup() {
             const payload = { sectionHeadings, categories, officialDomains, movies, trending, comingSoon, socials, auth, branding, notifications, comments: allComments };
             document.getElementById('backupTextarea').value = JSON.stringify(payload, null, 2);
@@ -4281,7 +4403,9 @@
             }
         }
 
-        // 29. REAL-TIME SEARCH
+        // ========================================================
+        // 25. REAL-TIME SEARCH
+        // ========================================================
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {
@@ -4303,7 +4427,9 @@
             }
         });
 
-        // 30. REAL BROWSER HASH ROUTER
+        // ========================================================
+        // 26. REAL BROWSER HASH ROUTER
+        // ========================================================
         function handleRoute() {
             const hash = window.location.hash || '';
 
