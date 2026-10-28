@@ -790,7 +790,7 @@ body.modal-open {
     border-radius: 0;
     border: none;
     box-shadow: none;
-    padding: 12px 14px 110px 14px; /* Generous 110px bottom space */
+    padding: 12px 14px 110px 14px;
     margin: 0 auto;
     position: relative;
     box-sizing: border-box;
@@ -1465,7 +1465,7 @@ body.modal-open {
    ======================================================== */
 .movie-comments-section {
     margin-top: 32px;
-    margin-bottom: 85px; /* Generous bottom spacing */
+    margin-bottom: 85px;
     padding-top: 22px;
     border-top: 1px solid rgba(0, 229, 255, 0.25);
     width: 100%;
@@ -1594,7 +1594,7 @@ body.modal-open {
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    min-width: 0; /* CRITICAL: Prevents flex child from bursting parent container */
+    min-width: 0;
 }
 
 .comment-item-card.is-hidden-mode {
@@ -1629,7 +1629,7 @@ body.modal-open {
 
 .comment-body-col {
     flex: 1;
-    min-width: 0; /* CRITICAL: Prevents long text/inputs from overflowing flex item */
+    min-width: 0;
     display: flex;
     flex-direction: column;
 }
@@ -1676,7 +1676,7 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-shrink: 0; /* Stays neatly aligned on the right without pushing out */
+    flex-shrink: 0;
 }
 
 .comment-timestamp {
@@ -1754,7 +1754,7 @@ body.modal-open {
     color: #c9d0e2;
     line-height: 1.5;
     margin-bottom: 8px;
-    word-break: break-word; /* Prevents long words from stretching screen */
+    word-break: break-word;
 }
 
 .hidden-comment-placeholder {

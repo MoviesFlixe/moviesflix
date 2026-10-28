@@ -13,9 +13,8 @@
     <!-- FontAwesome 6 Pro CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- FIREBASE COMPAT SDK VIA CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- SUPABASE JS SDK VIA CDN (BAN-FREE CLOUD DATABASE) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -617,7 +616,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 11: CYBER EDIT COMMENT POPUP (NO MORE UGLY PROMPT)
+         MODAL 11: CYBER EDIT COMMENT POPUP
          ======================================================== -->
     <div class="modal-overlay" id="editCommentCustomModal" style="z-index: 4000;">
         <div class="modal-box" style="max-width: 440px; min-height: auto; border-radius: 12px; border: 1px solid var(--border-cyan); padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.85); background: #0c0f1d;">
@@ -644,7 +643,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 12: CYBER CONFIRM DELETE COMMENT POPUP (NO MORE UGLY CONFIRM)
+         MODAL 12: CYBER CONFIRM DELETE COMMENT POPUP
          ======================================================== -->
     <div class="modal-overlay" id="deleteCommentCustomModal" style="z-index: 4000;">
         <div class="modal-box" style="max-width: 400px; min-height: auto; border-radius: 12px; border: 1px solid rgba(255,0,85,0.4); padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.85); background: #0c0f1d; text-align:center;">
@@ -671,7 +670,7 @@
             <div style="display:flex; align-items:center; gap:12px;">
                 <h2 style="color:var(--cyan-accent);"><i class="fa-solid fa-terminal"></i> Admin Control Center</h2>
                 <span class="cloud-status-badge" id="cloudSyncStatusBadge">
-                    <i class="fa-solid fa-cloud"></i> Google Cloud Live
+                    <i class="fa-solid fa-cloud"></i> Supabase Cloud Live
                 </span>
             </div>
             <button onclick="exitAdminDashboard()" style="background:#191d2e; color:#fff; border:1px solid rgba(0,229,255,0.4); padding:8px 14px; border-radius:6px; cursor:pointer;">
@@ -1281,25 +1280,22 @@
             return url;
         }
 
-        // 1. FIREBASE CONFIGURATION
-        const firebaseConfig = {
-            apiKey: "AIzaSyB-t4r9mdqwnZVr7QVaXo7_G2zVXcG2Or4",
-            authDomain: "moviesflix-portal.firebaseapp.com",
-            projectId: "moviesflix-portal",
-            storageBucket: "moviesflix-portal.firebasestorage.app",
-            messagingSenderId: "967760651024",
-            appId: "1:967760651024:web:6518a2b1712a361a90fb95"
-        };
+        // ========================================================
+        // 1. SUPABASE CLIENT CONFIGURATION (BAN-FREE & SAFE)
+        // ========================================================
+        const SUPABASE_URL = "https://zidvtzcxktkpzrmyzexw.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_1WP138hq3WcBSbfugahlqA_r_OD8dMc";
 
-        let db = null;
+        let supabaseClient = null;
         try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
         } catch (err) {
-            console.error("Firebase init fallback:", err);
+            console.error("Supabase client init fallback:", err);
         }
 
-        // 2. DATA INITIALIZATION & FALLBACKS
+        // 2. DATA INITIALIZATION & FALLBACKS (ZERO BLANK SCREEN GUARANTEE)
         const defaultSectionHeadings = ["Categories & Channels"];
 
         const defaultCats = [
@@ -1327,13 +1323,64 @@
             { id: 3, platform: "instagram", icon: "fa-brands fa-instagram", url: "https://instagram.com" }
         ];
 
-        const hasSyncedBefore = localStorage.getItem('mf_cloud_synced') === 'true';
+        const defaultDemoMovies = [
+            {
+                id: 101,
+                type: "movie",
+                title: "Animal",
+                year: "2023",
+                mainCategory: "Movies",
+                subCategory: "Bollywood",
+                quality: "1080p HD",
+                tags: "Action, Crime, Drama, Ranbir Kapoor",
+                poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
+                desc: "A son's obsessive love for his father leads to an intense path of revenge and violent conflicts against dangerous underworld gangs.",
+                dateTime: "24 Oct 2026, 02:40 PM",
+                imdbRating: "6.8",
+                genre: "Action, Crime, Drama",
+                duration: "3h 24m",
+                country: "India",
+                director: "Sandeep Reddy Vanga",
+                servers: [{ id: 1, name: "Server 1 (Streamtape)", url: "https://streamtape.com/e/demo1" }],
+                downloads: [{ id: 1, quality: "1080p Full HD", name: "Mega.nz", size: "2.4 GB", url: "https://mega.nz" }],
+                episodes: [],
+                cast: [{ id: 1, name: "Ranbir Kapoor", role: "Ranvijay Singh", photo: "https://image.tmdb.org/t/p/w200/hXhB5W0UjA1kZ5G8t2V7K5g4.jpg", socialUrl: "" }]
+            },
+            {
+                id: 102,
+                type: "series",
+                title: "Kurulus Osman",
+                year: "2024",
+                mainCategory: "Web Series",
+                subCategory: "Turkish Drama",
+                quality: "720p HD",
+                tags: "Action, Adventure, Historical, Osman Bey",
+                poster: "https://image.tmdb.org/t/p/w500/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg",
+                desc: "The life of Osman Bey, son of Ertugrul Gazi and founder of the Ottoman Empire, fighting against Byzantine forces and Mongol threats.",
+                dateTime: "24 Oct 2026, 02:45 PM",
+                imdbRating: "7.6",
+                genre: "Action, Adventure, Drama",
+                duration: "2h 10m",
+                country: "Turkey",
+                director: "Metin Gunay",
+                servers: [],
+                downloads: [],
+                episodes: [
+                    { id: 1, season: "Season 1", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_ep1", downloadUrl: "https://mega.nz/file/ep1" },
+                    { id: 2, season: "Season 1", title: "Episode 02", streamUrl: "https://streamtape.com/e/demo_ep2", downloadUrl: "https://mega.nz/file/ep2" }
+                ],
+                cast: [{ id: 1, name: "Burak Ozcivit", role: "Osman Bey", photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", socialUrl: "" }]
+            }
+        ];
+
         let sectionHeadings = JSON.parse(localStorage.getItem('mf_section_headings')) || defaultSectionHeadings;
         let categories = JSON.parse(localStorage.getItem('mf_categories')) || defaultCats;
         let officialDomains = JSON.parse(localStorage.getItem('mf_official_domains')) || defaultOfficialDomains;
-        let movies = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_movies')) || []) : (JSON.parse(localStorage.getItem('mf_movies')) || []);
-        let trending = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_trending')) || []) : (JSON.parse(localStorage.getItem('mf_trending')) || []);
-        let comingSoon = hasSyncedBefore ? (JSON.parse(localStorage.getItem('mf_coming_soon')) || []) : (JSON.parse(localStorage.getItem('mf_coming_soon')) || []);
+        let movies = JSON.parse(localStorage.getItem('mf_movies')) || defaultDemoMovies;
+        if (!movies || movies.length === 0) movies = defaultDemoMovies;
+
+        let trending = JSON.parse(localStorage.getItem('mf_trending')) || [];
+        let comingSoon = JSON.parse(localStorage.getItem('mf_coming_soon')) || [];
         let socials = JSON.parse(localStorage.getItem('mf_socials')) || defaultSocials;
         let auth = JSON.parse(localStorage.getItem('mf_auth')) || { username: "admin", password: "admin123", pin: "7860" };
         let branding = JSON.parse(localStorage.getItem('mf_branding')) || {
@@ -1342,7 +1389,7 @@
             logoImage: ""
         };
         let notifications = JSON.parse(localStorage.getItem('mf_notifs')) || [
-            { id: 1, text: "Welcome to MoviesFlix! Connected to Google Cloud Database." }
+            { id: 1, text: "Welcome to MoviesFlix! Connected to Supabase Cloud Database." }
         ];
 
         let userClearedNotifIds = JSON.parse(localStorage.getItem('mf_cleared_notifs')) || [];
@@ -1359,9 +1406,8 @@
 
         let isCurrentlyOnHome = true;
 
-        // 3. PERSISTENCE ENGINE
+        // 3. PERSISTENCE ENGINE (SUPABASE UPSERT & LOCAL STORAGE CACHE)
         function persistAll() {
-            localStorage.setItem('mf_cloud_synced', 'true');
             localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
             localStorage.setItem('mf_categories', JSON.stringify(categories));
             localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
@@ -1374,8 +1420,8 @@
             localStorage.setItem('mf_notifs', JSON.stringify(notifications));
             localStorage.setItem('mf_comments', JSON.stringify(allComments));
 
-            if (db) {
-                db.collection('moviesflix_cloud').doc('portal_data').set({
+            if (supabaseClient) {
+                const payload = {
                     sectionHeadings: sectionHeadings,
                     categories: categories,
                     officialDomains: officialDomains,
@@ -1388,69 +1434,101 @@
                     notifications: notifications,
                     comments: allComments,
                     lastUpdated: Date.now()
-                }).then(() => {
-                    const badge = document.getElementById('cloudSyncStatusBadge');
-                    if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Cloud Synced`;
-                }).catch((err) => {
-                    console.error("Firestore sync error:", err);
-                });
+                };
+
+                supabaseClient
+                    .from('portal_data')
+                    .upsert({ id: 'main_data', content: payload })
+                    .then(({ error }) => {
+                        const badge = document.getElementById('cloudSyncStatusBadge');
+                        if (error) {
+                            console.error("Supabase upsert error:", error);
+                            if (badge) badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ff0055;"></i> Cloud Retry`;
+                        } else {
+                            if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Supabase Synced`;
+                        }
+                    });
             }
         }
 
-        function setupFirebaseRealtimeSync() {
-            if (!db) return;
+        // Apply incoming data from Supabase to state
+        function applyCloudPayload(data) {
+            if (!data) return;
 
-            db.collection('moviesflix_cloud').doc('portal_data')
-                .onSnapshot((doc) => {
-                    if (doc.exists) {
-                        const data = doc.data();
+            if (Array.isArray(data.movies) && data.movies.length > 0) movies = data.movies;
+            if (Array.isArray(data.categories) && data.categories.length > 0) categories = data.categories;
+            if (Array.isArray(data.sectionHeadings) && data.sectionHeadings.length > 0) sectionHeadings = data.sectionHeadings;
+            if (Array.isArray(data.officialDomains) && data.officialDomains.length > 0) officialDomains = data.officialDomains;
+            if (Array.isArray(data.trending)) trending = data.trending;
+            if (Array.isArray(data.comingSoon)) comingSoon = data.comingSoon;
+            if (Array.isArray(data.socials) && data.socials.length > 0) socials = data.socials;
+            if (data.branding) branding = data.branding;
+            if (data.auth) auth = data.auth;
+            if (Array.isArray(data.notifications)) notifications = data.notifications;
+            if (data.comments) allComments = data.comments;
 
-                        if (Array.isArray(data.movies)) movies = data.movies;
-                        if (Array.isArray(data.categories)) categories = data.categories;
-                        if (Array.isArray(data.sectionHeadings)) sectionHeadings = data.sectionHeadings;
-                        if (Array.isArray(data.officialDomains)) officialDomains = data.officialDomains;
-                        if (Array.isArray(data.trending)) trending = data.trending;
-                        if (Array.isArray(data.comingSoon)) comingSoon = data.comingSoon;
-                        if (Array.isArray(data.socials)) socials = data.socials;
-                        if (data.branding) branding = data.branding;
-                        if (data.auth) auth = data.auth;
-                        if (Array.isArray(data.notifications)) notifications = data.notifications;
-                        if (data.comments) allComments = data.comments;
+            localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
+            localStorage.setItem('mf_categories', JSON.stringify(categories));
+            localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
+            localStorage.setItem('mf_movies', JSON.stringify(movies));
+            localStorage.setItem('mf_trending', JSON.stringify(trending));
+            localStorage.setItem('mf_coming_soon', JSON.stringify(comingSoon));
+            localStorage.setItem('mf_socials', JSON.stringify(socials));
+            localStorage.setItem('mf_branding', JSON.stringify(branding));
+            localStorage.setItem('mf_notifs', JSON.stringify(notifications));
+            localStorage.setItem('mf_comments', JSON.stringify(allComments));
 
-                        localStorage.setItem('mf_cloud_synced', 'true');
-                        localStorage.setItem('mf_section_headings', JSON.stringify(sectionHeadings));
-                        localStorage.setItem('mf_categories', JSON.stringify(categories));
-                        localStorage.setItem('mf_official_domains', JSON.stringify(officialDomains));
-                        localStorage.setItem('mf_movies', JSON.stringify(movies));
-                        localStorage.setItem('mf_trending', JSON.stringify(trending));
-                        localStorage.setItem('mf_coming_soon', JSON.stringify(comingSoon));
-                        localStorage.setItem('mf_socials', JSON.stringify(socials));
-                        localStorage.setItem('mf_branding', JSON.stringify(branding));
-                        localStorage.setItem('mf_notifs', JSON.stringify(notifications));
-                        localStorage.setItem('mf_comments', JSON.stringify(allComments));
+            renderBranding();
+            if (isCurrentlyOnHome) {
+                renderMoviesGrid(movies, true);
+            }
+            renderSidebarMenu();
+            updateNotificationsUI();
 
-                        renderBranding();
-                        if (isCurrentlyOnHome) {
-                            renderMoviesGrid(movies, true);
-                        }
-                        renderSidebarMenu();
-                        updateNotificationsUI();
-
-                        if (currentViewingMovieId) {
-                            renderMovieComments(currentViewingMovieId);
-                        }
-
-                        const badge = document.getElementById('cloudSyncStatusBadge');
-                        if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Google Cloud Live`;
-                    } else {
-                        persistAll();
-                    }
-                }, (error) => {
-                    console.warn("Firestore live listener error:", error);
-                });
+            if (currentViewingMovieId) {
+                renderMovieComments(currentViewingMovieId);
+            }
         }
 
-        // 4. PROFESSIONAL CYBER TOAST SYSTEM
+        // 4. SUPABASE REALTIME & INITIAL FETCH
+        async function setupSupabaseRealtimeSync() {
+            if (!supabaseClient) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('portal_data')
+                    .select('content')
+                    .eq('id', 'main_data')
+                    .single();
+
+                if (data && data.content) {
+                    applyCloudPayload(data.content);
+                    const badge = document.getElementById('cloudSyncStatusBadge');
+                    if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Supabase Cloud Live`;
+                } else {
+                    // First time: Initialize Supabase table row with current data
+                    persistAll();
+                }
+            } catch (e) {
+                console.warn("Initial Supabase fetch error:", e);
+            }
+
+            // Realtime listener for cross-device instant sync
+            try {
+                supabaseClient
+                    .channel('portal_data_realtime')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_data' }, (payload) => {
+                        if (payload.new && payload.new.content) {
+                            applyCloudPayload(payload.new.content);
+                        }
+                    })
+                    .subscribe();
+            } catch (e) {
+                console.warn("Realtime sub error:", e);
+            }
+        }
+
+        // 5. PROFESSIONAL CYBER TOAST SYSTEM
         function showToast(message, isError = false) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -1467,7 +1545,7 @@
             }, 3000);
         }
 
-        // 5. UNIFIED 54px x 200px LOGO RENDERING
+        // 6. UNIFIED 54px x 200px LOGO RENDERING
         function renderBranding() {
             const logoTextEl = document.getElementById('brandLogoText');
             const logoImgEl = document.getElementById('brandLogoImg');
@@ -1527,7 +1605,7 @@
             renderSocialIcons();
         }
 
-        // 6. GHOST HISTORY LOOP SOLUTION
+        // 7. GHOST HISTORY LOOP SOLUTION
         function goHome() {
             if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
                 if (window.history.length > 1) {
@@ -1582,7 +1660,7 @@
             filterBySubCategory(subCat);
         }
 
-        // 7. RENDER MOVIES (HORIZONTAL FLIP ROWS)
+        // 8. RENDER MOVIES (HORIZONTAL FLIP ROWS)
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
             container.innerHTML = '';
@@ -1740,7 +1818,7 @@
             return card;
         }
 
-        // 8. SIDEBAR RENDERING
+        // 9. SIDEBAR RENDERING
         function renderSidebarMenu() {
             const container = document.getElementById('sidebarDynamicSectionsContainer');
             container.innerHTML = '';
@@ -1803,7 +1881,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 9. NOTIFICATION LOGIC (ISOLATED CLEAR PER USER)
+        // 10. NOTIFICATION LOGIC (ISOLATED CLEAR PER USER)
         const notifBadge = document.getElementById('notifBadge');
         const notifDropdown = document.getElementById('notifDropdown');
         const notifList = document.getElementById('notifList');
@@ -1862,7 +1940,7 @@
             document.querySelectorAll('.reaction-popover-box').forEach(p => p.classList.remove('show'));
         };
 
-        // 10. HTML SITEMAP MODAL
+        // 11. HTML SITEMAP MODAL
         function openSitemapModal() {
             window.location.hash = 'sitemap';
         }
@@ -1904,7 +1982,7 @@
             document.getElementById('sitemapModal').style.display = 'flex';
         }
 
-        // 11. OFFICIAL DOMAINS & PROXIES MODAL
+        // 12. OFFICIAL DOMAINS & PROXIES MODAL
         function openDomainsModal() {
             window.location.hash = 'domains';
         }
@@ -1970,7 +2048,7 @@
             }
         }
 
-        // 12. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
+        // 13. GOOGLE SEARCH CONSOLE XML SITEMAP GENERATOR
         function generateXmlSitemap() {
             let baseUrl = document.getElementById('inSiteLiveUrl').value.trim();
             if (!baseUrl) {
@@ -2004,7 +2082,7 @@
             showToast("Google Search Console sitemap.xml generated!");
         }
 
-        // 13. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
+        // 14. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
         const legalTexts = {
             about: {
                 title: "About MoviesFlix Streaming Company",
@@ -2124,7 +2202,7 @@
             showToast(`Thank you, ${name}! Your inquiry regarding "${subject}" was received.`);
         }
 
-        // 14. COMING SOON MODAL
+        // 15. COMING SOON MODAL
         function openComingSoonModal(id) {
             window.location.hash = 'upcoming=' + id;
         }
@@ -2167,7 +2245,7 @@
             return 'res-1080p';
         }
 
-        // 15. FULL POST VIEW ENGINE
+        // 16. FULL POST VIEW ENGINE
         let currentMovieServers = [];
 
         function openMoviePost(id) {
@@ -2449,7 +2527,7 @@
         }
 
         // ========================================================
-        // 16. DISCUSSION & COMMENTS (1-TIME EDIT, HIDE, REPORT, FB-REACTIONS)
+        // 17. DISCUSSION & COMMENTS (1-TIME EDIT, HIDE, REPORT, FB-REACTIONS)
         // ========================================================
         function renderMovieComments(movieId) {
             const commentsList = allComments[movieId] || [];
@@ -2487,7 +2565,7 @@
                 let repliesHtml = '';
                 if (c.replies && c.replies.length > 0) {
                     repliesHtml += `<div class="comment-replies-thread">`;
-                    c.replies.forEach((rep, rIdx) => {
+                    c.replies.forEach((rep) => {
                         repliesHtml += `
                             <div class="comment-item-card" style="background:#0c0f1d; border-color:rgba(0,229,255,0.15);">
                                 <div class="comment-user-avatar ${rep.isAdmin ? 'admin-avatar' : ''}" style="width:28px; height:28px; font-size:11px;">
@@ -2633,9 +2711,7 @@
             if (menu) menu.classList.toggle('show');
         }
 
-        // ==========================================
         // CUSTOM CYBER POPUPS FOR EDIT & DELETE
-        // ==========================================
         function editCommentText(commentIdx) {
             if (!currentViewingMovieId || !allComments[currentViewingMovieId]) return;
             const comment = allComments[currentViewingMovieId][commentIdx];
@@ -2721,7 +2797,6 @@
             if (popover) popover.classList.toggle('show');
         }
 
-        // Facebook Style Reaction Toggle & Replace Logic
         function addCommentReaction(commentIdx, emoji) {
             if (!currentViewingMovieId || !allComments[currentViewingMovieId]) return;
             const comment = allComments[currentViewingMovieId][commentIdx];
@@ -2792,7 +2867,7 @@
             showToast("Reply added!");
         }
 
-        // 17. ADMIN AUTHENTICATION
+        // 18. ADMIN AUTHENTICATION
         document.getElementById('secretAdminTrigger').onclick = () => {
             window.location.hash = 'admin-login';
         };
@@ -2809,7 +2884,7 @@
                 document.getElementById('authUsername').value = '';
                 document.getElementById('authPassword').value = '';
                 window.location.hash = 'admin-dashboard';
-                showToast("Welcome Admin! Google Cloud Connected.");
+                showToast("Welcome Admin! Supabase Cloud Connected.");
             } else {
                 showToast("Invalid Credentials!", true);
             }
@@ -2845,7 +2920,7 @@
             document.getElementById(panelId).classList.add('active');
         }
 
-        // 18. REAL & AUTOMATIC IMDB FETCHER ENGINE
+        // 19. REAL & AUTOMATIC IMDB FETCHER ENGINE
         async function autoFetchImdbData() {
             const title = document.getElementById('inMovieTitle').value.trim();
             const year = document.getElementById('inMovieYear').value.trim();
@@ -2921,7 +2996,7 @@
             }
         }
 
-        // 19. TOP 10 TRENDING LOGIC
+        // 20. TOP 10 TRENDING LOGIC
         function handleSaveTrending(e) {
             e.preventDefault();
             const movieId = parseInt(document.getElementById('inTrendingMovieSelect').value);
@@ -2976,7 +3051,7 @@
             showToast("Movie removed from Top Trending!");
         }
 
-        // 20. COMING SOON LOGIC
+        // 21. COMING SOON LOGIC
         function handleSaveComingSoon(e) {
             e.preventDefault();
 
@@ -3079,7 +3154,7 @@
             showToast("Upcoming post removed!");
         }
 
-        // 21. OFFICIAL DOMAINS MANAGEMENT LOGIC
+        // 22. OFFICIAL DOMAINS MANAGEMENT LOGIC
         function handleSaveDomain(e) {
             e.preventDefault();
             const editId = document.getElementById('editDomainId').value;
@@ -3169,7 +3244,7 @@
             showToast("Official domain removed!");
         }
 
-        // 22. ADMIN OPERATIONS WITH SMART URL FIXER
+        // 23. ADMIN OPERATIONS WITH SMART URL FIXER
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -3561,7 +3636,7 @@
                     cancelMovieEdit();
                     renderAdminMoviesList();
                     loadAdminDashboardData();
-                    showToast("Post Updated Live in Google Cloud!");
+                    showToast("Post Updated Live in Supabase!");
                 }
             } else {
                 const newPost = {
@@ -3598,7 +3673,7 @@
                 renderAdminMoviesList();
                 loadAdminDashboardData();
                 cancelMovieEdit();
-                showToast("Post Published Live in Google Cloud!");
+                showToast("Post Published Live in Supabase!");
             }
         });
 
@@ -3700,10 +3775,10 @@
             renderAdminMoviesList();
             renderAdminTrendingList();
             loadAdminDashboardData();
-            showToast("Post deleted from Google Cloud!");
+            showToast("Post deleted from Supabase!");
         }
 
-        // 23. 3-LEVEL HIERARCHY OPERATIONS
+        // 24. 3-LEVEL HIERARCHY OPERATIONS
         function addNewSectionHeading() {
             const input = document.getElementById('newHeadingNameInput');
             const name = input.value.trim();
@@ -3951,7 +4026,7 @@
             showToast("Subcategory Deleted!");
         }
 
-        // BRANDING
+        // 25. BRANDING
         function toggleLogoInputType() {
             const type = document.getElementById('logoTypeSelect').value;
             if (type === 'image') {
@@ -3972,7 +4047,7 @@
             showToast("Logo branding updated live across all pages!");
         }
 
-        // SOCIAL ICONS
+        // 26. SOCIAL ICONS
         const platformIcons = {
             telegram: "fa-brands fa-telegram",
             facebook: "fa-brands fa-facebook-f",
@@ -4023,7 +4098,7 @@
             showToast("Social icon removed!");
         }
 
-        // SECURITY
+        // 27. SECURITY
         function updateAdminCredentials() {
             const u = document.getElementById('newUsernameInput').value.trim();
             const p = document.getElementById('newPasswordInput').value.trim();
@@ -4038,7 +4113,7 @@
             showToast("Admin Credentials & PIN Saved!");
         }
 
-        // BACKUP
+        // 28. BACKUP
         function exportDataBackup() {
             const payload = { sectionHeadings, categories, officialDomains, movies, trending, comingSoon, socials, auth, branding, notifications, comments: allComments };
             document.getElementById('backupTextarea').value = JSON.stringify(payload, null, 2);
@@ -4071,7 +4146,7 @@
             }
         }
 
-        // 24. REAL-TIME SEARCH
+        // 29. REAL-TIME SEARCH
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {
@@ -4093,7 +4168,7 @@
             }
         });
 
-        // 25. REAL BROWSER HASH ROUTER
+        // 30. REAL BROWSER HASH ROUTER
         function handleRoute() {
             const hash = window.location.hash || '';
 
@@ -4163,11 +4238,11 @@
             closeModal();
         };
 
-        // INITIAL LOAD & FIREBASE CLOUD REALTIME SYNC START
+        // INITIAL LOAD & SUPABASE CLOUD REALTIME SYNC START
         renderBranding();
         renderSidebarMenu();
         updateNotificationsUI();
-        setupFirebaseRealtimeSync();
+        setupSupabaseRealtimeSync();
         
         handleRoute();
     </script>
