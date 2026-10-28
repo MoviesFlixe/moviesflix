@@ -1461,7 +1461,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   7. INTERACTIVE DISCUSSION, COMMENTS & MODERATION (FIXED OVERFLOW & NO PHONE COLLISION)
+   7. INTERACTIVE DISCUSSION, COMMENTS & MODERATION
    ======================================================== */
 .movie-comments-section {
     margin-top: 32px;
@@ -1498,7 +1498,6 @@ body.modal-open {
     border-radius: 12px;
 }
 
-/* Add Comment Card */
 .comment-input-card {
     background: #0b0e1a;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1573,7 +1572,6 @@ body.modal-open {
     transform: translateY(-2px);
 }
 
-/* Comments Feed List (Zero Overflow) */
 .comments-feed-list {
     display: flex;
     flex-direction: column;
@@ -1685,7 +1683,6 @@ body.modal-open {
     white-space: nowrap;
 }
 
-/* 3-Dots Dropdown Options Menu */
 .comment-options-dropdown-box {
     position: relative;
 }
@@ -1767,7 +1764,6 @@ body.modal-open {
     margin-bottom: 8px;
 }
 
-/* Facebook Style Reaction Bar & Actions */
 .comment-actions-bar {
     display: flex;
     align-items: center;
@@ -1865,7 +1861,6 @@ body.modal-open {
     background: rgba(0, 229, 255, 0.12);
 }
 
-/* Nested Replies Container */
 .comment-replies-thread {
     margin-top: 10px;
     padding-left: 10px;
@@ -1877,7 +1872,6 @@ body.modal-open {
     box-sizing: border-box;
 }
 
-/* Responsive Non-Overflow Reply Box */
 .reply-box-form {
     margin-top: 10px;
     margin-bottom: 12px;

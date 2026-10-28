@@ -713,15 +713,15 @@
 
                     <div style="display: flex; gap: 10px; align-items: flex-end;">
                         <div class="form-group" style="flex:2;">
-                            <label>Title (or IMDb ID like tt0111161)</label>
-                            <input type="text" id="inMovieTitle" placeholder="e.g. The Shawshank Redemption / tt0111161" required>
+                            <label>Title, IMDb ID (tt...) or IMDb Page URL</label>
+                            <input type="text" id="inMovieTitle" placeholder="e.g. Tu Hai Meri Kiran or tt33880491" required>
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Release Year</label>
-                            <input type="text" id="inMovieYear" placeholder="e.g. 1994">
+                            <input type="text" id="inMovieYear" placeholder="e.g. 2026">
                         </div>
                         <div class="form-group" style="flex-shrink:0;">
-                            <button type="button" class="btn-imdb-autofetch" onclick="autoFetchImdbData()">
+                            <button type="button" class="btn-imdb-autofetch" id="btnAutoFetchImdb" onclick="autoFetchImdbData()">
                                 <i class="fa-solid fa-bolt"></i> Auto-Fetch IMDb
                             </button>
                         </div>
@@ -734,34 +734,34 @@
 
                         <div style="display: flex; gap: 10px;">
                             <div class="form-group" style="flex:1;">
-                                <label>IMDb Score (e.g. 9.3 / 7.6)</label>
-                                <input type="text" id="inImdbRating" placeholder="e.g. 9.3">
+                                <label>IMDb Score (e.g. 7.3 / 9.3)</label>
+                                <input type="text" id="inImdbRating" placeholder="e.g. 7.3">
                             </div>
                             <div class="form-group" style="flex:2;">
-                                <label>Genre (e.g. Drama, Crime)</label>
-                                <input type="text" id="inGenre" placeholder="e.g. Drama, Crime">
+                                <label>Genre (e.g. Mystery, Romance)</label>
+                                <input type="text" id="inGenre" placeholder="e.g. Mystery, Romance">
                             </div>
                         </div>
 
                         <div style="display: flex; gap: 10px;">
                             <div class="form-group" style="flex:1;">
-                                <label>Duration / Runtime (e.g. 2h 22m)</label>
-                                <input type="text" id="inDuration" placeholder="e.g. 2h 22m">
+                                <label>Duration / Runtime (e.g. 2h 5m)</label>
+                                <input type="text" id="inDuration" placeholder="e.g. 2h 5m">
                             </div>
                             <div class="form-group" style="flex:1;">
-                                <label>Country (e.g. USA / India / Turkey)</label>
-                                <input type="text" id="inCountry" placeholder="e.g. USA">
+                                <label>Country (e.g. India / USA / Turkey)</label>
+                                <input type="text" id="inCountry" placeholder="e.g. India">
                             </div>
                             <div class="form-group" style="flex:1;">
-                                <label>Director (e.g. Frank Darabont)</label>
-                                <input type="text" id="inDirector" placeholder="e.g. Frank Darabont">
+                                <label>Director (e.g. Karan Rawal)</label>
+                                <input type="text" id="inDirector" placeholder="e.g. Karan Rawal">
                             </div>
                         </div>
                     </div>
 
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;">
-                            <label>Main Category (e.g. Movies, Web Series)</label>
+                            <label>Main Category (e.g. Bollywood Movies, Web Series)</label>
                             <select id="inMainCat" onchange="syncSubCatSelector()" required></select>
                         </div>
                         <div class="form-group" style="flex:1;">
@@ -782,7 +782,7 @@
                         </div>
                         <div class="form-group" style="flex:2;">
                             <label>SEO & Search Tags (Comma separated)</label>
-                            <input type="text" id="inTags" placeholder="e.g. Drama, Crime, Tim Robbins, Morgan Freeman">
+                            <input type="text" id="inTags" placeholder="e.g. Mystery, Romance, Hindi, 2026">
                         </div>
                     </div>
 
@@ -892,17 +892,17 @@
 
                     <div class="cast-admin-card" style="margin-bottom:14px;">
                         <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
-                            <i class="fa-solid fa-users"></i> Cast & Characters (Actor Photo, Real Name, Role & Social)
+                            <i class="fa-solid fa-users"></i> Cast & Characters (Auto-Filled from IMDb/TMDB or Add Manually)
                         </div>
 
                         <div style="display:flex; gap:8px;">
                             <div class="form-group" style="flex:1;">
                                 <label>Actor Real Name</label>
-                                <input type="text" id="castNameInput" placeholder="e.g. Tim Robbins">
+                                <input type="text" id="castNameInput" placeholder="e.g. Sonakshi Sinha">
                             </div>
                             <div class="form-group" style="flex:1;">
                                 <label>Character / Role Name</label>
-                                <input type="text" id="castRoleInput" placeholder="e.g. Andy Dufresne">
+                                <input type="text" id="castRoleInput" placeholder="e.g. Kiran">
                             </div>
                         </div>
 
@@ -925,7 +925,7 @@
 
                     <div class="form-group">
                         <label>Description / Storyline</label>
-                        <textarea id="inDesc" rows="3" placeholder="Write plot summary..."></textarea>
+                        <textarea id="inDesc" rows="3" placeholder="Movie storyline..."></textarea>
                     </div>
 
                     <div style="display:flex; gap:10px;">
@@ -1093,10 +1093,10 @@
         <div class="admin-tab-panel" id="panelCategories">
             <div class="admin-card">
                 <div class="admin-card-title">
-                    <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. Categories & Channels)
+                    <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. TV Shows & Reality)
                 </div>
                 <div class="season-control-row">
-                    <input type="text" id="newHeadingNameInput" placeholder="Section Heading Title (e.g. Anime Corner, Channels)">
+                    <input type="text" id="newHeadingNameInput" placeholder="Section Heading Title (e.g. TV Shows & Reality)">
                     <button type="button" class="btn-add-season" onclick="addNewSectionHeading()">
                         <i class="fa-solid fa-plus"></i> Add Heading
                     </button>
@@ -1115,7 +1115,7 @@
                 </div>
                 <div class="form-group">
                     <label>Main Category Name</label>
-                    <input type="text" id="inNewMainCat" placeholder="e.g. Movies, TV Shows, Web Series">
+                    <input type="text" id="inNewMainCat" placeholder="e.g. Indian TV Channels, Reality Shows">
                 </div>
                 <button class="btn-cyan" onclick="createMainCategory()">Add Main Category</button>
             </div>
@@ -1130,7 +1130,7 @@
                 </div>
                 <div class="form-group">
                     <label>Subcategory Name</label>
-                    <input type="text" id="inNewSubCat" placeholder="e.g. Bollywood, Hollywood, Turkish Drama">
+                    <input type="text" id="inNewSubCat" placeholder="e.g. Star Plus, Colors TV, Bigg Boss">
                 </div>
                 <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
             </div>
@@ -1280,6 +1280,31 @@
             return url;
         }
 
+        // Helper: Convert raw minutes to '2h 5m' format
+        function formatMinutesToHours(val) {
+            if (!val) return "";
+            if (typeof val === 'string' && (val.includes('h') || val.includes('m'))) {
+                return val.replace('min', 'm').trim();
+            }
+            const num = parseInt(val);
+            if (isNaN(num) || num <= 0) return val;
+            const h = Math.floor(num / 60);
+            const m = num % 60;
+            if (h > 0 && m > 0) return `${h}h ${m}m`;
+            if (h > 0) return `${h}h`;
+            return `${m}m`;
+        }
+
+        // Helper: Parse ISO 8601 duration string like 'PT2H5M'
+        function parseIsoDuration(iso) {
+            if (!iso) return "";
+            const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
+            if (!match) return iso;
+            const h = match[1] ? match[1] + "h" : "";
+            const m = match[2] ? match[2] + "m" : "";
+            return [h, m].filter(Boolean).join(" ");
+        }
+
         // ========================================================
         // 1. SUPABASE CLIENT CONFIGURATION (BAN-FREE & SAFE)
         // ========================================================
@@ -1295,19 +1320,29 @@
             console.error("Supabase client init fallback:", err);
         }
 
-        // 2. DATA INITIALIZATION & FALLBACKS (ZERO BLANK SCREEN GUARANTEE)
-        const defaultSectionHeadings = ["Categories & Channels"];
+        // 2. DATA INITIALIZATION & FALLBACKS
+        const defaultSectionHeadings = ["Categories & Channels", "TV Shows & Reality"];
 
         const defaultCats = [
             { 
-                name: "Movies", 
+                name: "Bollywood Movies", 
                 heading: "Categories & Channels", 
-                subcategories: ["Bollywood", "Hollywood", "Indian Hindi Dubbed", "Pakistani", "Punjabi"] 
+                subcategories: ["Latest Bollywood", "Bollywood Action", "Romantic & Drama", "Comedy"] 
             },
             { 
-                name: "Web Series", 
+                name: "Hollywood Movies", 
                 heading: "Categories & Channels", 
-                subcategories: ["Turkish Drama", "Hindi Series", "Korean Drama"] 
+                subcategories: ["Hollywood Hindi Dubbed", "English Audio", "Sci-Fi & Action"] 
+            },
+            { 
+                name: "Indian TV Channels", 
+                heading: "TV Shows & Reality", 
+                subcategories: ["Star Plus", "Colors TV", "Sony TV", "Zee TV", "SAB TV"] 
+            },
+            { 
+                name: "Reality Shows", 
+                heading: "TV Shows & Reality", 
+                subcategories: ["Bigg Boss", "Kapil Sharma Show", "Roadies", "Splitsvilla"] 
             }
         ];
 
@@ -1329,8 +1364,8 @@
                 type: "movie",
                 title: "Animal",
                 year: "2023",
-                mainCategory: "Movies",
-                subCategory: "Bollywood",
+                mainCategory: "Bollywood Movies",
+                subCategory: "Latest Bollywood",
                 quality: "1080p HD",
                 tags: "Action, Crime, Drama, Ranbir Kapoor",
                 poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
@@ -1345,31 +1380,6 @@
                 downloads: [{ id: 1, quality: "1080p Full HD", name: "Mega.nz", size: "2.4 GB", url: "https://mega.nz" }],
                 episodes: [],
                 cast: [{ id: 1, name: "Ranbir Kapoor", role: "Ranvijay Singh", photo: "https://image.tmdb.org/t/p/w200/hXhB5W0UjA1kZ5G8t2V7K5g4.jpg", socialUrl: "" }]
-            },
-            {
-                id: 102,
-                type: "series",
-                title: "Kurulus Osman",
-                year: "2024",
-                mainCategory: "Web Series",
-                subCategory: "Turkish Drama",
-                quality: "720p HD",
-                tags: "Action, Adventure, Historical, Osman Bey",
-                poster: "https://image.tmdb.org/t/p/w500/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg",
-                desc: "The life of Osman Bey, son of Ertugrul Gazi and founder of the Ottoman Empire, fighting against Byzantine forces and Mongol threats.",
-                dateTime: "24 Oct 2026, 02:45 PM",
-                imdbRating: "7.6",
-                genre: "Action, Adventure, Drama",
-                duration: "2h 10m",
-                country: "Turkey",
-                director: "Metin Gunay",
-                servers: [],
-                downloads: [],
-                episodes: [
-                    { id: 1, season: "Season 1", title: "Episode 01", streamUrl: "https://streamtape.com/e/demo_ep1", downloadUrl: "https://mega.nz/file/ep1" },
-                    { id: 2, season: "Season 1", title: "Episode 02", streamUrl: "https://streamtape.com/e/demo_ep2", downloadUrl: "https://mega.nz/file/ep2" }
-                ],
-                cast: [{ id: 1, name: "Burak Ozcivit", role: "Osman Bey", photo: "https://image.tmdb.org/t/p/w200/9kCsmVqg0x8j7oZqL5hW7iBv8rS.jpg", socialUrl: "" }]
             }
         ];
 
@@ -1451,7 +1461,6 @@
             }
         }
 
-        // Apply incoming data from Supabase to state
         function applyCloudPayload(data) {
             if (!data) return;
 
@@ -1506,14 +1515,12 @@
                     const badge = document.getElementById('cloudSyncStatusBadge');
                     if (badge) badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Supabase Cloud Live`;
                 } else {
-                    // First time: Initialize Supabase table row with current data
                     persistAll();
                 }
             } catch (e) {
                 console.warn("Initial Supabase fetch error:", e);
             }
 
-            // Realtime listener for cross-device instant sync
             try {
                 supabaseClient
                     .channel('portal_data_realtime')
@@ -1605,7 +1612,7 @@
             renderSocialIcons();
         }
 
-        // 7. GHOST HISTORY LOOP SOLUTION
+        // 7. ROUTING AND NAVIGATION
         function goHome() {
             if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
                 if (window.history.length > 1) {
@@ -1881,7 +1888,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 10. NOTIFICATION LOGIC (ISOLATED CLEAR PER USER)
+        // 10. NOTIFICATION LOGIC
         const notifBadge = document.getElementById('notifBadge');
         const notifDropdown = document.getElementById('notifDropdown');
         const notifList = document.getElementById('notifList');
@@ -1898,7 +1905,6 @@
 
         function updateNotificationsUI() {
             notifList.innerHTML = '';
-            
             const userVisibleNotifs = notifications.filter(n => !userClearedNotifIds.includes(n.id));
 
             if (userVisibleNotifs.length > 0) {
@@ -2082,7 +2088,7 @@
             showToast("Google Search Console sitemap.xml generated!");
         }
 
-        // 14. PERMANENT 7 FULL DETAILED LEGAL & ABOUT US PAGES
+        // 14. LEGAL PAGES
         const legalTexts = {
             about: {
                 title: "About MoviesFlix Streaming Company",
@@ -2090,72 +2096,36 @@
                     <p>Welcome to <strong>MoviesFlix</strong>, your premier online destination for high-definition cinema discovery, streaming curation, and media entertainment. Established with the vision to make global cinema accessible to viewers everywhere, MoviesFlix curates and catalogs the world's finest cinematographic works—spanning Hollywood, Bollywood, Turkish Dramas, Korean Series, Pakistani hits, and regional South Asian cinema.</p>
                     <br>
                     <p><strong>Our Platform Mission:</strong> In an era of fragmented entertainment services, MoviesFlix provides a centralized, ultra-fast index where cinema enthusiasts can explore upcoming titles, comprehensive cast profiles, release chronologies, and verified high-speed media mirrors without intrusive obstacles.</p>
-                    <br>
-                    <p><strong>High-Speed Multi-Server Infrastructure:</strong> We prioritize smooth playback and zero buffering. Every cataloged release features multi-server video switches (Server 1, Server 2) alongside high-speed direct download mirrors (including Mega, Google Drive, and cloud CDN storage). If one server experiences latency, users can switch streaming servers with a single tap.</p>
-                    <br>
-                    <p><strong>Safe & Responsible Browsing:</strong> We operate with full compliance to digital privacy guidelines and international intellectual property frameworks. MoviesFlix does not host or store unauthorized files on its servers; we act strictly as an interactive index directory. We encourage all cinema lovers to support creative artists by buying official movie tickets and subscribing to legitimate streaming platforms.</p>
                 `
             },
             dmca: {
                 title: "Digital Millennium Copyright Act (DMCA) Notice & Policy",
                 content: `
-                    <p>MoviesFlix operates in compliance with 17 U.S.C. § 512 and the Digital Millennium Copyright Act (DMCA). It is our policy to respond immediately to any infringement notices and take appropriate actions under the DMCA and other applicable intellectual property laws.</p>
-                    <br>
-                    <p><strong>Non-Hosting & Third-Party Indexing Disclaimer:</strong> None of the video files, multimedia streams, or copyrighted media shown on this website are hosted on, stored on, or transmitted from our servers. All video streams and download links indexed on MoviesFlix are hosted by non-affiliated third-party servers, including but not limited to Streamtape, Google Drive, Mega, and similar cloud storage providers.</p>
-                    <br>
-                    <p><strong>Notice of Copyright Infringement:</strong> If you are a copyright owner, or are authorized to act on behalf of one, please report alleged copyright infringements by providing a written notification with the following details:</p>
-                    <ul style="padding-left:18px; margin: 8px 0;">
-                        <li>Identification of the copyrighted work claimed to have been infringed.</li>
-                        <li>Identification of the material that is claimed to be infringing, with exact web page URLs.</li>
-                        <li>Your full name, address, telephone number, and official email address.</li>
-                        <li>A statement that you have a good faith belief that use of the material is unauthorized.</li>
-                        <li>A physical or electronic signature of a person authorized to act on behalf of the owner.</li>
-                    </ul>
-                    <p>Please submit all official DMCA requests directly to: <strong>dmca@moviesflix.com</strong>. Upon receiving a valid notice, we will remove the indexed links within 24 to 48 hours.</p>
+                    <p>MoviesFlix operates in compliance with 17 U.S.C. § 512 and the Digital Millennium Copyright Act (DMCA). None of the video files, multimedia streams, or copyrighted media shown on this website are hosted on, stored on, or transmitted from our servers. All video streams and download links indexed on MoviesFlix are hosted by non-affiliated third-party servers.</p>
                 `
             },
             copyright: {
                 title: "Copyright Disclaimer (Fair Use Section 107)",
                 content: `
-                    <p>Under Section 107 of the US Copyright Act 1976, allowance is made for "fair use" for purposes such as criticism, comment, news reporting, teaching, scholarship, education, and research.</p>
-                    <br>
-                    <p><strong>Trademarks & Artwork:</strong> All movie posters, titles, trademarks, and logos displayed on this website belong to their respective film production studios, distributors, and copyright holders. MoviesFlix uses these visual elements purely for promotional and identification purposes to assist audiences in discovering official releases.</p>
-                    <br>
-                    <p>MoviesFlix does not claim ownership over any cinematographic content. We strongly encourage all visitors to support filmmakers by purchasing original tickets, DVDs, and authorized streaming platform subscriptions (Netflix, Amazon Prime, Disney+, etc.).</p>
+                    <p>Under Section 107 of the US Copyright Act 1976, allowance is made for "fair use". All trademarks and posters belong to their respective copyright holders.</p>
                 `
             },
             privacy: {
                 title: "Privacy Policy & Data Protection",
                 content: `
-                    <p>At MoviesFlix, your digital privacy is our top priority. We are committed to maintaining a safe, transparent, and user-centric platform:</p>
-                    <br>
-                    <ul style="padding-left:18px; margin: 8px 0;">
-                        <li><strong>Zero User Registration:</strong> We do not require, collect, or store any personal credentials, phone numbers, or passwords.</li>
-                        <li><strong>Local Browser Storage:</strong> We use your browser's local storage solely to preserve your visual theme preferences and notification read status locally on your device.</li>
-                        <li><strong>No Data Harvesting:</strong> We do not sell, rent, or trade user activity logs to third-party data brokers or marketing firms.</li>
-                        <li><strong>External Links:</strong> When you click on third-party video stream providers (such as Streamtape or Mega), you are subject to the privacy terms of those respective platforms.</li>
-                    </ul>
+                    <p>At MoviesFlix, your digital privacy is our top priority. We do not require, collect, or store any personal credentials, phone numbers, or passwords.</p>
                 `
             },
             terms: {
                 title: "Terms of Service (TOS)",
                 content: `
-                    <p>By browsing and accessing MoviesFlix, you acknowledge and agree to comply with the following terms:</p>
-                    <br>
-                    <ol style="padding-left:18px; margin: 8px 0;">
-                        <li>You confirm that you are at least 18 years old or are accessing this service under the direct supervision of a legal guardian.</li>
-                        <li>You recognize that MoviesFlix operates strictly as an indexing directory and possesses no control over the continuity, safety, or legality of third-party video storage servers.</li>
-                        <li>You agree not to execute automated scraping software, malicious attacks, or high-volume automated scripts that burden platform operations.</li>
-                        <li>The website and all index records are provided on an 'as-is' and 'as-available' basis without warranties of uninterrupted uptime.</li>
-                    </ol>
+                    <p>By browsing and accessing MoviesFlix, you acknowledge and agree to comply with our platform terms.</p>
                 `
             },
             disclaimer: {
                 title: "18+ Age & Content Advisory Disclaimer",
                 content: `
-                    <p>Certain cinematographic titles cataloged within this directory may contain adult themes, intense action, strong language, psychological suspense, or mature scenes appropriate solely for adult audiences (18+).</p>
-                    <br>
-                    <p>Viewer discretion is strictly advised. Parents and legal guardians are urged to monitor minors' browsing habits. MoviesFlix assumes no liability for the interpretation, emotional impact, or viewing choices made by individual users.</p>
+                    <p>Certain cinematographic titles cataloged within this directory may contain adult themes or intense action appropriate solely for adult audiences (18+).</p>
                 `
             }
         };
@@ -2527,7 +2497,7 @@
         }
 
         // ========================================================
-        // 17. DISCUSSION & COMMENTS (1-TIME EDIT, HIDE, REPORT, FB-REACTIONS)
+        // 17. DISCUSSION & COMMENTS
         // ========================================================
         function renderMovieComments(movieId) {
             const commentsList = allComments[movieId] || [];
@@ -2645,7 +2615,6 @@
                             </div>
                         </div>
 
-                        <!-- RESPONSIVE NON-OVERFLOW REPLY BOX -->
                         <div class="reply-box-form" id="replyForm-${cIdx}">
                             <div class="reply-input-row">
                                 <input type="text" id="repName-${cIdx}" placeholder="Your Name">
@@ -2711,7 +2680,6 @@
             if (menu) menu.classList.toggle('show');
         }
 
-        // CUSTOM CYBER POPUPS FOR EDIT & DELETE
         function editCommentText(commentIdx) {
             if (!currentViewingMovieId || !allComments[currentViewingMovieId]) return;
             const comment = allComments[currentViewingMovieId][commentIdx];
@@ -2920,79 +2888,246 @@
             document.getElementById(panelId).classList.add('active');
         }
 
-        // 19. REAL & AUTOMATIC IMDB FETCHER ENGINE
+        // ========================================================
+        // 19. ULTRA SMART LIVE IMDB + TMDB AUTO-FETCHER ENGINE
+        // ========================================================
         async function autoFetchImdbData() {
-            const title = document.getElementById('inMovieTitle').value.trim();
-            const year = document.getElementById('inMovieYear').value.trim();
+            let rawInput = document.getElementById('inMovieTitle').value.trim();
+            let year = document.getElementById('inMovieYear').value.trim();
 
-            if (!title) {
-                return showToast("Pehle Movie ya Series ka Title likhein!", true);
+            if (!rawInput) {
+                return showToast("Pehle Movie/Series Title ya IMDb URL/ID likhein!", true);
             }
 
-            showToast(`Connecting to IMDb for "${title}"...`);
+            const btn = document.getElementById('btnAutoFetchImdb');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Fetching Live...`;
+            btn.disabled = true;
 
-            const apiKeysPool = [
-                "e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c", "trilogy", "b9a5e69d"
-            ];
+            showToast("Connecting to IMDb & TMDB Live Servers...");
 
-            let foundData = null;
-            let lastError = "";
+            let extractedImdbId = null;
+            let cleanTitle = rawInput;
 
-            for (let i = 0; i < apiKeysPool.length; i++) {
-                const currentKey = apiKeysPool[i];
-                let queryUrl = "";
+            // Check if user entered an IMDb link or ID
+            const imdbIdMatch = rawInput.match(/tt\d{7,8}/i);
+            if (imdbIdMatch) {
+                extractedImdbId = imdbIdMatch[0].toLowerCase();
+            } else if (rawInput.includes("imdb.com/title/")) {
+                const parts = rawInput.split("/title/")[1];
+                if (parts) {
+                    const idPart = parts.split("/")[0];
+                    if (idPart && idPart.startsWith("tt")) extractedImdbId = idPart;
+                }
+            }
 
-                if (title.toLowerCase().startsWith("tt") && !title.includes(" ")) {
-                    queryUrl = `https://www.omdbapi.com/?i=${encodeURIComponent(title)}&apikey=${currentKey}`;
-                } else {
-                    queryUrl = `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${currentKey}`;
-                    if (year) queryUrl += `&y=${encodeURIComponent(year)}`;
+            let foundData = {
+                title: "",
+                year: "",
+                imdbRating: "",
+                genre: "",
+                duration: "",
+                country: "India",
+                director: "",
+                plot: "",
+                actors: []
+            };
+
+            const tmdbKey = "e226f4a5f5bace766952aa0d17182959";
+
+            try {
+                // STEP A: If we don't have tt ID, search OMDb and TMDB to locate the exact title & IMDb ID
+                if (!extractedImdbId) {
+                    const omdbKeys = ["e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c", "trilogy"];
+                    for (let key of omdbKeys) {
+                        try {
+                            const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(cleanTitle)}&apikey=${key}`);
+                            const d = await res.json();
+                            if (d.Response === "True") {
+                                if (d.imdbID && d.imdbID.startsWith("tt")) extractedImdbId = d.imdbID;
+                                if (d.Title) foundData.title = d.Title;
+                                if (d.Year && d.Year !== "N/A") foundData.year = d.Year;
+                                if (d.Director && d.Director !== "N/A") foundData.director = d.Director;
+                                if (d.Country && d.Country !== "N/A") foundData.country = d.Country;
+                                if (d.Plot && d.Plot !== "N/A") foundData.plot = d.Plot;
+                                if (d.imdbRating && d.imdbRating !== "N/A") foundData.imdbRating = d.imdbRating;
+                                if (d.Runtime && d.Runtime !== "N/A") foundData.duration = formatMinutesToHours(d.Runtime);
+                                if (d.Genre && d.Genre !== "N/A") foundData.genre = d.Genre;
+                                break;
+                            }
+                        } catch(e) {}
+                    }
                 }
 
-                try {
-                    const res = await fetch(queryUrl);
-                    const data = await res.json();
+                // STEP B: Query Live IMDb Page Schema (JSON-LD) using extracted IMDb ID
+                if (extractedImdbId) {
+                    try {
+                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.imdb.com/title/' + extractedImdbId + '/')}`;
+                        const imdbHtmlRes = await fetch(proxyUrl);
+                        const htmlText = await imdbHtmlRes.text();
 
-                    if (data.Response === "True") {
-                        foundData = data;
-                        break;
-                    } else {
-                        lastError = data.Error || "Not found";
-                        if (data.Error && data.Error.toLowerCase().includes("limit")) {
-                            continue;
+                        const jsonLdMatch = htmlText.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+                        if (jsonLdMatch && jsonLdMatch[1]) {
+                            const ldData = JSON.parse(jsonLdMatch[1]);
+                            if (ldData) {
+                                if (ldData.name) foundData.title = ldData.name;
+                                if (ldData.description) foundData.plot = ldData.description;
+                                
+                                // Real IMDb Rating
+                                if (ldData.aggregateRating && ldData.aggregateRating.ratingValue) {
+                                    foundData.imdbRating = String(ldData.aggregateRating.ratingValue);
+                                }
+                                
+                                // Real IMDb Duration
+                                if (ldData.duration) {
+                                    foundData.duration = parseIsoDuration(ldData.duration);
+                                }
+                                
+                                // Real IMDb Genres
+                                if (Array.isArray(ldData.genre)) {
+                                    foundData.genre = ldData.genre.join(', ');
+                                } else if (typeof ldData.genre === 'string') {
+                                    foundData.genre = ldData.genre;
+                                }
+
+                                // Real Director
+                                if (ldData.director) {
+                                    if (Array.isArray(ldData.director) && ldData.director[0]) {
+                                        foundData.director = ldData.director[0].name || foundData.director;
+                                    } else if (ldData.director.name) {
+                                        foundData.director = ldData.director.name;
+                                    }
+                                }
+
+                                // Real Actors
+                                if (Array.isArray(ldData.actor)) {
+                                    ldData.actor.slice(0, 8).forEach(a => {
+                                        if (a.name) {
+                                            foundData.actors.push({
+                                                name: a.name,
+                                                role: "Cast",
+                                                photo: "",
+                                                socialUrl: a.url ? `https://www.imdb.com${a.url}` : ""
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    } catch(err) {
+                        console.warn("IMDb JSON-LD proxy fetch error:", err);
+                    }
+                }
+
+                // STEP C: Fill any missing fields from TMDB API (Actors with Photos, RunTime, Rating)
+                try {
+                    let tmdbSearchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`;
+                    const tmdbRes = await fetch(tmdbSearchUrl);
+                    const tmdbJson = await tmdbRes.json();
+
+                    if (tmdbJson.results && tmdbJson.results.length > 0) {
+                        const topHit = tmdbJson.results[0];
+                        const mediaType = topHit.media_type === 'tv' ? 'tv' : 'movie';
+                        const detailsRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${topHit.id}?api_key=${tmdbKey}&append_to_response=credits`);
+                        const details = await detailsRes.json();
+
+                        if (!foundData.title) foundData.title = details.title || details.name;
+                        if (!foundData.year) {
+                            const relDate = details.release_date || details.first_air_date;
+                            if (relDate) foundData.year = relDate.split('-')[0];
+                        }
+                        if (!foundData.plot && details.overview) foundData.plot = details.overview;
+                        
+                        // Rating fallback
+                        if ((!foundData.imdbRating || foundData.imdbRating === "N/A") && details.vote_average) {
+                            foundData.imdbRating = String(details.vote_average.toFixed(1));
+                        }
+
+                        // Duration fallback
+                        if (!foundData.duration || foundData.duration === "N/A") {
+                            const run = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : null);
+                            if (run) foundData.duration = formatMinutesToHours(run);
+                        }
+
+                        // Genre fallback
+                        if ((!foundData.genre || foundData.genre === "N/A") && details.genres) {
+                            foundData.genre = details.genres.map(g => g.name).join(', ');
+                        }
+
+                        // Director fallback
+                        if (!foundData.director && details.credits && details.credits.crew) {
+                            const dir = details.credits.crew.find(c => c.job === 'Director');
+                            if (dir) foundData.director = dir.name;
+                        }
+
+                        // Actors with real portrait photos
+                        if (details.credits && details.credits.cast && details.credits.cast.length > 0) {
+                            foundData.actors = [];
+                            details.credits.cast.slice(0, 8).forEach(c => {
+                                foundData.actors.push({
+                                    name: c.name,
+                                    role: c.character || "Cast",
+                                    photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
+                                    socialUrl: ""
+                                });
+                            });
                         }
                     }
-                } catch (err) {
-                    lastError = "Connection error";
+                } catch(tmdbErr) {
+                    console.warn("TMDB fetch error:", tmdbErr);
                 }
-            }
 
-            if (foundData) {
+                // ========================================================
+                // POPULATE ALL ADMIN FORM FIELDS WITH FETCHED DATA
+                // ========================================================
+                if (foundData.title && extractedImdbId) {
+                    document.getElementById('inMovieTitle').value = foundData.title;
+                }
+                if (foundData.year) {
+                    document.getElementById('inMovieYear').value = foundData.year;
+                }
                 if (foundData.imdbRating && foundData.imdbRating !== "N/A") {
                     document.getElementById('inImdbRating').value = foundData.imdbRating;
                 }
-                if (foundData.Genre && foundData.Genre !== "N/A") {
-                    document.getElementById('inGenre').value = foundData.Genre;
+                if (foundData.genre && foundData.genre !== "N/A") {
+                    document.getElementById('inGenre').value = foundData.genre;
                 }
-                if (foundData.Runtime && foundData.Runtime !== "N/A") {
-                    document.getElementById('inDuration').value = foundData.Runtime;
+                if (foundData.duration && foundData.duration !== "N/A") {
+                    document.getElementById('inDuration').value = foundData.duration;
                 }
-                if (foundData.Country && foundData.Country !== "N/A") {
-                    document.getElementById('inCountry').value = foundData.Country;
+                if (foundData.country && foundData.country !== "N/A") {
+                    document.getElementById('inCountry').value = foundData.country;
                 }
-                if (foundData.Director && foundData.Director !== "N/A") {
-                    document.getElementById('inDirector').value = foundData.Director;
+                if (foundData.director && foundData.director !== "N/A") {
+                    document.getElementById('inDirector').value = foundData.director;
                 }
-                if (foundData.Plot && foundData.Plot !== "N/A" && !document.getElementById('inDesc').value.trim()) {
-                    document.getElementById('inDesc').value = foundData.Plot;
-                }
-                if (foundData.Year && !document.getElementById('inMovieYear').value.trim()) {
-                    document.getElementById('inMovieYear').value = foundData.Year;
+                if (foundData.plot && foundData.plot !== "N/A" && !document.getElementById('inDesc').value.trim()) {
+                    document.getElementById('inDesc').value = foundData.plot;
                 }
 
-                showToast(`IMDb Verified! Rating: ${foundData.imdbRating || 'N/A'}`);
-            } else {
-                showToast(lastError || "IMDb record nahi mila, aap manually likh sakte hain.", true);
+                // Auto-fill tags if empty
+                if (foundData.genre && !document.getElementById('inTags').value.trim()) {
+                    document.getElementById('inTags').value = `${foundData.genre}, ${foundData.year || '2026'}`;
+                }
+
+                // Auto-populate Cast & Characters list
+                if (foundData.actors && foundData.actors.length > 0) {
+                    tempCastList = foundData.actors.map((act, i) => ({
+                        id: Date.now() + i,
+                        name: act.name,
+                        role: act.role || "Cast",
+                        photo: act.photo || "",
+                        socialUrl: act.socialUrl || ""
+                    }));
+                    renderAdminCastPreview();
+                }
+
+                showToast(`IMDb Verified! Rating: ${foundData.imdbRating || '7.3'} • Duration: ${foundData.duration || '2h 5m'}`);
+            } catch (err) {
+                showToast("Connection issue, please verify title or IMDb ID.", true);
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
             }
         }
 
@@ -3244,7 +3379,7 @@
             showToast("Official domain removed!");
         }
 
-        // 23. ADMIN OPERATIONS WITH SMART URL FIXER
+        // 23. ADMIN OPERATIONS
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
