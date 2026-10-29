@@ -1092,7 +1092,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: COMPLETE 4-LEVEL HIERARCHY (HEADING -> MAIN -> SUB -> CHILD) -->
+        <!-- TAB 5: COMPLETE 4-LEVEL HIERARCHY WITH YEAR AUTO-SORT & REORDERING -->
         <div class="admin-tab-panel" id="panelCategories">
             <!-- 1. Heading -->
             <div class="admin-card">
@@ -1141,7 +1141,7 @@
                 <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
             </div>
 
-            <!-- 4. NEW: Child Category under Subcategory -->
+            <!-- 4. Child Category under Subcategory -->
             <div class="admin-card">
                 <div class="admin-card-title" style="color:var(--cyan-accent);">
                     <i class="fa-solid fa-code-branch"></i> 4. Add Child Category under Subcategory (e.g. Anupamaa, CID)
@@ -1163,8 +1163,16 @@
                 <button class="btn-cyan" onclick="createChildCategory()">Add Child Category</button>
             </div>
 
+            <!-- Tree with Year Auto-Sort Toolbar -->
             <div class="admin-card">
-                <div class="admin-card-title"><i class="fa-solid fa-sitemap"></i> Complete 4-Level Categories Tree</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <div class="admin-card-title" style="margin-bottom:0; padding-bottom:0; border-bottom:none;">
+                        <i class="fa-solid fa-sitemap"></i> Complete 4-Level Categories Tree
+                    </div>
+                    <button type="button" class="btn-sort-auto" onclick="autoSortAllCategoriesByYear()" title="Automatically sort categories by newest year first (2028 -> 2027 -> 2026)">
+                        <i class="fa-solid fa-arrow-down-9-1"></i> ⚡ Auto-Sort by Year (Newest First)
+                    </button>
+                </div>
                 <div id="categoryTree"></div>
             </div>
         </div>
@@ -1715,8 +1723,7 @@
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
       
-
-        // ========================================================
+      // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
         // ========================================================
         function renderBranding() {
@@ -4216,8 +4223,126 @@
         }
 
         // ========================================================
-        // 21. 4-LEVEL HIERARCHY OPERATIONS (WITH DROPDOWN MEMORY)
+        // 21. 4-LEVEL HIERARCHY, SMART YEAR AUTO-SORT & REORDERING
         // ========================================================
+        function extractYearNumber(name) {
+            if (!name) return 0;
+            const match = String(name).match(/\b(19\d{2}|20\d{2})\b/);
+            return match ? parseInt(match[0], 10) : 0;
+        }
+
+        // Insert in descending order of year among siblings with years (2028 -> 2027 -> 2026)
+        function insertSortedByYear(list, newItem, isObject = true) {
+            const newName = isObject ? newItem.name : newItem;
+            const newYear = extractYearNumber(newName);
+            if (!newYear) {
+                list.push(newItem);
+                return;
+            }
+            let insertIdx = list.length;
+            for (let i = 0; i < list.length; i++) {
+                const item = list[i];
+                const itemYear = extractYearNumber(isObject ? item.name : item);
+                if (itemYear && newYear > itemYear) {
+                    insertIdx = i;
+                    break;
+                }
+            }
+            list.splice(insertIdx, 0, newItem);
+        }
+
+        // 1-Click Auto-Sort All Categories by Year (Newest First)
+        function autoSortAllCategoriesByYear() {
+            categories.forEach(cat => {
+                if (Array.isArray(cat.subcategories)) {
+                    cat.subcategories.sort((a, b) => {
+                        const aName = typeof a === 'string' ? a : a.name;
+                        const bName = typeof b === 'string' ? b : b.name;
+                        const yearA = extractYearNumber(aName);
+                        const yearB = extractYearNumber(bName);
+                        if (yearA && yearB) return yearB - yearA;
+                        if (yearA && !yearB) return -1;
+                        if (!yearA && yearB) return 1;
+                        return 0;
+                    });
+
+                    cat.subcategories.forEach(sub => {
+                        if (sub && Array.isArray(sub.childCategories)) {
+                            sub.childCategories.sort((a, b) => {
+                                const yearA = extractYearNumber(a);
+                                const yearB = extractYearNumber(b);
+                                if (yearA && yearB) return yearB - yearA;
+                                if (yearA && !yearB) return -1;
+                                if (!yearA && yearB) return 1;
+                                return 0;
+                            });
+                        }
+                    });
+                }
+            });
+
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+            showToast("⚡ Categories auto-sorted by Year (Newest First)!");
+        }
+
+        // Reordering Move Up & Down Functions
+        function moveHeading(idx, direction) {
+            const targetIdx = idx + direction;
+            if (targetIdx < 0 || targetIdx >= sectionHeadings.length) return;
+            const temp = sectionHeadings[idx];
+            sectionHeadings[idx] = sectionHeadings[targetIdx];
+            sectionHeadings[targetIdx] = temp;
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+        }
+
+        function moveMainCategory(catIdx, direction) {
+            const cat = categories[catIdx];
+            const heading = cat.heading || sectionHeadings[0];
+            const sameHeadingCats = categories.map((c, i) => ({ c, i })).filter(item => (item.c.heading || sectionHeadings[0]) === heading);
+            
+            const currPos = sameHeadingCats.findIndex(item => item.i === catIdx);
+            const targetPos = currPos + direction;
+            if (targetPos < 0 || targetPos >= sameHeadingCats.length) return;
+            
+            const swapCatIdx = sameHeadingCats[targetPos].i;
+            const temp = categories[catIdx];
+            categories[catIdx] = categories[swapCatIdx];
+            categories[swapCatIdx] = temp;
+            
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+        }
+
+        function moveSubCategory(catIdx, subIdx, direction) {
+            const targetIdx = subIdx + direction;
+            const subs = categories[catIdx].subcategories;
+            if (targetIdx < 0 || targetIdx >= subs.length) return;
+            const temp = subs[subIdx];
+            subs[subIdx] = subs[targetIdx];
+            subs[targetIdx] = temp;
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+        }
+
+        function moveChildCategory(catIdx, subIdx, chIdx, direction) {
+            const sub = categories[catIdx].subcategories[subIdx];
+            const children = sub.childCategories;
+            const targetIdx = chIdx + direction;
+            if (targetIdx < 0 || targetIdx >= children.length) return;
+            const temp = children[chIdx];
+            children[chIdx] = children[targetIdx];
+            children[targetIdx] = temp;
+            persistAll();
+            loadAdminDashboardData();
+            renderSidebarMenu();
+        }
+
         function addNewSectionHeading() {
             const input = document.getElementById('newHeadingNameInput');
             const name = input.value.trim();
@@ -4320,11 +4445,14 @@
 
             const target = categories.find(c => c.name === parent);
             if (target) {
-                target.subcategories.push({ name: subVal, childCategories: [] });
+                const newSubObj = { name: subVal, childCategories: [] };
+                // SMART INSERT: Sorts by Year if a year is detected (2028 > 2027 > 2026)
+                insertSortedByYear(target.subcategories, newSubObj, true);
+
                 persistAll();
                 input.value = '';
 
-                // DROPDOWN MEMORY: DO NOT RESET THE PARENT DROPDOWN!
+                // DROPDOWN MEMORY: Parent selection is preserved!
                 const savedParent = parent;
                 loadAdminDashboardData();
                 document.getElementById('parentCatSelect').value = savedParent;
@@ -4333,11 +4461,10 @@
                 document.getElementById('childParentSubCatSelect').value = subVal;
 
                 renderSidebarMenu();
-                showToast(`Subcategory "${subVal}" added under "${parent}"! (Parent kept selected)`);
+                showToast(`Subcategory "${subVal}" added under "${parent}"!`);
             }
         }
 
-        // STEP 4: CREATE CHILD CATEGORY (WITH DROPDOWN MEMORY)
         function createChildCategory() {
             const mainVal = document.getElementById('childParentMainCatSelect').value;
             const subVal = document.getElementById('childParentSubCatSelect').value;
@@ -4358,11 +4485,13 @@
                 }
 
                 if (targetSub && targetSub.childCategories) {
-                    targetSub.childCategories.push(childVal);
+                    // SMART INSERT: Sorts by Year if year is present
+                    insertSortedByYear(targetSub.childCategories, childVal, false);
+
                     persistAll();
                     input.value = '';
 
-                    // DROPDOWN MEMORY: Remember both chosen Main and Subcategory!
+                    // DROPDOWN MEMORY: Remember chosen Main and Subcategory!
                     const savedMain = mainVal;
                     const savedSub = subVal;
 
@@ -4485,7 +4614,7 @@
             }
         }
 
-        // 4-LEVEL CATEGORY TREE RENDERING
+        // 4-LEVEL CATEGORY TREE RENDERING WITH REORDER MOVE BUTTONS (▲ / ▼)
         function renderAdminCategoryTree() {
             const tree = document.getElementById('categoryTree');
             tree.innerHTML = '';
@@ -4502,6 +4631,8 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(0,229,255,0.2); padding-bottom:6px;">
                         <strong style="color:var(--cyan-accent); font-size:14px; text-transform:uppercase;"><i class="fa-solid fa-layer-group"></i> Heading: ${heading}</strong>
                         <div class="btn-group-actions">
+                            <button class="btn-order-move" onclick="moveHeading(${hIdx}, -1)" ${hIdx === 0 ? 'disabled' : ''} title="Move Up Heading">▲</button>
+                            <button class="btn-order-move" onclick="moveHeading(${hIdx}, 1)" ${hIdx === sectionHeadings.length - 1 ? 'disabled' : ''} title="Move Down Heading">▼</button>
                             <button class="btn-edit-item" onclick="editSectionHeading(${hIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
                             <button class="btn-delete-item" onclick="deleteSectionHeading(${hIdx})">Delete</button>
                         </div>
@@ -4513,7 +4644,7 @@
                 if (matchedCats.length === 0) {
                     headingBox.innerHTML += `<p style="color:#666; font-size:12px; font-style:italic;">No main categories added under this heading yet.</p>`;
                 } else {
-                    matchedCats.forEach(cat => {
+                    matchedCats.forEach((cat, mIdx) => {
                         const originalCatIdx = categories.findIndex(c => c === cat);
                         const catDiv = document.createElement('div');
                         catDiv.style.background = '#111422';
@@ -4526,6 +4657,8 @@
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <strong style="color:#fff; font-size:13px;"><i class="fa-solid fa-folder"></i> ${cat.name}</strong>
                                 <div class="btn-group-actions">
+                                    <button class="btn-order-move" onclick="moveMainCategory(${originalCatIdx}, -1)" ${mIdx === 0 ? 'disabled' : ''} title="Move Up Main Category">▲</button>
+                                    <button class="btn-order-move" onclick="moveMainCategory(${originalCatIdx}, 1)" ${mIdx === matchedCats.length - 1 ? 'disabled' : ''} title="Move Down Main Category">▼</button>
                                     <button class="btn-edit-item" onclick="editMainCategory(${originalCatIdx})"><i class="fa-solid fa-pen"></i> Edit</button>
                                     <button class="btn-delete-item" onclick="deleteMainCategory(${originalCatIdx})">Delete</button>
                                 </div>
@@ -4546,9 +4679,11 @@
                                 subRow.innerHTML = `
                                     <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#c4cadc; background:#0d0e17; padding:4px 8px; border-radius:4px;">
                                         <span>↳ <strong>${subName}</strong></span>
-                                        <div style="display:flex; gap:8px;">
-                                            <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editSubCategory(${originalCatIdx}, ${sIdx})" title="Edit Subcategory"><i class="fa-solid fa-pen"></i></span>
-                                            <span style="color:#ff0055; cursor:pointer;" onclick="deleteSubCategory(${originalCatIdx}, ${sIdx})" title="Delete Subcategory"><i class="fa-solid fa-xmark"></i></span>
+                                        <div class="btn-group-actions">
+                                            <button class="btn-order-move" onclick="moveSubCategory(${originalCatIdx}, ${sIdx}, -1)" ${sIdx === 0 ? 'disabled' : ''} title="Move Up Subcategory" style="padding:1px 5px; font-size:10px;">▲</button>
+                                            <button class="btn-order-move" onclick="moveSubCategory(${originalCatIdx}, ${sIdx}, 1)" ${sIdx === cat.subcategories.length - 1 ? 'disabled' : ''} title="Move Down Subcategory" style="padding:1px 5px; font-size:10px;">▼</button>
+                                            <span style="color:var(--cyan-accent); cursor:pointer; margin-left:4px;" onclick="editSubCategory(${originalCatIdx}, ${sIdx})" title="Edit Subcategory"><i class="fa-solid fa-pen"></i></span>
+                                            <span style="color:#ff0055; cursor:pointer; margin-left:4px;" onclick="deleteSubCategory(${originalCatIdx}, ${sIdx})" title="Delete Subcategory"><i class="fa-solid fa-xmark"></i></span>
                                         </div>
                                     </div>
                                 `;
@@ -4560,11 +4695,13 @@
 
                                     childList.forEach((ch, chIdx) => {
                                         childWrapper.innerHTML += `
-                                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin:3px 0; color:#8c94ac;">
+                                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin:3px 0; color:#8c94ac; background:rgba(255,255,255,0.02); padding:3px 6px; border-radius:4px;">
                                                 <span>↳↳ ${ch}</span>
-                                                <div style="display:flex; gap:6px;">
-                                                    <span style="color:var(--cyan-accent); cursor:pointer;" onclick="editChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Edit Child Category"><i class="fa-solid fa-pen"></i></span>
-                                                    <span style="color:#ff0055; cursor:pointer;" onclick="deleteChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Delete Child Category"><i class="fa-solid fa-xmark"></i></span>
+                                                <div class="btn-group-actions">
+                                                    <button class="btn-order-move" onclick="moveChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx}, -1)" ${chIdx === 0 ? 'disabled' : ''} title="Move Up Child" style="padding:1px 4px; font-size:9px;">▲</button>
+                                                    <button class="btn-order-move" onclick="moveChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx}, 1)" ${chIdx === childList.length - 1 ? 'disabled' : ''} title="Move Down Child" style="padding:1px 4px; font-size:9px;">▼</button>
+                                                    <span style="color:var(--cyan-accent); cursor:pointer; margin-left:3px;" onclick="editChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Edit Child Category"><i class="fa-solid fa-pen"></i></span>
+                                                    <span style="color:#ff0055; cursor:pointer; margin-left:3px;" onclick="deleteChildCategory(${originalCatIdx}, ${sIdx}, ${chIdx})" title="Delete Child Category"><i class="fa-solid fa-xmark"></i></span>
                                                 </div>
                                             </div>
                                         `;

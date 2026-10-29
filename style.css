@@ -2160,7 +2160,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   9. FULL ADMIN DASHBOARD & HIERARCHY MANAGER
+   9. FULL ADMIN DASHBOARD & HIERARCHY MANAGER + ORDERING
    ======================================================== */
 .admin-dashboard-overlay {
     position: fixed;
@@ -2533,7 +2533,61 @@ body.modal-open {
 
 .btn-group-actions {
     display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ========================================================
+   NEW: DRAG & DROP / REORDER MOVE BUTTONS (TOUCH FRIENDLY)
+   ======================================================== */
+.btn-order-move {
+    background: #141726;
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    color: var(--cyan-accent);
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s all;
+    line-height: 1;
+}
+
+.btn-order-move:hover,
+.btn-order-move:active {
+    background: var(--cyan-accent);
+    color: #000;
+    box-shadow: 0 0 8px var(--cyan-glow);
+}
+
+.btn-order-move:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    border-color: rgba(255,255,255,0.06);
+    color: #555;
+}
+
+.btn-sort-auto {
+    background: #171b2d;
+    border: 1px solid var(--gold-accent);
+    color: var(--gold-accent);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
     gap: 6px;
+    transition: 0.2s all;
+}
+
+.btn-sort-auto:hover {
+    background: var(--gold-accent);
+    color: #000;
+    box-shadow: 0 0 10px var(--gold-glow);
 }
 
 .btn-edit-item {
