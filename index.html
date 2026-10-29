@@ -228,7 +228,7 @@
                 <div class="episodes-grid" id="episodesGridContainer"></div>
             </div>
 
-            <!-- WATCH BUTTON -->
+            <!-- WATCH BUTTON (MOVIES) -->
             <div class="action-buttons-group" id="movieActionButtons">
                 <button class="btn-watch-online" id="btnTriggerPlayer" onclick="toggleOnlinePlayer()">
                     <i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)
@@ -247,7 +247,7 @@
                 <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
             </div>
 
-            <!-- ENHANCED DOWNLOAD MIRRORS -->
+            <!-- ENHANCED DOWNLOAD MIRRORS (MOVIES) -->
             <div id="movieDownloadsWrapper" style="margin-top:16px;">
                 <div class="servers-title-badge" id="downloadHeading" style="margin-bottom:10px;">
                     <i class="fa-solid fa-cloud-arrow-down"></i> Available Download Mirrors & Resolutions:
@@ -255,17 +255,12 @@
                 <div class="multi-downloads-container" id="modalDownloadsList"></div>
             </div>
 
-            <div id="seriesDownloadGroup" style="display:none; margin-top:14px;">
-                <a id="seriesEpisodeDownloadBtn" href="#" target="_blank" class="download-mirror-card" style="border-color:var(--green-accent);">
-                    <div class="dl-card-left">
-                        <span class="dl-resolution-badge res-1080p">HD Stream</span>
-                        <div class="dl-card-info">
-                            <div class="dl-server-name" id="seriesEpDlTitle">Download Selected Episode</div>
-                            <div class="dl-file-size"><i class="fa-solid fa-bolt"></i> Fast Direct Cloud Mirror</div>
-                        </div>
-                    </div>
-                    <span class="dl-action-pill"><i class="fa-solid fa-cloud-arrow-down"></i> Download</span>
-                </a>
+            <!-- ENHANCED DOWNLOAD MIRRORS (SERIES EPISODES WITH MULTI-RESOLUTION & SIZES) -->
+            <div id="seriesDownloadGroup" style="display:none; margin-top:16px;">
+                <div class="servers-title-badge" id="seriesDownloadHeading" style="margin-bottom:10px; color:var(--green-accent);">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Episode Download Mirrors & Resolutions:
+                </div>
+                <div class="multi-downloads-container" id="modalSeriesDownloadsList"></div>
             </div>
 
             <!-- DISCUSSION & COMMENTS SECTION -->
@@ -423,7 +418,7 @@
     </div>
 
     <!-- ========================================================
-         MODAL 5: FULL DETAILED LEGAL & ABOUT PAGES (UNCUT REAL TEXT)
+         MODAL 5: FULL DETAILED LEGAL & ABOUT PAGES
          ======================================================== -->
     <div class="modal-overlay" id="legalPageModal">
         <div class="modal-box">
@@ -757,7 +752,7 @@
                         </div>
                     </div>
 
-                    <!-- 4-LEVEL POST CATEGORY SELECTORS (MAIN -> SUB -> CHILD) -->
+                    <!-- 4-LEVEL POST CATEGORY SELECTORS -->
                     <div style="display: flex; gap: 10px;">
                         <div class="form-group" style="flex:1;">
                             <label>Main Category</label>
@@ -789,6 +784,7 @@
                         </div>
                     </div>
 
+                    <!-- 1. SINGLE MOVIE FIELDS -->
                     <div id="movieSpecificFields">
                         <div class="link-builder-card">
                             <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
@@ -805,7 +801,7 @@
                                 </div>
                             </div>
                             <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addStreamServer()">
-                                <i class="fa-solid fa-plus"></i> + Add Streaming Server
+                                <i class="fa-solid fa-plus"></i> Add Streaming Server
                             </button>
                             <div class="added-episodes-table" id="adminServersListContainer"></div>
                         </div>
@@ -836,12 +832,13 @@
                             </div>
 
                             <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--green-accent); border:1px solid var(--green-accent);" onclick="addDownloadServer()">
-                                <i class="fa-solid fa-plus"></i> + Add Resolution Download Mirror
+                                <i class="fa-solid fa-plus"></i> Add Resolution Download Mirror
                             </button>
                             <div class="added-episodes-table" id="adminDownloadsListContainer"></div>
                         </div>
                     </div>
 
+                    <!-- 2. SERIES EPISODES MANAGER (FIXED ZERO-OVERFLOW RESPONSIVE GRID) -->
                     <div id="seriesSpecificFields" style="display:none;">
                         <div class="episode-admin-card">
                             <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
@@ -861,7 +858,7 @@
                             <div class="sidebar-divider" style="margin:12px 0;"></div>
 
                             <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:12px;">
-                                <i class="fa-solid fa-list-ol"></i> Step 2: Add Episode to Selected Season
+                                <i class="fa-solid fa-list-ol"></i> Step 2: Add Episode & Multi-Resolution Downloads
                             </div>
 
                             <div style="display:flex; gap:8px;">
@@ -880,19 +877,47 @@
                                 <input type="text" id="epStreamInput" placeholder="https://streamtape.com/e/... or LuluStream URL">
                             </div>
 
-                            <div class="form-group">
-                                <label>Episode Mega/Drive Download Link</label>
-                                <input type="url" id="epDownloadInput" placeholder="https://mega.nz/... or Drive link">
+                            <!-- EPISODE DOWNLOAD MIRRORS SUB-BUILDER WITH RESPONSIVE GRID -->
+                            <div class="link-builder-card" style="margin-top:10px; border-color: rgba(16, 185, 129, 0.4); background:#060810;">
+                                <div style="font-size:12px; font-weight:700; color:var(--green-accent); margin-bottom:8px;">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> Episode Download Mirrors & Resolutions (1080p, 720p, 480p, Size)
+                                </div>
+                                
+                                <div class="episode-dl-grid-row">
+                                    <div>
+                                        <label style="font-size:10px; color:#8c94ac; display:block; margin-bottom:3px;">Resolution</label>
+                                        <input type="text" id="epDlQualityInput" placeholder="e.g. 720p HD" value="720p HD">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:10px; color:#8c94ac; display:block; margin-bottom:3px;">Server</label>
+                                        <input type="text" id="epDlNameInput" placeholder="e.g. Mega.nz" value="Mega.nz">
+                                    </div>
+                                    <div class="ep-dl-span-full">
+                                        <label style="font-size:10px; color:#8c94ac; display:block; margin-bottom:3px;">File Size (Optional)</label>
+                                        <input type="text" id="epDlSizeInput" placeholder="e.g. 450 MB">
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:10px; color:#8c94ac; display:block; margin-bottom:3px;">Download Link URL</label>
+                                    <input type="url" id="epDlUrlInput" placeholder="https://mega.nz/... or Drive link">
+                                </div>
+
+                                <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--green-accent); border:1px solid var(--green-accent); padding:8px 12px; font-size:12px;" onclick="addEpisodeDownloadMirror()">
+                                    <i class="fa-solid fa-plus"></i> Add Download Mirror to this Episode
+                                </button>
+                                <div class="added-episodes-table" id="adminEpDownloadsListContainer" style="max-height:100px; margin-top:6px;"></div>
                             </div>
 
-                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addEpisodeToList()">
-                                <i class="fa-solid fa-plus"></i> + Add This Episode to Season
+                            <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan); margin-top:10px;" onclick="addEpisodeToList()">
+                                <i class="fa-solid fa-plus"></i> Add This Episode to Season
                             </button>
 
                             <div class="added-episodes-table" id="adminEpisodeListContainer"></div>
                         </div>
                     </div>
 
+                    <!-- CAST & CHARACTERS -->
                     <div class="cast-admin-card" style="margin-bottom:14px;">
                         <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
                             <i class="fa-solid fa-users"></i> Cast & Characters (Auto-Filled from IMDb/TMDB or Add Manually)
@@ -920,7 +945,7 @@
                         </div>
 
                         <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan);" onclick="addCastMember()">
-                            <i class="fa-solid fa-user-plus"></i> + Add Cast Member
+                            <i class="fa-solid fa-user-plus"></i> Add Cast Member
                         </button>
 
                         <div class="added-episodes-table" id="adminCastListContainer"></div>
@@ -1092,9 +1117,8 @@
             </div>
         </div>
 
-        <!-- TAB 5: COMPLETE 4-LEVEL HIERARCHY WITH YEAR AUTO-SORT & REORDERING -->
+        <!-- TAB 5: 4-LEVEL HIERARCHY -->
         <div class="admin-tab-panel" id="panelCategories">
-            <!-- 1. Heading -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-heading"></i> 1. Create Sidebar Section Heading (e.g. TV Shows & Reality)
@@ -1109,7 +1133,6 @@
                 <div class="seasons-badge-list" id="adminHeadingsChipsContainer"></div>
             </div>
 
-            <!-- 2. Main Category -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-folder-plus"></i> 2. Create Main Category under Section Heading
@@ -1125,7 +1148,6 @@
                 <button class="btn-cyan" onclick="createMainCategory()">Add Main Category</button>
             </div>
 
-            <!-- 3. Subcategory -->
             <div class="admin-card">
                 <div class="admin-card-title">
                     <i class="fa-solid fa-diagram-project"></i> 3. Add Subcategory under Main Category
@@ -1141,7 +1163,6 @@
                 <button class="btn-cyan" onclick="createSubCategory()">Add Subcategory</button>
             </div>
 
-            <!-- 4. Child Category under Subcategory -->
             <div class="admin-card">
                 <div class="admin-card-title" style="color:var(--cyan-accent);">
                     <i class="fa-solid fa-code-branch"></i> 4. Add Child Category under Subcategory (e.g. Anupamaa, CID)
@@ -1163,13 +1184,12 @@
                 <button class="btn-cyan" onclick="createChildCategory()">Add Child Category</button>
             </div>
 
-            <!-- Tree with Year Auto-Sort Toolbar -->
             <div class="admin-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08);">
                     <div class="admin-card-title" style="margin-bottom:0; padding-bottom:0; border-bottom:none;">
                         <i class="fa-solid fa-sitemap"></i> Complete 4-Level Categories Tree
                     </div>
-                    <button type="button" class="btn-sort-auto" onclick="autoSortAllCategoriesByYear()" title="Automatically sort categories by newest year first (2028 -> 2027 -> 2026)">
+                    <button type="button" class="btn-sort-auto" onclick="autoSortAllCategoriesByYear()" title="Automatically sort categories by newest year first">
                         <i class="fa-solid fa-arrow-down-9-1"></i> ⚡ Auto-Sort by Year (Newest First)
                     </button>
                 </div>
@@ -1316,7 +1336,6 @@
             return url;
         }
 
-        // Exact Hours & Minutes Formatter (e.g. 125 min -> 2h 5m)
         function formatMinutesToHours(val) {
             if (!val) return "";
             var str = String(val).trim();
@@ -1412,7 +1431,6 @@
             }
         ];
 
-        // 100% Backward Compatibility Migration Helper
         function normalizeCategories(rawList) {
             if (!Array.isArray(rawList)) return defaultCats;
             return rawList.map(cat => {
@@ -1502,6 +1520,7 @@
         let tempCastList = [];
         let tempServersList = [];
         let tempDownloadsList = [];
+        let tempEpDownloadsList = [];
         let currentFormSeasons = ["Season 1"];
 
         let isCurrentlyOnHome = true;
@@ -1723,6 +1742,7 @@
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
 
+
         // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
         // ========================================================
@@ -1786,18 +1806,16 @@
         }
 
         // ========================================================
-        // 8. ROUTING AND NAVIGATION
+        // 8. ROUTING AND INSTANT SINGLE-TAP NAVIGATION (NO DOUBLE TAP BUG)
         // ========================================================
         function goHome() {
-            if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.hash = '';
-                }
-            } else {
-                handleRoute();
-            }
+            const f1 = document.getElementById('modalPlayerFrame');
+            if (f1) f1.src = 'about:blank';
+            const f2 = document.getElementById('csTrailerFrame');
+            if (f2) f2.src = 'about:blank';
+
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+            handleRoute();
         }
 
         function closeModal(id) {
@@ -1806,17 +1824,30 @@
                 return;
             }
 
+            const f1 = document.getElementById('modalPlayerFrame');
+            if (f1) f1.src = 'about:blank';
+            const f2 = document.getElementById('csTrailerFrame');
+            if (f2) f2.src = 'about:blank';
+
+            // Clean direct single-tap exit without browser history trapping
             if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.hash = '';
-                }
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+                handleRoute();
             } else {
                 closeAllModalsInternal();
                 closeSidebarInternal();
                 renderMoviesGrid(movies, true);
             }
+        }
+
+        // Helper to swap player iframe without adding an extra browser history entry
+        function setIframeSrcWithoutHistory(frameId, url) {
+            const oldFrame = document.getElementById(frameId);
+            if (!oldFrame) return;
+            const cleanUrl = sanitizeStreamUrl(url);
+            const newFrame = oldFrame.cloneNode(false);
+            newFrame.src = cleanUrl;
+            oldFrame.parentNode.replaceChild(newFrame, oldFrame);
         }
 
         function renderSocialIcons() {
@@ -2572,7 +2603,8 @@
 
             const playerWrapper = document.getElementById('playerWrapper');
             playerWrapper.style.display = 'none';
-            document.getElementById('modalPlayerFrame').src = '';
+            const f = document.getElementById('modalPlayerFrame');
+            if (f) f.src = 'about:blank';
 
             const seriesPanel = document.getElementById('seriesEpisodePanel');
             const movieBtnGroup = document.getElementById('movieActionButtons');
@@ -2598,7 +2630,7 @@
         }
 
         function switchStreamServer(url) {
-            document.getElementById('modalPlayerFrame').src = sanitizeStreamUrl(url);
+            setIframeSrcWithoutHistory('modalPlayerFrame', url);
             showToast("Switched video server!");
         }
 
@@ -2657,26 +2689,59 @@
 
             const playerWrapper = document.getElementById('playerWrapper');
             playerWrapper.style.display = 'block';
-            document.getElementById('modalPlayerFrame').src = sanitizeStreamUrl(episode.streamUrl);
 
-            const dlBtn = document.getElementById('seriesEpisodeDownloadBtn');
-            dlBtn.href = episode.downloadUrl || '#';
-            document.getElementById('seriesEpDlTitle').innerText = `Download ${episode.season} - ${episode.title}`;
+            // Use DOM node replacement so mobile browsers do NOT add an extra history step
+            setIframeSrcWithoutHistory('modalPlayerFrame', episode.streamUrl);
+
+            // MULTI-RESOLUTION & MULTI-SIZE DOWNLOADS FOR THIS SPECIFIC EPISODE
+            const dlContainer = document.getElementById('modalSeriesDownloadsList');
+            const dlHeading = document.getElementById('seriesDownloadHeading');
+            dlContainer.innerHTML = '';
+
+            const epDownloads = (episode.downloads && episode.downloads.length > 0) 
+                ? episode.downloads 
+                : (episode.downloadUrl ? [{ quality: "1080p HD", name: "Cloud Server", size: "", url: episode.downloadUrl }] : []);
+
+            if (epDownloads.length > 0) {
+                dlHeading.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Download Mirrors for ${episode.season} - ${episode.title}:`;
+                epDownloads.forEach(dl => {
+                    const card = document.createElement('a');
+                    card.href = dl.url;
+                    card.target = "_blank";
+                    card.className = "download-mirror-card";
+
+                    const qClass = getResBadgeClass(dl.quality);
+
+                    card.innerHTML = `
+                        <div class="dl-card-left">
+                            <span class="dl-resolution-badge ${qClass}">${dl.quality || '720p HD'}</span>
+                            <div class="dl-card-info">
+                                <div class="dl-server-name">Download via ${dl.name || 'Cloud Mirror'}</div>
+                                ${dl.size ? `<div class="dl-file-size"><i class="fa-solid fa-hard-drive"></i> Size: ${dl.size}</div>` : ''}
+                            </div>
+                        </div>
+                        <span class="dl-action-pill"><i class="fa-solid fa-cloud-arrow-down"></i> Download</span>
+                    `;
+                    dlContainer.appendChild(card);
+                });
+            } else {
+                dlContainer.innerHTML = `<p style="color:#777; font-size:12px;">No download links added for this episode.</p>`;
+            }
         }
 
         function toggleOnlinePlayer() {
             const playerWrapper = document.getElementById('playerWrapper');
-            const frame = document.getElementById('modalPlayerFrame');
             const btn = document.getElementById('btnTriggerPlayer');
 
             if (playerWrapper.style.display === 'block') {
                 playerWrapper.style.display = 'none';
-                frame.src = '';
+                const f = document.getElementById('modalPlayerFrame');
+                if (f) f.src = 'about:blank';
                 btn.innerHTML = `<i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)`;
             } else {
                 playerWrapper.style.display = 'block';
                 if (currentMovieServers.length > 0) {
-                    frame.src = sanitizeStreamUrl(currentMovieServers[0].url);
+                    setIframeSrcWithoutHistory('modalPlayerFrame', currentMovieServers[0].url);
                 }
                 btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Stream Player`;
             }
@@ -2690,9 +2755,9 @@
             document.body.classList.remove('modal-open');
 
             const f1 = document.getElementById('modalPlayerFrame');
-            if (f1) f1.src = '';
+            if (f1) f1.src = 'about:blank';
             const f2 = document.getElementById('csTrailerFrame');
-            if (f2) f2.src = '';
+            if (f2) f2.src = 'about:blank';
             const pWrap = document.getElementById('playerWrapper');
             if (pWrap) pWrap.style.display = 'none';
             currentViewingMovieId = null;
@@ -3113,13 +3178,11 @@
             let extractedImdbId = null;
             let cleanTitle = rawInput;
 
-            // Extract exact tt ID even from URLs like https://www.imdb.com/title/tt36347588/
             const imdbIdMatch = rawInput.match(/tt\d{7,10}/i);
             if (imdbIdMatch) {
                 extractedImdbId = imdbIdMatch[0].toLowerCase();
             }
 
-            // If it's a direct URL, strip domain to get title if no ID
             if (rawInput.includes("imdb.com") && !extractedImdbId) {
                 const parts = rawInput.split("/title/")[1];
                 if (parts) {
@@ -3143,7 +3206,6 @@
 
             const tmdbKey = "e226f4a5f5bace766952aa0d17182959";
 
-            // Country Code Mapper
             const countryCodeMap = {
                 "KR": "South Korea",
                 "US": "USA",
@@ -3161,18 +3223,15 @@
             };
 
             try {
-                // 1. PRIMARY SEARCH: TMDB Find by IMDb ID (Handles Movies, Web Series & TV Shows)
                 if (extractedImdbId) {
                     try {
                         const findRes = await fetch(`https://api.themoviedb.org/3/find/${extractedImdbId}?api_key=${tmdbKey}&external_source=imdb_id`);
                         const findData = await findRes.json();
 
-                        // A. Check if it's a TV Series / Drama / Show
                         if (findData && findData.tv_results && findData.tv_results.length > 0) {
                             const tvHit = findData.tv_results[0];
                             foundData.isSeries = true;
                             
-                            // Fetch Complete TV details with aggregate credits
                             const tvDetailsRes = await fetch(`https://api.themoviedb.org/3/tv/${tvHit.id}?api_key=${tmdbKey}&append_to_response=credits,external_ids,aggregate_credits`);
                             const tvDetails = await tvDetailsRes.json();
 
@@ -3186,11 +3245,9 @@
                                 foundData.imdbRating = String(tvDetails.vote_average.toFixed(1));
                             }
 
-                            // Episode runtime
                             const run = (tvDetails.episode_run_time && tvDetails.episode_run_time.length > 0) ? tvDetails.episode_run_time[0] : 60;
                             foundData.duration = formatMinutesToHours(run);
 
-                            // Country
                             if (tvDetails.origin_country && tvDetails.origin_country.length > 0) {
                                 const code = tvDetails.origin_country[0];
                                 foundData.country = countryCodeMap[code] || code;
@@ -3198,7 +3255,6 @@
                                 foundData.country = tvDetails.production_countries[0].name;
                             }
 
-                            // Genres
                             if (tvDetails.genres && tvDetails.genres.length > 0) {
                                 tvDetails.genres.forEach(g => {
                                     if (g.name && !foundData.genresList.includes(g.name)) {
@@ -3207,7 +3263,6 @@
                                 });
                             }
 
-                            // Creator / Director
                             if (tvDetails.created_by && tvDetails.created_by.length > 0) {
                                 foundData.director = tvDetails.created_by.map(c => c.name).join(', ');
                             } else if (tvDetails.credits && tvDetails.credits.crew) {
@@ -3215,7 +3270,6 @@
                                 if (dir) foundData.director = dir.name;
                             }
 
-                            // Cast (Actors & Characters)
                             const castPool = (tvDetails.aggregate_credits && tvDetails.aggregate_credits.cast) || (tvDetails.credits && tvDetails.credits.cast) || [];
                             if (castPool.length > 0) {
                                 foundData.actors = [];
@@ -3229,9 +3283,7 @@
                                     });
                                 });
                             }
-                        }
-                        // B. Check if it's a Movie
-                        else if (findData && findData.movie_results && findData.movie_results.length > 0) {
+                        } else if (findData && findData.movie_results && findData.movie_results.length > 0) {
                             const movieHit = findData.movie_results[0];
                             foundData.isSeries = false;
 
@@ -3289,7 +3341,6 @@
                     }
                 }
 
-                // 2. SECONDARY SEARCH: Title Based Multi-Search (If user typed a Title like "The Scandal")
                 if (!foundData.title) {
                     try {
                         const isSeriesActive = document.getElementById('inPostType').value === 'series';
@@ -3389,7 +3440,6 @@
                     }
                 }
 
-                // 3. CINEMETA FALLBACK (If TMDB was slow or missing)
                 if ((!foundData.title || !foundData.plot) && extractedImdbId) {
                     try {
                         let cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/series/${extractedImdbId}.json`);
@@ -3418,7 +3468,6 @@
                     } catch(err) {}
                 }
 
-                // 4. APPLY DATA TO FORM & AUTO-SWITCH POST TYPE
                 if (foundData.title) {
                     document.getElementById('inMovieTitle').value = foundData.title;
                 }
@@ -3466,7 +3515,6 @@
                     renderAdminCastPreview();
                 }
 
-                // AUTO-SWITCH MODE: If it's a TV Series, automatically activate "Web Series / Drama" mode!
                 if (foundData.isSeries) {
                     selectPostType('series');
                 } else if (!document.getElementById('editMovieId').value) {
@@ -3919,11 +3967,59 @@
             });
         }
 
+        // ========================================================
+        // SERIES EPISODE MULTI-DOWNLOAD MIRRORS BUILDER HELPERS
+        // ========================================================
+        function addEpisodeDownloadMirror() {
+            const quality = document.getElementById('epDlQualityInput').value.trim() || '720p HD';
+            const name = document.getElementById('epDlNameInput').value.trim() || 'Mega.nz';
+            const size = document.getElementById('epDlSizeInput').value.trim();
+            const url = document.getElementById('epDlUrlInput').value.trim();
+
+            if (!url) return showToast("Enter Download URL for this mirror!", true);
+
+            tempEpDownloadsList.push({
+                id: Date.now(),
+                quality: quality,
+                name: name,
+                size: size,
+                url: url
+            });
+
+            document.getElementById('epDlSizeInput').value = '';
+            document.getElementById('epDlUrlInput').value = '';
+            renderAdminEpDownloadsPreview();
+            showToast(`Added [${quality}] ${name} mirror to episode!`);
+        }
+
+        function renderAdminEpDownloadsPreview() {
+            const container = document.getElementById('adminEpDownloadsListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            tempEpDownloadsList.forEach((d, idx) => {
+                const row = document.createElement('div');
+                row.className = 'manage-item-row';
+                row.style.padding = '6px 8px';
+                row.innerHTML = `
+                    <div>
+                        <strong style="color:#00e676; font-size:11px;">[${d.quality}] ${d.name}</strong>
+                        ${d.size ? `<span style="font-size:10px; color:#aaa; margin-left:4px;">(${d.size})</span>` : ''}
+                    </div>
+                    <button type="button" class="btn-delete-item" style="padding:2px 6px; font-size:10px;" onclick="removeTempEpDownload(${idx})">Remove</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function removeTempEpDownload(idx) {
+            tempEpDownloadsList.splice(idx, 1);
+            renderAdminEpDownloadsPreview();
+        }
+
         function addEpisodeToList() {
             const season = document.getElementById('epSeasonSelectDropdown').value;
             const title = document.getElementById('epNumberInput').value.trim();
             const rawStream = document.getElementById('epStreamInput').value.trim();
-            const download = document.getElementById('epDownloadInput').value.trim();
 
             if (!season) return showToast("Create/Select a Season first!", true);
             if (!title) return showToast("Enter Episode Title/Number!", true);
@@ -3936,14 +4032,15 @@
                 season: season,
                 title: title,
                 streamUrl: cleanStream,
-                downloadUrl: download
+                downloads: [...tempEpDownloadsList]
             });
 
             document.getElementById('epNumberInput').value = '';
             document.getElementById('epStreamInput').value = '';
-            document.getElementById('epDownloadInput').value = '';
+            tempEpDownloadsList = [];
+            renderAdminEpDownloadsPreview();
             renderAdminEpisodesPreview();
-            showToast(`${title} added to ${season}! (Auto-converted to embed)`);
+            showToast(`${title} added to ${season}!`);
         }
 
         function renderAdminEpisodesPreview() {
@@ -3951,12 +4048,13 @@
             container.innerHTML = '';
 
             tempEpisodesList.forEach((ep, idx) => {
+                const dlCount = ep.downloads ? ep.downloads.length : (ep.downloadUrl ? 1 : 0);
                 const row = document.createElement('div');
                 row.className = 'manage-item-row';
                 row.innerHTML = `
                     <div>
                         <strong style="color:var(--cyan-accent);">${ep.season} - ${ep.title}</strong>
-                        <div style="font-size:10px; color:#777;">${ep.streamUrl}</div>
+                        <div style="font-size:10px; color:#777;">Stream linked • ${dlCount} Download Mirrors</div>
                     </div>
                     <button type="button" class="btn-delete-item" onclick="removeTempEpisode(${idx})">Remove</button>
                 `;
@@ -4082,6 +4180,7 @@
             renderAdminCastPreview();
             renderAdminServersPreview();
             renderAdminDownloadsPreview();
+            renderAdminEpDownloadsPreview();
         }
 
         function syncSubCatSelector() {
@@ -4286,6 +4385,9 @@
             renderAdminSeasonBadges();
             renderAdminEpisodesPreview();
 
+            tempEpDownloadsList = [];
+            renderAdminEpDownloadsPreview();
+
             tempCastList = movie.cast ? [...movie.cast] : [];
             renderAdminCastPreview();
 
@@ -4305,12 +4407,14 @@
             tempCastList = [];
             tempServersList = [];
             tempDownloadsList = [];
+            tempEpDownloadsList = [];
             currentFormSeasons = ["Season 1"];
             renderAdminEpisodesPreview();
             renderAdminSeasonBadges();
             renderAdminCastPreview();
             renderAdminServersPreview();
             renderAdminDownloadsPreview();
+            renderAdminEpDownloadsPreview();
             selectPostType('movie');
 
             document.getElementById('formHeaderTitle').innerText = "Publish New Post";
@@ -4737,7 +4841,6 @@
             }
         }
 
-        // 4-LEVEL CATEGORY TREE RENDERING WITH REORDER MOVE BUTTONS (▲ / ▼)
         function renderAdminCategoryTree() {
             const tree = document.getElementById('categoryTree');
             tree.innerHTML = '';

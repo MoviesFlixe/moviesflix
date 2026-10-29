@@ -2158,7 +2158,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   9. FULL ADMIN DASHBOARD & HIERARCHY MANAGER + ORDERING
+   9. FULL ADMIN DASHBOARD & EPISODE MANAGER STYLING
    ======================================================== */
 .admin-dashboard-overlay {
     position: fixed;
@@ -2171,6 +2171,31 @@ body.modal-open {
     display: none;
     overflow-y: auto;
     padding: 18px;
+}
+
+/* UNIVERSAL DARK INPUT PROTECTION FOR ADMIN DASHBOARD */
+.admin-dashboard-overlay input,
+.admin-dashboard-overlay select,
+.admin-dashboard-overlay textarea,
+.episode-admin-card input,
+.link-builder-card input {
+    background: #090a10 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 6px !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+}
+
+.admin-dashboard-overlay input:focus,
+.admin-dashboard-overlay select:focus,
+.admin-dashboard-overlay textarea:focus,
+.episode-admin-card input:focus,
+.link-builder-card input:focus {
+    border-color: var(--cyan-accent) !important;
+    box-shadow: 0 0 8px var(--cyan-glow) !important;
 }
 
 .admin-top-bar {
@@ -2351,11 +2376,6 @@ body.modal-open {
     outline: none !important;
 }
 
-.season-control-row input:focus {
-    border-color: var(--cyan-accent) !important;
-    box-shadow: 0 0 8px var(--cyan-glow) !important;
-}
-
 .btn-add-season {
     background: var(--cyan-accent) !important;
     color: #000 !important;
@@ -2423,6 +2443,40 @@ body.modal-open {
     color: #ff0055;
 }
 
+.episode-admin-card {
+    background: #080911;
+    border: 1px dashed rgba(0, 229, 255, 0.4);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 14px;
+}
+
+/* EPISODE DOWNLOAD MIRRORS RESPONSIVE GRID (ZERO OVERFLOW) */
+.episode-dl-grid-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.episode-dl-grid-row input {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 9px 10px !important;
+    font-size: 12px !important;
+}
+
+@media (max-width: 480px) {
+    .episode-dl-grid-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .episode-dl-grid-row .ep-dl-span-full {
+        grid-column: span 2;
+    }
+}
+
 .added-episodes-table {
     margin-top: 10px;
     max-height: 220px;
@@ -2452,13 +2506,6 @@ body.modal-open {
     color: #fff;
     font-size: 13px;
     outline: none;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--cyan-accent);
-    box-shadow: 0 0 8px var(--cyan-glow);
 }
 
 .btn-cyan {
