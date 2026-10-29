@@ -405,7 +405,6 @@ body.modal-open {
     background: rgba(0, 229, 255, 0.08);
 }
 
-/* 4TH LEVEL: Subcategory Toggle Button */
 .subcat-toggle-btn {
     width: 100%;
     background: transparent;
@@ -428,7 +427,6 @@ body.modal-open {
     background: rgba(0, 229, 255, 0.08);
 }
 
-/* 4TH LEVEL: Nested Child Subcategory Menu */
 .nested-submenu {
     list-style: none;
     padding-left: 10px;
@@ -2537,9 +2535,6 @@ body.modal-open {
     gap: 5px;
 }
 
-/* ========================================================
-   NEW: DRAG & DROP / REORDER MOVE BUTTONS (TOUCH FRIENDLY)
-   ======================================================== */
 .btn-order-move {
     background: #141726;
     border: 1px solid rgba(0, 229, 255, 0.25);

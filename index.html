@@ -371,7 +371,7 @@
                         <a class="sitemap-link-item" onclick="openDomainsModal()"><i class="fa-solid fa-chevron-right"></i> Official Domains</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('about')"><i class="fa-solid fa-chevron-right"></i> About Us</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('dmca')"><i class="fa-solid fa-shield-halved"></i> DMCA Policy</a>
-                        <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-chevron-right"></i> Copyright</a>
+                        <a class="sitemap-link-item" onclick="openLegalPage('copyright')"><i class="fa-solid fa-chevron-right"></i> Copyright</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('privacy')"><i class="fa-solid fa-user-lock"></i> Privacy Policy</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('terms')"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
                         <a class="sitemap-link-item" onclick="openLegalPage('disclaimer')"><i class="fa-solid fa-triangle-exclamation"></i> 18+ Disclaimer</a>
@@ -712,7 +712,7 @@
                     <div style="display: flex; gap: 10px; align-items: flex-end;">
                         <div class="form-group" style="flex:2;">
                             <label>Title, IMDb ID (tt...) or IMDb Page URL</label>
-                            <input type="text" id="inMovieTitle" placeholder="e.g. Tu Hai Meri Kiran or tt33880491" required>
+                            <input type="text" id="inMovieTitle" placeholder="e.g. Tu Hai Meri Kiran, The Scandal, or tt36347588" required>
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Release Year</label>
@@ -743,16 +743,16 @@
 
                         <div style="display: flex; gap: 10px;">
                             <div class="form-group" style="flex:1;">
-                                <label>Duration / Runtime (e.g. 2h 5m)</label>
+                                <label>Duration / Runtime (e.g. 2h 5m / 1h 0m)</label>
                                 <input type="text" id="inDuration" placeholder="e.g. 2h 5m">
                             </div>
                             <div class="form-group" style="flex:1;">
-                                <label>Country (e.g. India / USA / Turkey)</label>
-                                <input type="text" id="inCountry" placeholder="e.g. India">
+                                <label>Country (e.g. South Korea / Turkey / India / USA)</label>
+                                <input type="text" id="inCountry" placeholder="e.g. South Korea">
                             </div>
                             <div class="form-group" style="flex:1;">
-                                <label>Director (e.g. Karan Rawal)</label>
-                                <input type="text" id="inDirector" placeholder="e.g. Karan Rawal">
+                                <label>Director / Creator (e.g. Jung Ji-woo)</label>
+                                <input type="text" id="inDirector" placeholder="e.g. Jung Ji-woo">
                             </div>
                         </div>
                     </div>
@@ -785,7 +785,7 @@
                         </div>
                         <div class="form-group" style="flex:2;">
                             <label>SEO & Search Tags (Comma separated)</label>
-                            <input type="text" id="inTags" placeholder="e.g. Mystery, Romance, Thriller, Hindi, 2026">
+                            <input type="text" id="inTags" placeholder="e.g. Korean Drama, Romance, Thriller, 2026">
                         </div>
                     </div>
 
@@ -901,11 +901,11 @@
                         <div style="display:flex; gap:8px;">
                             <div class="form-group" style="flex:1;">
                                 <label>Actor Real Name</label>
-                                <input type="text" id="castNameInput" placeholder="e.g. Sonakshi Sinha">
+                                <input type="text" id="castNameInput" placeholder="e.g. Son Ye-jin, Ji Chang-wook">
                             </div>
                             <div class="form-group" style="flex:1;">
                                 <label>Character / Role Name</label>
-                                <input type="text" id="castRoleInput" placeholder="e.g. Kiran">
+                                <input type="text" id="castRoleInput" placeholder="e.g. Lead Role">
                             </div>
                         </div>
 
@@ -1722,8 +1722,8 @@
         };
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
-      
-      // ========================================================
+
+        // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
         // ========================================================
         function renderBranding() {
@@ -3093,7 +3093,7 @@
         }
 
         // ========================================================
-        // 16. LIVE IMDB + CINEMETA + TMDB AUTO-FETCHER
+        // 16. LIVE IMDB + TMDB FIND + KOREAN / WEB SERIES AUTO-FETCHER
         // ========================================================
         async function autoFetchImdbData() {
             let rawInput = document.getElementById('inMovieTitle').value.trim();
@@ -3108,19 +3108,23 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Fetching Live...`;
             btn.disabled = true;
 
-            showToast("Connecting to Live IMDb & Cinemeta Servers...");
+            showToast("Connecting to Live IMDb & TMDB Servers...");
 
             let extractedImdbId = null;
             let cleanTitle = rawInput;
 
-            const imdbIdMatch = rawInput.match(/tt\d{7,8}/i);
+            // Extract exact tt ID even from URLs like https://www.imdb.com/title/tt36347588/
+            const imdbIdMatch = rawInput.match(/tt\d{7,10}/i);
             if (imdbIdMatch) {
                 extractedImdbId = imdbIdMatch[0].toLowerCase();
-            } else if (rawInput.includes("imdb.com/title/")) {
+            }
+
+            // If it's a direct URL, strip domain to get title if no ID
+            if (rawInput.includes("imdb.com") && !extractedImdbId) {
                 const parts = rawInput.split("/title/")[1];
                 if (parts) {
                     const idPart = parts.split("/")[0];
-                    if (idPart && idPart.startsWith("tt")) extractedImdbId = idPart;
+                    if (idPart && idPart.startsWith("tt")) extractedImdbId = idPart.toLowerCase();
                 }
             }
 
@@ -3130,176 +3134,292 @@
                 imdbRating: "",
                 genresList: [],
                 duration: "",
-                country: "India",
+                country: "",
                 director: "",
                 plot: "",
-                actors: []
+                actors: [],
+                isSeries: false
             };
 
             const tmdbKey = "e226f4a5f5bace766952aa0d17182959";
 
+            // Country Code Mapper
+            const countryCodeMap = {
+                "KR": "South Korea",
+                "US": "USA",
+                "IN": "India",
+                "TR": "Turkey",
+                "PK": "Pakistan",
+                "GB": "United Kingdom",
+                "JP": "Japan",
+                "CN": "China",
+                "ES": "Spain",
+                "FR": "France",
+                "DE": "Germany",
+                "CA": "Canada",
+                "AU": "Australia"
+            };
+
             try {
-                if (!extractedImdbId) {
+                // 1. PRIMARY SEARCH: TMDB Find by IMDb ID (Handles Movies, Web Series & TV Shows)
+                if (extractedImdbId) {
                     try {
-                        const cleanQuery = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                        const firstChar = cleanQuery.charAt(0);
-                        if (firstChar) {
-                            const suggRes = await fetch(`https://v3.sg.media-imdb.com/suggestion/${firstChar}/${cleanQuery}.json`);
-                            const suggData = await suggRes.json();
-                            if (suggData && suggData.d && suggData.d.length > 0) {
-                                const topHit = suggData.d[0];
-                                if (topHit.id && topHit.id.startsWith("tt")) {
-                                    extractedImdbId = topHit.id;
-                                    if (topHit.l) foundData.title = topHit.l;
-                                    if (topHit.y) foundData.year = String(topHit.y);
-                                }
-                            }
-                        }
-                    } catch(e) {}
+                        const findRes = await fetch(`https://api.themoviedb.org/3/find/${extractedImdbId}?api_key=${tmdbKey}&external_source=imdb_id`);
+                        const findData = await findRes.json();
 
-                    if (!extractedImdbId) {
-                        try {
-                            const tmdbSearchRes = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`);
-                            const tmdbSearchData = await tmdbSearchRes.json();
-                            if (tmdbSearchData.results && tmdbSearchData.results.length > 0) {
-                                const firstHit = tmdbSearchData.results[0];
-                                const mediaType = firstHit.media_type === 'tv' ? 'tv' : 'movie';
-                                const extRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${firstHit.id}/external_ids?api_key=${tmdbKey}`);
-                                const extData = await extRes.json();
-                                if (extData && extData.imdb_id) {
-                                    extractedImdbId = extData.imdb_id;
-                                }
-                            }
-                        } catch(e) {}
-                    }
+                        // A. Check if it's a TV Series / Drama / Show
+                        if (findData && findData.tv_results && findData.tv_results.length > 0) {
+                            const tvHit = findData.tv_results[0];
+                            foundData.isSeries = true;
+                            
+                            // Fetch Complete TV details with aggregate credits
+                            const tvDetailsRes = await fetch(`https://api.themoviedb.org/3/tv/${tvHit.id}?api_key=${tmdbKey}&append_to_response=credits,external_ids,aggregate_credits`);
+                            const tvDetails = await tvDetailsRes.json();
 
-                    if (!extractedImdbId) {
-                        const omdbKeys = ["e2960f27", "4f458a6f", "7282b8a7", "85a6a568", "a39a9d8c"];
-                        for (let k of omdbKeys) {
-                            try {
-                                const r = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(cleanTitle)}&apikey=${k}`);
-                                const d = await r.json();
-                                if (d.Response === "True") {
-                                    if (d.imdbID && d.imdbID.startsWith("tt")) extractedImdbId = d.imdbID;
-                                    if (d.Title) foundData.title = d.Title;
-                                    if (d.Year && d.Year !== "N/A") foundData.year = d.Year;
-                                    if (d.Director && d.Director !== "N/A") foundData.director = d.Director;
-                                    if (d.Country && d.Country !== "N/A") foundData.country = d.Country;
-                                    if (d.Plot && d.Plot !== "N/A") foundData.plot = d.Plot;
-                                    if (d.imdbRating && d.imdbRating !== "N/A") foundData.imdbRating = d.imdbRating;
-                                    if (d.Runtime && d.Runtime !== "N/A") foundData.duration = formatMinutesToHours(d.Runtime);
-                                    if (d.Genre && d.Genre !== "N/A") {
-                                        d.Genre.split(',').forEach(g => foundData.genresList.push(g.trim()));
+                            foundData.title = tvDetails.name || tvDetails.original_name || tvHit.name;
+                            if (tvDetails.first_air_date) {
+                                foundData.year = tvDetails.first_air_date.split('-')[0];
+                            }
+                            if (tvDetails.overview) foundData.plot = tvDetails.overview;
+
+                            if (tvDetails.vote_average && tvDetails.vote_average > 0) {
+                                foundData.imdbRating = String(tvDetails.vote_average.toFixed(1));
+                            }
+
+                            // Episode runtime
+                            const run = (tvDetails.episode_run_time && tvDetails.episode_run_time.length > 0) ? tvDetails.episode_run_time[0] : 60;
+                            foundData.duration = formatMinutesToHours(run);
+
+                            // Country
+                            if (tvDetails.origin_country && tvDetails.origin_country.length > 0) {
+                                const code = tvDetails.origin_country[0];
+                                foundData.country = countryCodeMap[code] || code;
+                            } else if (tvDetails.production_countries && tvDetails.production_countries.length > 0) {
+                                foundData.country = tvDetails.production_countries[0].name;
+                            }
+
+                            // Genres
+                            if (tvDetails.genres && tvDetails.genres.length > 0) {
+                                tvDetails.genres.forEach(g => {
+                                    if (g.name && !foundData.genresList.includes(g.name)) {
+                                        foundData.genresList.push(g.name.trim());
                                     }
-                                    break;
-                                }
-                            } catch(e) {}
+                                });
+                            }
+
+                            // Creator / Director
+                            if (tvDetails.created_by && tvDetails.created_by.length > 0) {
+                                foundData.director = tvDetails.created_by.map(c => c.name).join(', ');
+                            } else if (tvDetails.credits && tvDetails.credits.crew) {
+                                const dir = tvDetails.credits.crew.find(c => c.job === 'Director' || c.job === 'Executive Producer');
+                                if (dir) foundData.director = dir.name;
+                            }
+
+                            // Cast (Actors & Characters)
+                            const castPool = (tvDetails.aggregate_credits && tvDetails.aggregate_credits.cast) || (tvDetails.credits && tvDetails.credits.cast) || [];
+                            if (castPool.length > 0) {
+                                foundData.actors = [];
+                                castPool.slice(0, 8).forEach(c => {
+                                    const charName = c.roles ? c.roles.map(r => r.character).join(' / ') : (c.character || "Lead Role");
+                                    foundData.actors.push({
+                                        name: c.name,
+                                        role: charName || "Cast",
+                                        photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
+                                        socialUrl: ""
+                                    });
+                                });
+                            }
                         }
+                        // B. Check if it's a Movie
+                        else if (findData && findData.movie_results && findData.movie_results.length > 0) {
+                            const movieHit = findData.movie_results[0];
+                            foundData.isSeries = false;
+
+                            const movieDetailsRes = await fetch(`https://api.themoviedb.org/3/movie/${movieHit.id}?api_key=${tmdbKey}&append_to_response=credits,external_ids`);
+                            const movieDetails = await movieDetailsRes.json();
+
+                            foundData.title = movieDetails.title || movieDetails.original_title || movieHit.title;
+                            if (movieDetails.release_date) {
+                                foundData.year = movieDetails.release_date.split('-')[0];
+                            }
+                            if (movieDetails.overview) foundData.plot = movieDetails.overview;
+
+                            if (movieDetails.vote_average && movieDetails.vote_average > 0) {
+                                foundData.imdbRating = String(movieDetails.vote_average.toFixed(1));
+                            }
+
+                            if (movieDetails.runtime) {
+                                foundData.duration = formatMinutesToHours(movieDetails.runtime);
+                            }
+
+                            if (movieDetails.production_countries && movieDetails.production_countries.length > 0) {
+                                foundData.country = movieDetails.production_countries[0].name;
+                            } else if (movieDetails.origin_country && movieDetails.origin_country.length > 0) {
+                                const code = movieDetails.origin_country[0];
+                                foundData.country = countryCodeMap[code] || code;
+                            }
+
+                            if (movieDetails.genres && movieDetails.genres.length > 0) {
+                                movieDetails.genres.forEach(g => {
+                                    if (g.name && !foundData.genresList.includes(g.name)) {
+                                        foundData.genresList.push(g.name.trim());
+                                    }
+                                });
+                            }
+
+                            if (movieDetails.credits && movieDetails.credits.crew) {
+                                const dir = movieDetails.credits.crew.find(c => c.job === 'Director');
+                                if (dir) foundData.director = dir.name;
+                            }
+
+                            if (movieDetails.credits && movieDetails.credits.cast && movieDetails.credits.cast.length > 0) {
+                                foundData.actors = [];
+                                movieDetails.credits.cast.slice(0, 8).forEach(c => {
+                                    foundData.actors.push({
+                                        name: c.name,
+                                        role: c.character || "Cast",
+                                        photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
+                                        socialUrl: ""
+                                    });
+                                });
+                            }
+                        }
+                    } catch (findErr) {
+                        console.warn("TMDB find error:", findErr);
                     }
                 }
 
-                if (extractedImdbId) {
+                // 2. SECONDARY SEARCH: Title Based Multi-Search (If user typed a Title like "The Scandal")
+                if (!foundData.title) {
                     try {
-                        let cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/movie/${extractedImdbId}.json`);
+                        const isSeriesActive = document.getElementById('inPostType').value === 'series';
+                        const searchEndpoint = isSeriesActive 
+                            ? `https://api.themoviedb.org/3/search/tv?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`
+                            : `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(cleanTitle)}`;
+
+                        const tmdbSearchRes = await fetch(searchEndpoint);
+                        const tmdbSearchData = await tmdbSearchRes.json();
+
+                        if (tmdbSearchData.results && tmdbSearchData.results.length > 0) {
+                            const topHit = tmdbSearchData.results[0];
+                            const mediaType = isSeriesActive ? 'tv' : (topHit.media_type === 'tv' ? 'tv' : 'movie');
+
+                            if (mediaType === 'tv') {
+                                foundData.isSeries = true;
+                                const detailsRes = await fetch(`https://api.themoviedb.org/3/tv/${topHit.id}?api_key=${tmdbKey}&append_to_response=credits,external_ids,aggregate_credits`);
+                                const details = await detailsRes.json();
+
+                                foundData.title = details.name || details.original_name;
+                                if (details.first_air_date) foundData.year = details.first_air_date.split('-')[0];
+                                if (details.overview) foundData.plot = details.overview;
+                                if (details.vote_average) foundData.imdbRating = String(details.vote_average.toFixed(1));
+
+                                const run = (details.episode_run_time && details.episode_run_time.length > 0) ? details.episode_run_time[0] : 60;
+                                foundData.duration = formatMinutesToHours(run);
+
+                                if (details.origin_country && details.origin_country.length > 0) {
+                                    const code = details.origin_country[0];
+                                    foundData.country = countryCodeMap[code] || code;
+                                }
+
+                                if (details.genres) {
+                                    details.genres.forEach(g => {
+                                        if (g.name && !foundData.genresList.includes(g.name)) foundData.genresList.push(g.name.trim());
+                                    });
+                                }
+
+                                if (details.created_by && details.created_by.length > 0) {
+                                    foundData.director = details.created_by.map(c => c.name).join(', ');
+                                }
+
+                                const castPool = (details.aggregate_credits && details.aggregate_credits.cast) || (details.credits && details.credits.cast) || [];
+                                if (castPool.length > 0) {
+                                    foundData.actors = [];
+                                    castPool.slice(0, 8).forEach(c => {
+                                        const charName = c.roles ? c.roles.map(r => r.character).join(' / ') : (c.character || "Cast");
+                                        foundData.actors.push({
+                                            name: c.name,
+                                            role: charName || "Cast",
+                                            photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
+                                            socialUrl: ""
+                                        });
+                                    });
+                                }
+                            } else {
+                                foundData.isSeries = false;
+                                const detailsRes = await fetch(`https://api.themoviedb.org/3/movie/${topHit.id}?api_key=${tmdbKey}&append_to_response=credits,external_ids`);
+                                const details = await detailsRes.json();
+
+                                foundData.title = details.title || details.original_title;
+                                if (details.release_date) foundData.year = details.release_date.split('-')[0];
+                                if (details.overview) foundData.plot = details.overview;
+                                if (details.vote_average) foundData.imdbRating = String(details.vote_average.toFixed(1));
+                                if (details.runtime) foundData.duration = formatMinutesToHours(details.runtime);
+
+                                if (details.production_countries && details.production_countries.length > 0) {
+                                    foundData.country = details.production_countries[0].name;
+                                }
+
+                                if (details.genres) {
+                                    details.genres.forEach(g => {
+                                        if (g.name && !foundData.genresList.includes(g.name)) foundData.genresList.push(g.name.trim());
+                                    });
+                                }
+
+                                if (details.credits && details.credits.crew) {
+                                    const dir = details.credits.crew.find(c => c.job === 'Director');
+                                    if (dir) foundData.director = dir.name;
+                                }
+
+                                if (details.credits && details.credits.cast && details.credits.cast.length > 0) {
+                                    foundData.actors = [];
+                                    details.credits.cast.slice(0, 8).forEach(c => {
+                                        foundData.actors.push({
+                                            name: c.name,
+                                            role: c.character || "Cast",
+                                            photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
+                                            socialUrl: ""
+                                        });
+                                    });
+                                }
+                            }
+                        }
+                    } catch (tmdbErr) {
+                        console.warn("Title search error:", tmdbErr);
+                    }
+                }
+
+                // 3. CINEMETA FALLBACK (If TMDB was slow or missing)
+                if ((!foundData.title || !foundData.plot) && extractedImdbId) {
+                    try {
+                        let cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/series/${extractedImdbId}.json`);
                         let cineData = await cineRes.json();
 
                         if (!cineData || !cineData.meta) {
-                            cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/series/${extractedImdbId}.json`);
+                            cineRes = await fetch(`https://v3-cinemeta.strem.io/meta/movie/${extractedImdbId}.json`);
                             cineData = await cineRes.json();
                         }
 
                         if (cineData && cineData.meta) {
                             const meta = cineData.meta;
-                            if (meta.name) foundData.title = meta.name;
-                            if (meta.year) foundData.year = String(meta.year);
-                            if (meta.description) foundData.plot = meta.description;
+                            if (!foundData.title && meta.name) foundData.title = meta.name;
+                            if (!foundData.year && meta.year) foundData.year = String(meta.year);
+                            if (!foundData.plot && meta.description) foundData.plot = meta.description;
+                            if (!foundData.imdbRating && meta.imdbRating) foundData.imdbRating = String(meta.imdbRating);
+                            if (!foundData.duration && meta.runtime) foundData.duration = formatMinutesToHours(meta.runtime);
+                            if (meta.type === 'series') foundData.isSeries = true;
 
-                            if (meta.imdbRating && meta.imdbRating !== "N/A") {
-                                foundData.imdbRating = String(meta.imdbRating);
-                            }
-
-                            if (meta.runtime) {
-                                foundData.duration = formatMinutesToHours(meta.runtime);
-                            }
-
-                            if (Array.isArray(meta.genres) && meta.genres.length > 0) {
+                            if (Array.isArray(meta.genres)) {
                                 meta.genres.forEach(g => {
-                                    if (g && !foundData.genresList.includes(g)) {
-                                        foundData.genresList.push(g.trim());
-                                    }
+                                    if (g && !foundData.genresList.includes(g)) foundData.genresList.push(g.trim());
                                 });
                             }
-
-                            if (meta.director) {
-                                if (Array.isArray(meta.director)) {
-                                    foundData.director = meta.director.join(', ');
-                                } else if (typeof meta.director === 'string') {
-                                    foundData.director = meta.director;
-                                }
-                            }
                         }
-                    } catch(err) {
-                        console.warn("Cinemeta fetch error:", err);
-                    }
+                    } catch(err) {}
                 }
 
-                try {
-                    let tmdbSearchUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(foundData.title || cleanTitle)}`;
-                    const tmdbRes = await fetch(tmdbSearchUrl);
-                    const tmdbJson = await tmdbRes.json();
-
-                    if (tmdbJson.results && tmdbJson.results.length > 0) {
-                        const topHit = tmdbJson.results[0];
-                        const mediaType = topHit.media_type === 'tv' ? 'tv' : 'movie';
-                        const detailsRes = await fetch(`https://api.themoviedb.org/3/${mediaType}/${topHit.id}?api_key=${tmdbKey}&append_to_response=credits`);
-                        const details = await detailsRes.json();
-
-                        if (!foundData.title) foundData.title = details.title || details.name;
-                        if (!foundData.year) {
-                            const relDate = details.release_date || details.first_air_date;
-                            if (relDate) foundData.year = relDate.split('-')[0];
-                        }
-                        if (!foundData.plot && details.overview) foundData.plot = details.overview;
-
-                        if (!foundData.imdbRating && details.vote_average) {
-                            foundData.imdbRating = String(details.vote_average.toFixed(1));
-                        }
-
-                        if (!foundData.duration) {
-                            const run = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : null);
-                            if (run) foundData.duration = formatMinutesToHours(run);
-                        }
-
-                        if (details.genres && details.genres.length > 0) {
-                            details.genres.forEach(g => {
-                                if (g.name && !foundData.genresList.includes(g.name)) {
-                                    foundData.genresList.push(g.name.trim());
-                                }
-                            });
-                        }
-
-                        if (!foundData.director && details.credits && details.credits.crew) {
-                            const dir = details.credits.crew.find(c => c.job === 'Director');
-                            if (dir) foundData.director = dir.name;
-                        }
-
-                        if (details.credits && details.credits.cast && details.credits.cast.length > 0) {
-                            foundData.actors = [];
-                            details.credits.cast.slice(0, 8).forEach(c => {
-                                foundData.actors.push({
-                                    name: c.name,
-                                    role: c.character || "Cast",
-                                    photo: c.profile_path ? `https://image.tmdb.org/t/p/w200${c.profile_path}` : "",
-                                    socialUrl: ""
-                                });
-                            });
-                        }
-                    }
-                } catch(tmdbErr) {
-                    console.warn("TMDB details fetch error:", tmdbErr);
-                }
-
-                if (foundData.title && extractedImdbId) {
+                // 4. APPLY DATA TO FORM & AUTO-SWITCH POST TYPE
+                if (foundData.title) {
                     document.getElementById('inMovieTitle').value = foundData.title;
                 }
                 if (foundData.year) {
@@ -3319,13 +3439,15 @@
                     document.getElementById('inDuration').value = foundData.duration;
                 }
 
-                if (foundData.country && foundData.country !== "N/A") {
+                if (foundData.country) {
                     document.getElementById('inCountry').value = foundData.country;
                 }
-                if (foundData.director && foundData.director !== "N/A") {
+
+                if (foundData.director) {
                     document.getElementById('inDirector').value = foundData.director;
                 }
-                if (foundData.plot && foundData.plot !== "N/A" && !document.getElementById('inDesc').value.trim()) {
+
+                if (foundData.plot && !document.getElementById('inDesc').value.trim()) {
                     document.getElementById('inDesc').value = foundData.plot;
                 }
 
@@ -3344,8 +3466,17 @@
                     renderAdminCastPreview();
                 }
 
-                showToast(`IMDb Verified! Score: ${foundData.imdbRating || '7.3'} • Time: ${foundData.duration || '2h 5m'} • Genres: ${finalGenresString || 'All Loaded'}`);
+                // AUTO-SWITCH MODE: If it's a TV Series, automatically activate "Web Series / Drama" mode!
+                if (foundData.isSeries) {
+                    selectPostType('series');
+                } else if (!document.getElementById('editMovieId').value) {
+                    selectPostType('movie');
+                }
+
+                const typeLabel = foundData.isSeries ? 'Web Series / Drama' : 'Movie';
+                showToast(`Verified ${typeLabel}! Title: ${foundData.title} • Score: ${foundData.imdbRating || 'Verified'} • Country: ${foundData.country || 'International'} • Cast: ${foundData.actors.length} loaded`);
             } catch (err) {
+                console.error("Auto-fetch error:", err);
                 showToast("Connection issue, please verify title or IMDb ID.", true);
             } finally {
                 btn.innerHTML = originalBtnText;
@@ -4231,7 +4362,6 @@
             return match ? parseInt(match[0], 10) : 0;
         }
 
-        // Insert in descending order of year among siblings with years (2028 -> 2027 -> 2026)
         function insertSortedByYear(list, newItem, isObject = true) {
             const newName = isObject ? newItem.name : newItem;
             const newYear = extractYearNumber(newName);
@@ -4251,7 +4381,6 @@
             list.splice(insertIdx, 0, newItem);
         }
 
-        // 1-Click Auto-Sort All Categories by Year (Newest First)
         function autoSortAllCategoriesByYear() {
             categories.forEach(cat => {
                 if (Array.isArray(cat.subcategories)) {
@@ -4287,7 +4416,6 @@
             showToast("⚡ Categories auto-sorted by Year (Newest First)!");
         }
 
-        // Reordering Move Up & Down Functions
         function moveHeading(idx, direction) {
             const targetIdx = idx + direction;
             if (targetIdx < 0 || targetIdx >= sectionHeadings.length) return;
@@ -4423,7 +4551,6 @@
             persistAll();
             input.value = '';
 
-            // DROPDOWN MEMORY: Remember chosen heading
             const savedHeading = heading;
             loadAdminDashboardData();
             document.getElementById('parentSectionHeadingSelect').value = savedHeading;
@@ -4446,13 +4573,11 @@
             const target = categories.find(c => c.name === parent);
             if (target) {
                 const newSubObj = { name: subVal, childCategories: [] };
-                // SMART INSERT: Sorts by Year if a year is detected (2028 > 2027 > 2026)
                 insertSortedByYear(target.subcategories, newSubObj, true);
 
                 persistAll();
                 input.value = '';
 
-                // DROPDOWN MEMORY: Parent selection is preserved!
                 const savedParent = parent;
                 loadAdminDashboardData();
                 document.getElementById('parentCatSelect').value = savedParent;
@@ -4485,13 +4610,11 @@
                 }
 
                 if (targetSub && targetSub.childCategories) {
-                    // SMART INSERT: Sorts by Year if year is present
                     insertSortedByYear(targetSub.childCategories, childVal, false);
 
                     persistAll();
                     input.value = '';
 
-                    // DROPDOWN MEMORY: Remember chosen Main and Subcategory!
                     const savedMain = mainVal;
                     const savedSub = subVal;
 
