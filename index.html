@@ -1759,7 +1759,6 @@
         };
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
-      
 
         // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
@@ -1857,14 +1856,14 @@
             }
         }
 
-        // Anti-Redirect Player Swapper: Always enforces sandbox so no ad redirects can hijack tab
+        // Clean Player Swapper: Sandbox removed so Streamtape/LuluStream NEVER show "Client blocked!"
         function setIframeSrcWithoutHistory(frameId, url) {
             const oldFrame = document.getElementById(frameId);
             if (!oldFrame) return;
             const cleanUrl = sanitizeStreamUrl(url);
             const newFrame = oldFrame.cloneNode(false);
             newFrame.src = cleanUrl;
-            newFrame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation allow-forms");
+            newFrame.removeAttribute("sandbox"); // Ensures Streamtape, LuluStream & VidHide work without any block
             oldFrame.parentNode.replaceChild(newFrame, oldFrame);
         }
 
@@ -1996,7 +1995,6 @@
             }
 
             if (hasMovies) {
-                // Collect all subcategories from assigned categories
                 const allSubCategories = [];
                 list.forEach(m => {
                     if (m.subCategory && !allSubCategories.includes(m.subCategory)) {
@@ -2661,7 +2659,10 @@
             const playerWrapper = document.getElementById('playerWrapper');
             playerWrapper.style.display = 'none';
             const f = document.getElementById('modalPlayerFrame');
-            if (f) f.src = 'about:blank';
+            if (f) {
+                f.src = 'about:blank';
+                f.removeAttribute("sandbox"); // Streamtape safe
+            }
 
             const seriesPanel = document.getElementById('seriesEpisodePanel');
             const movieBtnGroup = document.getElementById('movieActionButtons');
@@ -2791,7 +2792,10 @@
             if (playerWrapper.style.display === 'block') {
                 playerWrapper.style.display = 'none';
                 const f = document.getElementById('modalPlayerFrame');
-                if (f) f.src = 'about:blank';
+                if (f) {
+                    f.src = 'about:blank';
+                    f.removeAttribute("sandbox");
+                }
                 btn.innerHTML = `<i class="fa-solid fa-circle-play"></i> Watch Online (Stream Player)`;
             } else {
                 playerWrapper.style.display = 'block';
@@ -2810,9 +2814,15 @@
             document.body.classList.remove('modal-open');
 
             const f1 = document.getElementById('modalPlayerFrame');
-            if (f1) f1.src = 'about:blank';
+            if (f1) {
+                f1.src = 'about:blank';
+                f1.removeAttribute("sandbox");
+            }
             const f2 = document.getElementById('csTrailerFrame');
-            if (f2) f2.src = 'about:blank';
+            if (f2) {
+                f2.src = 'about:blank';
+                f2.removeAttribute("sandbox");
+            }
             const pWrap = document.getElementById('playerWrapper');
             if (pWrap) pWrap.style.display = 'none';
             currentViewingMovieId = null;
@@ -4370,7 +4380,6 @@
                 return showToast("Please add at least 1 Streaming Server!", true);
             }
 
-            // If user did not manually click "+ Assign Category to Post", automatically take the currently selected dropdowns as category
             if (tempAssignedCategoriesList.length === 0) {
                 const autoMain = document.getElementById('inMainCat').value;
                 const autoSub = document.getElementById('inSubCat').value;
@@ -4398,7 +4407,6 @@
                     movies[movieIndex].title = document.getElementById('inMovieTitle').value.trim();
                     movies[movieIndex].year = document.getElementById('inMovieYear').value.trim();
                     
-                    // Multi-category & backward-compatible primary fields
                     movies[movieIndex].mainCategory = primaryCat.main;
                     movies[movieIndex].subCategory = primaryCat.sub;
                     movies[movieIndex].childCategory = primaryCat.child || "";
@@ -4478,7 +4486,6 @@
             document.getElementById('inMovieTitle').value = movie.title;
             document.getElementById('inMovieYear').value = movie.year || '2024';
 
-            // Populate Multi-Categories
             if (movie.assignedCategories && Array.isArray(movie.assignedCategories) && movie.assignedCategories.length > 0) {
                 tempAssignedCategoriesList = [...movie.assignedCategories];
             } else {
@@ -5372,9 +5379,14 @@
         renderSidebarMenu();
         updateNotificationsUI();
         setupSupabaseRealtimeSync();
+
+        // Safety Cleanup: Ensure player iframes have NO sandbox on startup so Streamtape / LuluStream play cleanly
+        const pfInit = document.getElementById('modalPlayerFrame');
+        if (pfInit) pfInit.removeAttribute('sandbox');
+        const csInit = document.getElementById('csTrailerFrame');
+        if (csInit) csInit.removeAttribute('sandbox');
         
         handleRoute();
     </script>
 </body>
 </html>
-
