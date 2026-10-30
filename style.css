@@ -515,7 +515,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   5. MOVIES CONTAINER & HORIZONTAL FLIP/SLIDER CAROUSEL
+   5. MOVIES CONTAINER & CAROUSEL SLIDERS
    ======================================================== */
 .main-content {
     padding: 18px 12px;
@@ -823,7 +823,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   6. FULLSCREEN MOVIE POST VIEW (EXTRA BOTTOM PADDING 110px)
+   6. FULLSCREEN MOVIE POST VIEW
    ======================================================== */
 .modal-overlay {
     position: fixed;
@@ -1518,7 +1518,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   7. INTERACTIVE DISCUSSION, COMMENTS & MODERATION
+   7. COMMENTS SECTION
    ======================================================== */
 .movie-comments-section {
     margin-top: 32px;
@@ -1984,7 +1984,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   8. SITEMAP & OFFICIAL DOMAINS STYLING
+   8. SITEMAP & DOMAINS DIRECTORY
    ======================================================== */
 .sitemap-directory-wrapper {
     display: flex;
@@ -2158,7 +2158,7 @@ body.modal-open {
 }
 
 /* ========================================================
-   9. FULL ADMIN DASHBOARD & EPISODE MANAGER STYLING
+   9. FULL ADMIN DASHBOARD & MULTI-CATEGORY ASSIGNMENT
    ======================================================== */
 .admin-dashboard-overlay {
     position: fixed;
@@ -2314,6 +2314,57 @@ body.modal-open {
     margin-bottom: 14px;
 }
 
+/* MULTI-CATEGORY ASSIGNMENT CHIPS CONTAINER */
+.assigned-categories-wrapper {
+    background: #090b14;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 14px;
+}
+
+.assigned-cats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    min-height: 32px;
+}
+
+.assigned-cat-chip {
+    background: #141728;
+    border: 1px solid var(--border-cyan);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.assigned-cat-chip strong {
+    color: var(--cyan-accent);
+}
+
+.assigned-cat-chip .btn-remove-assigned {
+    background: none;
+    border: none;
+    color: #ff0055;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.assigned-cat-chip .btn-remove-assigned:hover {
+    transform: scale(1.2);
+}
+
 .coming-soon-builder-card {
     background: #080911;
     border: 1px solid rgba(245, 158, 11, 0.4);
@@ -2451,7 +2502,6 @@ body.modal-open {
     margin-bottom: 14px;
 }
 
-/* EPISODE DOWNLOAD MIRRORS RESPONSIVE GRID (ZERO OVERFLOW) */
 .episode-dl-grid-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

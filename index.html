@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoviesFlix - Streaming Portal</title>
+    <!-- 1. PROFESSIONAL CINEMA TITLE (NO "STREAMING PORTAL") -->
+    <title>MoviesFlix - Watch Full Movies & Web Series Online Free HD</title>
     
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="fevicon.png">
@@ -168,13 +169,11 @@
                 <img id="postPosterImg" src="" class="post-poster-img" alt="Poster">
                 <div class="post-meta-info">
                     <h2 id="modalMovieTitle">Title</h2>
-                    <div class="post-badges-row">
+                    <!-- MULTIPLE ASSIGNED CATEGORIES SHOWN HERE -->
+                    <div class="post-badges-row" id="modalBadgesContainer">
                         <span class="meta-pill" id="badgeType">Movie</span>
                         <span class="meta-pill" id="badgeQuality">1080p HD</span>
                         <span class="meta-pill" id="badgeYear">2024</span>
-                        <span class="meta-pill meta-pill-clickable" id="badgeMainCat">Movies</span>
-                        <span class="meta-pill meta-pill-clickable" id="badgeSubCat" onclick="handleModalCategoryClick()">Bollywood</span>
-                        <span class="meta-pill meta-pill-clickable" id="badgeChildCat" style="display:none;" onclick="handleModalChildCategoryClick()">Show</span>
                     </div>
                     <div class="real-time-stamp">
                         <i class="fa-regular fa-clock" style="color:var(--cyan-accent);"></i>
@@ -235,7 +234,7 @@
                 </button>
             </div>
 
-            <!-- STREAM PLAYER WITH SERVERS -->
+            <!-- STREAM PLAYER WITH ANTI-REDIRECT SANDBOX PROTECTION (FIRST CLICK PLAY WITHOUT POPUP HIJACK) -->
             <div class="player-container-box" id="playerWrapper">
                 <div class="streaming-servers-box" id="serversSwitchContainer" style="display:none;">
                     <div class="servers-title-badge">
@@ -244,7 +243,7 @@
                     <div class="servers-btn-grid" id="modalServersGrid"></div>
                 </div>
                 
-                <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+                <iframe id="modalPlayerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
             </div>
 
             <!-- ENHANCED DOWNLOAD MIRRORS (MOVIES) -->
@@ -329,7 +328,7 @@
                 <div class="servers-title-badge" style="color:#f59e0b;">
                     <i class="fa-solid fa-play"></i> Official Trailer / Teaser:
                 </div>
-                <iframe id="csTrailerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen"></iframe>
+                <iframe id="csTrailerFrame" class="player-frame" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
             </div>
         </div>
     </div>
@@ -752,19 +751,32 @@
                         </div>
                     </div>
 
-                    <!-- 4-LEVEL POST CATEGORY SELECTORS -->
-                    <div style="display: flex; gap: 10px;">
-                        <div class="form-group" style="flex:1;">
-                            <label>Main Category</label>
-                            <select id="inMainCat" onchange="syncSubCatSelector()" required></select>
+                    <!-- MULTI-CATEGORY ASSIGNMENT BUILDER (AK MOVIE KO JITNI MARZI CATEGORIES ME ASSIGN KAREIN) -->
+                    <div class="link-builder-card" style="border-color: rgba(0, 229, 255, 0.45);">
+                        <div style="font-size:13px; font-weight:700; color:var(--cyan-accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-tags"></i> 3. Assign Categories & Genres (Multiple Category Selection)
                         </div>
-                        <div class="form-group" style="flex:1;">
-                            <label>Sub Category / Genre</label>
-                            <select id="inSubCat" onchange="syncChildCatSelector()" required></select>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <div class="form-group" style="flex:1; min-width:140px; margin-bottom:6px;">
+                                <label>Main Category</label>
+                                <select id="inMainCat" onchange="syncSubCatSelector()"></select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:140px; margin-bottom:6px;">
+                                <label>Sub Category / Genre</label>
+                                <select id="inSubCat" onchange="syncChildCatSelector()"></select>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width:140px; margin-bottom:6px;">
+                                <label>Child Category / Show (Optional)</label>
+                                <select id="inChildCat"></select>
+                            </div>
                         </div>
-                        <div class="form-group" style="flex:1;">
-                            <label>Child Category / Show (Optional)</label>
-                            <select id="inChildCat"></select>
+                        <button type="button" class="btn-cyan" style="background:#171b2d; color:var(--cyan-accent); border:1px solid var(--border-cyan); padding:8px 14px; font-size:12px; margin-top:4px;" onclick="assignCategoryToPost()">
+                            <i class="fa-solid fa-plus"></i> + Assign Category to Post
+                        </button>
+                        
+                        <div class="assigned-categories-wrapper">
+                            <div style="font-size:11px; color:#8c94ac;">Assigned Categories for this Post (Click × to remove):</div>
+                            <div class="assigned-cats-list" id="assignedCategoriesContainer"></div>
                         </div>
                     </div>
 
@@ -838,7 +850,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. SERIES EPISODES MANAGER (FIXED ZERO-OVERFLOW RESPONSIVE GRID) -->
+                    <!-- 2. SERIES EPISODES MANAGER -->
                     <div id="seriesSpecificFields" style="display:none;">
                         <div class="episode-admin-card">
                             <div style="font-size:14px; font-weight:700; color:var(--cyan-accent); margin-bottom:10px;">
@@ -1474,6 +1486,9 @@
                 mainCategory: "Bollywood Movies",
                 subCategory: "Latest Bollywood",
                 childCategory: "",
+                assignedCategories: [
+                    { main: "Bollywood Movies", sub: "Latest Bollywood", child: "" }
+                ],
                 quality: "1080p HD",
                 tags: "Action, Crime, Drama, Ranbir Kapoor",
                 poster: "https://image.tmdb.org/t/p/w500/hr9rjR4JWoFiIMoh4nRiw9Gmuox.jpg",
@@ -1522,6 +1537,9 @@
         let tempDownloadsList = [];
         let tempEpDownloadsList = [];
         let currentFormSeasons = ["Season 1"];
+
+        // MULTI-CATEGORY ASSIGNMENT TEMPORARY ARRAY
+        let tempAssignedCategoriesList = [];
 
         let isCurrentlyOnHome = true;
 
@@ -1741,7 +1759,7 @@
         };
 
         /* ====== PART 1 ENDS HERE - PART 2 CONTINUES DIRECTLY BELOW ====== */
-
+      
 
         // ========================================================
         // 7. UNIFIED 54px x 200px LOGO RENDERING
@@ -1829,7 +1847,6 @@
             const f2 = document.getElementById('csTrailerFrame');
             if (f2) f2.src = 'about:blank';
 
-            // Clean direct single-tap exit without browser history trapping
             if (window.location.hash && window.location.hash !== '#' && window.location.hash !== '#home') {
                 history.replaceState(null, '', window.location.pathname + window.location.search);
                 handleRoute();
@@ -1840,13 +1857,14 @@
             }
         }
 
-        // Helper to swap player iframe without adding an extra browser history entry
+        // Anti-Redirect Player Swapper: Always enforces sandbox so no ad redirects can hijack tab
         function setIframeSrcWithoutHistory(frameId, url) {
             const oldFrame = document.getElementById(frameId);
             if (!oldFrame) return;
             const cleanUrl = sanitizeStreamUrl(url);
             const newFrame = oldFrame.cloneNode(false);
             newFrame.src = cleanUrl;
+            newFrame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation allow-forms");
             oldFrame.parentNode.replaceChild(newFrame, oldFrame);
         }
 
@@ -1868,18 +1886,8 @@
             filterBySubCategory(subCategory);
         }
 
-        function handleModalCategoryClick() {
-            const subCat = document.getElementById('badgeSubCat').innerText;
-            filterBySubCategory(subCat);
-        }
-
-        function handleModalChildCategoryClick() {
-            const childCat = document.getElementById('badgeChildCat').innerText;
-            window.location.hash = 'childcategory=' + encodeURIComponent(childCat);
-        }
-
         // ========================================================
-        // 9. RENDER MOVIES (HORIZONTAL FLIP ROWS)
+        // 9. RENDER MOVIES (HORIZONTAL ROWS WITH MULTI-CATEGORY SUPPORT)
         // ========================================================
         function renderMoviesGrid(list, isHomePage = false) {
             const container = document.getElementById('mainContent');
@@ -1988,10 +1996,37 @@
             }
 
             if (hasMovies) {
-                const subCats = [...new Set(list.map(m => m.subCategory))];
-                subCats.forEach(sub => {
-                    const subMovies = list.filter(m => m.subCategory === sub);
-                    const parentMainCat = subMovies[0] ? subMovies[0].mainCategory : 'Browse';
+                // Collect all subcategories from assigned categories
+                const allSubCategories = [];
+                list.forEach(m => {
+                    if (m.subCategory && !allSubCategories.includes(m.subCategory)) {
+                        allSubCategories.push(m.subCategory);
+                    }
+                    if (m.assignedCategories && Array.isArray(m.assignedCategories)) {
+                        m.assignedCategories.forEach(c => {
+                            if (c.sub && !allSubCategories.includes(c.sub)) {
+                                allSubCategories.push(c.sub);
+                            }
+                        });
+                    }
+                });
+
+                allSubCategories.forEach(sub => {
+                    const subMovies = list.filter(m => {
+                        if (m.subCategory && m.subCategory.toLowerCase() === sub.toLowerCase()) return true;
+                        if (m.assignedCategories && Array.isArray(m.assignedCategories)) {
+                            return m.assignedCategories.some(c => c.sub && c.sub.toLowerCase() === sub.toLowerCase());
+                        }
+                        return false;
+                    });
+
+                    if (subMovies.length === 0) return;
+
+                    let parentMainCat = subMovies[0].mainCategory || 'Browse';
+                    if (subMovies[0].assignedCategories && Array.isArray(subMovies[0].assignedCategories)) {
+                        const matchedAssignment = subMovies[0].assignedCategories.find(c => c.sub.toLowerCase() === sub.toLowerCase());
+                        if (matchedAssignment) parentMainCat = matchedAssignment.main;
+                    }
 
                     const section = document.createElement('section');
                     section.className = 'category-section';
@@ -2131,7 +2166,13 @@
             closeAllModalsInternal();
             closeSidebarInternal();
             isCurrentlyOnHome = false;
-            const filtered = movies.filter(m => m.subCategory.toLowerCase() === subName.toLowerCase());
+            const filtered = movies.filter(m => {
+                if (m.subCategory && m.subCategory.toLowerCase() === subName.toLowerCase()) return true;
+                if (m.assignedCategories && Array.isArray(m.assignedCategories)) {
+                    return m.assignedCategories.some(c => c.sub && c.sub.toLowerCase() === subName.toLowerCase());
+                }
+                return false;
+            });
             renderMoviesGrid(filtered, false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2140,11 +2181,13 @@
             closeAllModalsInternal();
             closeSidebarInternal();
             isCurrentlyOnHome = false;
-            const filtered = movies.filter(m => 
-                (m.childCategory && m.childCategory.toLowerCase() === childName.toLowerCase()) ||
-                (m.tags && m.tags.toLowerCase().includes(childName.toLowerCase())) ||
-                m.title.toLowerCase().includes(childName.toLowerCase())
-            );
+            const filtered = movies.filter(m => {
+                const inChild = m.childCategory && m.childCategory.toLowerCase() === childName.toLowerCase();
+                const inAssigned = m.assignedCategories && m.assignedCategories.some(c => c.child && c.child.toLowerCase() === childName.toLowerCase());
+                const inTags = m.tags && m.tags.toLowerCase().includes(childName.toLowerCase());
+                const inTitle = m.title.toLowerCase().includes(childName.toLowerCase());
+                return inChild || inAssigned || inTags || inTitle;
+            });
             renderMoviesGrid(filtered, false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2417,10 +2460,10 @@
 
             if (item.trailerUrl && item.trailerUrl.trim() !== '') {
                 trailerWrapper.style.display = 'block';
-                trailerFrame.src = sanitizeStreamUrl(item.trailerUrl);
+                setIframeSrcWithoutHistory('csTrailerFrame', item.trailerUrl);
             } else {
                 trailerWrapper.style.display = 'none';
-                trailerFrame.src = '';
+                trailerFrame.src = 'about:blank';
             }
 
             document.body.classList.add('modal-open');
@@ -2438,7 +2481,7 @@
         }
 
         // ========================================================
-        // 13. FULL MOVIE POST VIEW ENGINE
+        // 13. FULL MOVIE POST VIEW ENGINE (MULTI-CATEGORY PILLS)
         // ========================================================
         let currentMovieServers = [];
 
@@ -2457,24 +2500,38 @@
 
             document.getElementById('modalMovieTitle').innerText = `${movie.title} (${movie.year || '2024'})`;
             document.getElementById('postPosterImg').src = movie.poster;
-            document.getElementById('badgeQuality').innerText = movie.quality || '1080p HD';
-            document.getElementById('badgeYear').innerText = movie.year || '2024';
-            document.getElementById('badgeMainCat').innerText = movie.mainCategory;
-            document.getElementById('badgeSubCat').innerText = movie.subCategory;
 
-            const childBadge = document.getElementById('badgeChildCat');
-            if (movie.childCategory && movie.childCategory.trim() !== '') {
-                childBadge.style.display = 'inline-block';
-                childBadge.innerText = movie.childCategory;
-            } else {
-                childBadge.style.display = 'none';
-            }
+            const isSeries = movie.type === 'series';
+
+            // RENDER ALL MULTI-ASSIGNED CATEGORY PILLS
+            const badgesContainer = document.getElementById('modalBadgesContainer');
+            badgesContainer.innerHTML = `
+                <span class="meta-pill" id="badgeType">${isSeries ? 'Series / Drama' : 'Single Movie'}</span>
+                <span class="meta-pill" id="badgeQuality">${movie.quality || '1080p HD'}</span>
+                <span class="meta-pill" id="badgeYear">${movie.year || '2024'}</span>
+            `;
+
+            const catList = (movie.assignedCategories && movie.assignedCategories.length > 0)
+                ? movie.assignedCategories
+                : [{ main: movie.mainCategory, sub: movie.subCategory, child: movie.childCategory || '' }];
+
+            catList.forEach(c => {
+                const pill = document.createElement('span');
+                pill.className = 'meta-pill meta-pill-clickable';
+                pill.innerText = c.child ? `${c.sub} › ${c.child}` : c.sub;
+                pill.title = `View all in ${c.sub}`;
+                pill.onclick = () => {
+                    if (c.child) {
+                        window.location.hash = 'childcategory=' + encodeURIComponent(c.child);
+                    } else {
+                        filterBySubCategory(c.sub);
+                    }
+                };
+                badgesContainer.appendChild(pill);
+            });
 
             document.getElementById('badgeDateTime').innerText = `Posted: ${movie.dateTime || 'Just Now'}`;
             document.getElementById('modalMovieDesc').innerText = movie.desc || "No plot summary provided.";
-
-            const isSeries = movie.type === 'series';
-            document.getElementById('badgeType').innerText = isSeries ? 'Series / Drama' : 'Single Movie';
 
             const imdbPanel = document.getElementById('modalImdbPanel');
             if (movie.imdbRating || movie.genre || movie.duration || movie.director) {
@@ -2690,10 +2747,8 @@
             const playerWrapper = document.getElementById('playerWrapper');
             playerWrapper.style.display = 'block';
 
-            // Use DOM node replacement so mobile browsers do NOT add an extra history step
             setIframeSrcWithoutHistory('modalPlayerFrame', episode.streamUrl);
 
-            // MULTI-RESOLUTION & MULTI-SIZE DOWNLOADS FOR THIS SPECIFIC EPISODE
             const dlContainer = document.getElementById('modalSeriesDownloadsList');
             const dlHeading = document.getElementById('seriesDownloadHeading');
             dlContainer.innerHTML = '';
@@ -3787,8 +3842,58 @@
         }
 
         // ========================================================
-        // 20. ADMIN POSTING OPERATIONS
+        // 20. MULTI-CATEGORY ASSIGNMENT HELPER FUNCTIONS
         // ========================================================
+        function assignCategoryToPost() {
+            const main = document.getElementById('inMainCat').value;
+            const sub = document.getElementById('inSubCat').value;
+            const child = document.getElementById('inChildCat').value.trim();
+
+            if (!main || !sub) {
+                return showToast("Select Main and Subcategory first!", true);
+            }
+
+            const exists = tempAssignedCategoriesList.some(c => 
+                c.main === main && c.sub === sub && (c.child || '') === child
+            );
+
+            if (exists) {
+                return showToast("This category is already assigned to this post!", true);
+            }
+
+            tempAssignedCategoriesList.push({ main, sub, child });
+            renderAssignedCategoriesPreview();
+            showToast(`Assigned: ${main} › ${sub} ${child ? `› ${child}` : ''}`);
+        }
+
+        function removeAssignedCategory(idx) {
+            tempAssignedCategoriesList.splice(idx, 1);
+            renderAssignedCategoriesPreview();
+        }
+
+        function renderAssignedCategoriesPreview() {
+            const container = document.getElementById('assignedCategoriesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (tempAssignedCategoriesList.length === 0) {
+                container.innerHTML = '<span style="font-size:11px; color:#666; font-style:italic;">No categories assigned yet. Pick above and click "+ Assign Category to Post".</span>';
+                return;
+            }
+
+            tempAssignedCategoriesList.forEach((c, idx) => {
+                const chip = document.createElement('div');
+                chip.className = 'assigned-cat-chip';
+                chip.innerHTML = `
+                    <span><strong>${c.main}</strong> › ${c.sub} ${c.child ? `› <em>${c.child}</em>` : ''}</span>
+                    <button type="button" class="btn-remove-assigned" onclick="removeAssignedCategory(${idx})" title="Remove">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
         function selectPostType(type) {
             document.getElementById('inPostType').value = type;
             const btnM = document.getElementById('typeBtnMovie');
@@ -3967,9 +4072,6 @@
             });
         }
 
-        // ========================================================
-        // SERIES EPISODE MULTI-DOWNLOAD MIRRORS BUILDER HELPERS
-        // ========================================================
         function addEpisodeDownloadMirror() {
             const quality = document.getElementById('epDlQualityInput').value.trim() || '720p HD';
             const name = document.getElementById('epDlNameInput').value.trim() || 'Mega.nz';
@@ -4181,6 +4283,7 @@
             renderAdminServersPreview();
             renderAdminDownloadsPreview();
             renderAdminEpDownloadsPreview();
+            renderAssignedCategoriesPreview();
         }
 
         function syncSubCatSelector() {
@@ -4252,7 +4355,7 @@
             return `${dateStr}, ${timeStr}`;
         }
 
-        // SAVE / UPDATE POST (SUPABASE SYNCED WITH CHILD CATEGORY)
+        // SAVE / UPDATE POST (MULTI-CATEGORY SUPPORTED)
         document.getElementById('adminAddMovieForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -4267,12 +4370,26 @@
                 return showToast("Please add at least 1 Streaming Server!", true);
             }
 
+            // If user did not manually click "+ Assign Category to Post", automatically take the currently selected dropdowns as category
+            if (tempAssignedCategoriesList.length === 0) {
+                const autoMain = document.getElementById('inMainCat').value;
+                const autoSub = document.getElementById('inSubCat').value;
+                const autoChild = document.getElementById('inChildCat').value.trim();
+                if (autoMain && autoSub) {
+                    tempAssignedCategoriesList.push({ main: autoMain, sub: autoSub, child: autoChild });
+                }
+            }
+
+            if (tempAssignedCategoriesList.length === 0) {
+                return showToast("Please assign at least 1 Category to this post!", true);
+            }
+
+            const primaryCat = tempAssignedCategoriesList[0];
             const imdbRating = document.getElementById('inImdbRating').value.trim();
             const genre = document.getElementById('inGenre').value.trim();
             const duration = document.getElementById('inDuration').value.trim();
             const country = document.getElementById('inCountry').value.trim();
             const director = document.getElementById('inDirector').value.trim();
-            const childCategory = document.getElementById('inChildCat').value.trim();
 
             if (editId) {
                 const movieIndex = movies.findIndex(m => m.id == editId);
@@ -4280,9 +4397,13 @@
                     movies[movieIndex].type = postType;
                     movies[movieIndex].title = document.getElementById('inMovieTitle').value.trim();
                     movies[movieIndex].year = document.getElementById('inMovieYear').value.trim();
-                    movies[movieIndex].mainCategory = document.getElementById('inMainCat').value;
-                    movies[movieIndex].subCategory = document.getElementById('inSubCat').value;
-                    movies[movieIndex].childCategory = childCategory;
+                    
+                    // Multi-category & backward-compatible primary fields
+                    movies[movieIndex].mainCategory = primaryCat.main;
+                    movies[movieIndex].subCategory = primaryCat.sub;
+                    movies[movieIndex].childCategory = primaryCat.child || "";
+                    movies[movieIndex].assignedCategories = [...tempAssignedCategoriesList];
+
                     movies[movieIndex].quality = document.getElementById('inQuality').value.trim();
                     movies[movieIndex].tags = document.getElementById('inTags').value.trim();
                     movies[movieIndex].poster = document.getElementById('inPoster').value.trim();
@@ -4304,7 +4425,7 @@
                     cancelMovieEdit();
                     renderAdminMoviesList();
                     loadAdminDashboardData();
-                    showToast("Post Updated Live in Supabase!");
+                    showToast("Post Updated Live in Supabase with Multiple Categories!");
                 }
             } else {
                 const newPost = {
@@ -4312,9 +4433,10 @@
                     type: postType,
                     title: document.getElementById('inMovieTitle').value.trim(),
                     year: document.getElementById('inMovieYear').value.trim() || '2024',
-                    mainCategory: document.getElementById('inMainCat').value,
-                    subCategory: document.getElementById('inSubCat').value,
-                    childCategory: childCategory,
+                    mainCategory: primaryCat.main,
+                    subCategory: primaryCat.sub,
+                    childCategory: primaryCat.child || "",
+                    assignedCategories: [...tempAssignedCategoriesList],
                     quality: document.getElementById('inQuality').value.trim(),
                     tags: document.getElementById('inTags').value.trim(),
                     poster: document.getElementById('inPoster').value.trim(),
@@ -4342,7 +4464,7 @@
                 renderAdminMoviesList();
                 loadAdminDashboardData();
                 cancelMovieEdit();
-                showToast("Post Published Live in Supabase!");
+                showToast("Post Published Live in Supabase with Multiple Categories!");
             }
         });
 
@@ -4355,12 +4477,26 @@
 
             document.getElementById('inMovieTitle').value = movie.title;
             document.getElementById('inMovieYear').value = movie.year || '2024';
-            document.getElementById('inMainCat').value = movie.mainCategory;
-            syncSubCatSelector();
-            document.getElementById('inSubCat').value = movie.subCategory;
-            syncChildCatSelector();
-            if (movie.childCategory) {
-                document.getElementById('inChildCat').value = movie.childCategory;
+
+            // Populate Multi-Categories
+            if (movie.assignedCategories && Array.isArray(movie.assignedCategories) && movie.assignedCategories.length > 0) {
+                tempAssignedCategoriesList = [...movie.assignedCategories];
+            } else {
+                tempAssignedCategoriesList = [{
+                    main: movie.mainCategory || categories[0].name,
+                    sub: movie.subCategory || "General",
+                    child: movie.childCategory || ""
+                }];
+            }
+            renderAssignedCategoriesPreview();
+
+            if (tempAssignedCategoriesList.length > 0) {
+                const first = tempAssignedCategoriesList[0];
+                document.getElementById('inMainCat').value = first.main;
+                syncSubCatSelector();
+                document.getElementById('inSubCat').value = first.sub;
+                syncChildCatSelector();
+                if (first.child) document.getElementById('inChildCat').value = first.child;
             }
 
             document.getElementById('inQuality').value = movie.quality;
@@ -4397,7 +4533,7 @@
             document.getElementById('btnCancelEdit').style.display = "block";
 
             document.getElementById('adminDashboard').scrollTo({ top: 0, behavior: 'smooth' });
-            showToast("Loaded into Edit Form!");
+            showToast("Loaded into Edit Form with All Assigned Categories!");
         }
 
         function cancelMovieEdit() {
@@ -4408,6 +4544,7 @@
             tempServersList = [];
             tempDownloadsList = [];
             tempEpDownloadsList = [];
+            tempAssignedCategoriesList = [];
             currentFormSeasons = ["Season 1"];
             renderAdminEpisodesPreview();
             renderAdminSeasonBadges();
@@ -4415,6 +4552,7 @@
             renderAdminServersPreview();
             renderAdminDownloadsPreview();
             renderAdminEpDownloadsPreview();
+            renderAssignedCategoriesPreview();
             selectPostType('movie');
 
             document.getElementById('formHeaderTitle').innerText = "Publish New Post";
@@ -4431,12 +4569,18 @@
             movies.forEach(m => {
                 const item = document.createElement('div');
                 item.className = 'manage-item-row';
+
+                let catSummary = m.subCategory;
+                if (m.assignedCategories && m.assignedCategories.length > 1) {
+                    catSummary = m.assignedCategories.map(c => c.sub).join(', ');
+                }
+
                 item.innerHTML = `
                     <div>
                         <strong style="color:#fff;">${m.title} (${m.year || '2024'})</strong>
                         <span style="font-size:10px; color:var(--cyan-accent); margin-left:5px;">[${m.type === 'series' ? 'Series' : 'Movie'}]</span>
                         <span style="font-size:10px; color:var(--imdb-yellow); margin-left:5px;">[IMDb ${m.imdbRating || 'N/A'}]</span>
-                        <div style="font-size:11px; color:#6b7280;">${m.subCategory} ${m.childCategory ? `> ${m.childCategory}` : ''} • ${m.quality} • ${m.dateTime || 'Recent'}</div>
+                        <div style="font-size:11px; color:#6b7280;">Categories: ${catSummary} • ${m.quality} • ${m.dateTime || 'Recent'}</div>
                     </div>
                     <div class="btn-group-actions">
                         <button class="btn-edit-item" onclick="editMovie(${m.id})"><i class="fa-solid fa-pen"></i> Edit</button>
@@ -4793,6 +4937,11 @@
                 const oldName = categories[idx].name;
                 movies.forEach(m => {
                     if (m.mainCategory === oldName) m.mainCategory = newName;
+                    if (m.assignedCategories) {
+                        m.assignedCategories.forEach(c => {
+                            if (c.main === oldName) c.main = newName;
+                        });
+                    }
                 });
                 categories[idx].name = newName;
                 persistAll();
@@ -4808,6 +4957,11 @@
                 
                 movies.forEach(m => {
                     if (m.subCategory === oldSub) m.subCategory = newName;
+                    if (m.assignedCategories) {
+                        m.assignedCategories.forEach(c => {
+                            if (c.sub === oldSub) c.sub = newName;
+                        });
+                    }
                 });
                 
                 if (typeof sub === 'string') {
@@ -4830,6 +4984,11 @@
 
                 movies.forEach(m => {
                     if (m.childCategory === oldChild) m.childCategory = newName;
+                    if (m.assignedCategories) {
+                        m.assignedCategories.forEach(c => {
+                            if (c.child === oldChild) c.child = newName;
+                        });
+                    }
                 });
 
                 sub.childCategories[chIdx] = newName;
@@ -5100,7 +5259,7 @@
         }
 
         // ========================================================
-        // 25. REAL-TIME SEARCH
+        // 25. REAL-TIME SEARCH (SUPPORTS MULTI-CATEGORY TAGS)
         // ========================================================
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
@@ -5112,13 +5271,22 @@
                 const filtered = movies.filter(m => {
                     const matchTitle = m.title.toLowerCase().includes(query);
                     const matchYear = m.year && m.year.toLowerCase().includes(query);
-                    const matchSub = m.subCategory.toLowerCase().includes(query);
+                    const matchSub = m.subCategory && m.subCategory.toLowerCase().includes(query);
                     const matchChild = m.childCategory && m.childCategory.toLowerCase().includes(query);
-                    const matchMain = m.mainCategory.toLowerCase().includes(query);
+                    const matchMain = m.mainCategory && m.mainCategory.toLowerCase().includes(query);
                     const matchTags = m.tags && m.tags.toLowerCase().includes(query);
                     const matchCast = m.cast && m.cast.some(c => c.name.toLowerCase().includes(query) || c.role.toLowerCase().includes(query));
 
-                    return matchTitle || matchYear || matchSub || matchChild || matchMain || matchTags || matchCast;
+                    let matchAssigned = false;
+                    if (m.assignedCategories && Array.isArray(m.assignedCategories)) {
+                        matchAssigned = m.assignedCategories.some(c => 
+                            (c.main && c.main.toLowerCase().includes(query)) ||
+                            (c.sub && c.sub.toLowerCase().includes(query)) ||
+                            (c.child && c.child.toLowerCase().includes(query))
+                        );
+                    }
+
+                    return matchTitle || matchYear || matchSub || matchChild || matchMain || matchTags || matchCast || matchAssigned;
                 });
                 renderMoviesGrid(filtered, false);
             }
@@ -5209,3 +5377,4 @@
     </script>
 </body>
 </html>
+
